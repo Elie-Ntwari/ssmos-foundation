@@ -120,6 +120,9 @@ export const translations: Record<Language, Record<string, string>> = {
     'footer.newsletter': 'Newsletter',
     'footer.newsletter.placeholder': 'Votre email',
     'footer.newsletter.subscribe': 'S\'abonner',
+    'footer.designedBy': 'Conçu par',
+    'cta.ready.title': 'Prêt à améliorer votre sécurité au travail ?',
+    'cta.ready.description': 'Contactez notre équipe d\'experts pour discuter de vos besoins et découvrir nos solutions sur mesure.',
   },
   en: {
     // Navigation
@@ -232,6 +235,9 @@ export const translations: Record<Language, Record<string, string>> = {
     'footer.newsletter': 'Newsletter',
     'footer.newsletter.placeholder': 'Your email',
     'footer.newsletter.subscribe': 'Subscribe',
+    'footer.designedBy': 'Designed by',
+    'cta.ready.title': 'Ready to improve your workplace safety?',
+    'cta.ready.description': 'Contact our team of experts to discuss your needs and discover our tailored solutions.',
   },
   ln: {
     // Navigation
@@ -269,6 +275,12 @@ export const translations: Record<Language, Record<string, string>> = {
     'footer.services': 'Misala na biso',
     'footer.contact': 'Koyebana',
     'footer.rights': 'Makoki nionso ebatelami.',
+    'footer.designedBy': 'Esalami na',
+    'footer.newsletter': 'Newsletter',
+    'footer.newsletter.placeholder': 'Email na yo',
+    'footer.newsletter.subscribe': 'Kokoma',
+    'cta.ready.title': 'Olingi kobongisa sécurité na mosala?',
+    'cta.ready.description': 'Solola na équipe na biso ya experts mpo na koyeba mpe kozwa solutions adaptées.',
     
     // Common (fallback to French for incomplete translations)
     'about.title': 'Na tina na SSMos',
@@ -314,6 +326,12 @@ export const translations: Record<Language, Record<string, string>> = {
     'footer.services': 'Huduma zetu',
     'footer.contact': 'Wasiliana',
     'footer.rights': 'Haki zote zimehifadhiwa.',
+    'footer.designedBy': 'Imeundwa na',
+    'footer.newsletter': 'Jarida',
+    'footer.newsletter.placeholder': 'Barua pepe yako',
+    'footer.newsletter.subscribe': 'Jisajili',
+    'cta.ready.title': 'Uko tayari kuboresha usalama kazini?',
+    'cta.ready.description': 'Wasiliana na timu yetu ya wataalam kujadili mahitaji yako na kugundua suluhisho zetu.',
     
     // Common
     'about.title': 'Kuhusu SSMos',
@@ -353,6 +371,12 @@ export const translations: Record<Language, Record<string, string>> = {
     'footer.services': 'Midimu yetu',
     'footer.contact': 'Kutuilangana',
     'footer.rights': 'Buonso bukuatshishibue.',
+    'footer.designedBy': 'Tshia elama kudi',
+    'footer.newsletter': 'Mukanda',
+    'footer.newsletter.placeholder': 'Email webe',
+    'footer.newsletter.subscribe': 'Kudifunda',
+    'cta.ready.title': 'Udi mulamuke bua kubongela bukubi mu mudimu?',
+    'cta.ready.description': 'Langana ne tshisumbu tshietu tshia experts bua kuyukila bua bintu biebe.',
     
     // Common
     'about.title': 'Bua SSMos',

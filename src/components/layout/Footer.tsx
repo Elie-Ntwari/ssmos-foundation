@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, Facebook, Linkedin, Twitter } from 'lucide-react';
+import { Mail, Phone, MapPin, Facebook, Linkedin, Twitter, ExternalLink } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import logo from '@/assets/logo.png';
 
 const Footer = () => {
   const { t } = useLanguage();
@@ -31,34 +33,27 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* About Section */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center">
-                <span className="text-secondary-foreground font-bold text-lg">SS</span>
-              </div>
-              <span className="font-display text-xl font-bold">SSMos</span>
-            </div>
+            <motion.div 
+              className="flex items-center gap-2 mb-4"
+              whileHover={{ scale: 1.02 }}
+            >
+              <img src={logo} alt="SSMos Logo" className="h-14 w-auto brightness-0 invert" />
+            </motion.div>
             <p className="text-primary-foreground/80 text-sm leading-relaxed mb-6">
               {t('footer.description')}
             </p>
             <div className="flex gap-3">
-              <a
-                href="#"
-                className="w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-secondary flex items-center justify-center transition-colors"
-              >
-                <Facebook className="h-4 w-4" />
-              </a>
-              <a
-                href="#"
-                className="w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-secondary flex items-center justify-center transition-colors"
-              >
-                <Linkedin className="h-4 w-4" />
-              </a>
-              <a
-                href="#"
-                className="w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-secondary flex items-center justify-center transition-colors"
-              >
-                <Twitter className="h-4 w-4" />
-              </a>
+              {[Facebook, Linkedin, Twitter].map((Icon, idx) => (
+                <motion.a
+                  key={idx}
+                  href="#"
+                  whileHover={{ scale: 1.1, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-secondary flex items-center justify-center transition-colors"
+                >
+                  <Icon className="h-4 w-4" />
+                </motion.a>
+              ))}
             </div>
           </div>
 
@@ -70,7 +65,7 @@ const Footer = () => {
                 <li key={link.path}>
                   <Link
                     to={link.path}
-                    className="text-primary-foreground/80 hover:text-secondary text-sm transition-colors"
+                    className="text-primary-foreground/80 hover:text-secondary text-sm transition-colors inline-block hover:translate-x-1 duration-200"
                   >
                     {link.label}
                   </Link>
@@ -87,7 +82,7 @@ const Footer = () => {
                 <li key={service}>
                   <Link
                     to="/services"
-                    className="text-primary-foreground/80 hover:text-secondary text-sm transition-colors"
+                    className="text-primary-foreground/80 hover:text-secondary text-sm transition-colors inline-block hover:translate-x-1 duration-200"
                   >
                     {service}
                   </Link>
@@ -132,12 +127,26 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Copyright */}
+      {/* Copyright & Designed by */}
       <div className="border-t border-primary-foreground/10">
         <div className="container mx-auto px-4 py-4">
-          <p className="text-center text-primary-foreground/60 text-sm">
-            © {new Date().getFullYear()} SSMos - Safety & Santé na Mosala. {t('footer.rights')}
-          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
+            <p className="text-primary-foreground/60 text-sm">
+              © {new Date().getFullYear()} SSMos - Safety & Santé na Mosala. {t('footer.rights')}
+            </p>
+            <p className="text-primary-foreground/60 text-sm flex items-center gap-1">
+              {t('footer.designedBy')}{' '}
+              <a 
+                href="https://jej-murex.vercel.app/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-secondary hover:text-secondary/80 font-medium inline-flex items-center gap-1 transition-colors"
+              >
+                JEJ
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </footer>
