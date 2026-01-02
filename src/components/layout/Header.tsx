@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown, Globe } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -9,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import logo from '@/assets/logo.png';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -34,16 +36,14 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-lg hero-gradient flex items-center justify-center">
-              <span className="text-white font-bold text-lg">SS</span>
-            </div>
-            <div className="hidden sm:block">
-              <span className="font-display text-xl font-bold text-primary">SSMos</span>
-              <span className="hidden md:inline text-xs text-muted-foreground ml-2">
-                Safety & Santé na Mosala
-              </span>
-            </div>
+          <Link to="/" className="flex items-center gap-3 group">
+            <motion.img 
+              src={logo} 
+              alt="SSMos Logo" 
+              className="h-12 md:h-14 w-auto"
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            />
           </Link>
 
           {/* Desktop Navigation */}
@@ -52,7 +52,7 @@ const Header = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 ${
                   isActive(link.path)
                     ? 'bg-primary text-primary-foreground'
                     : 'text-foreground hover:bg-accent hover:text-accent-foreground'
@@ -73,7 +73,7 @@ const Header = () => {
                   <ChevronDown className="h-3 w-3" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align="end" className="bg-card z-50">
                 {languages.map((lang) => (
                   <DropdownMenuItem
                     key={lang.code}
@@ -99,26 +99,40 @@ const Header = () => {
       </div>
 
       {/* Mobile Navigation */}
-      {isMenuOpen && (
-        <div className="lg:hidden border-t border-border bg-card animate-fade-in">
-          <nav className="container mx-auto px-4 py-4 flex flex-col gap-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                onClick={() => setIsMenuOpen(false)}
-                className={`px-4 py-3 rounded-md text-sm font-medium transition-colors ${
-                  isActive(link.path)
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-foreground hover:bg-accent'
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-        </div>
-      )}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="lg:hidden border-t border-border bg-card overflow-hidden"
+          >
+            <nav className="container mx-auto px-4 py-4 flex flex-col gap-1">
+              {navLinks.map((link, index) => (
+                <motion.div
+                  key={link.path}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  <Link
+                    to={link.path}
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`block px-4 py-3 rounded-md text-sm font-medium transition-colors ${
+                      isActive(link.path)
+                        ? 'bg-primary text-primary-foreground'
+                        : 'text-foreground hover:bg-accent'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                </motion.div>
+              ))}
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };
