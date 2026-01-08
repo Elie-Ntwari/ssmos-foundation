@@ -215,7 +215,7 @@ export const articles: Article[] = [
     contentSw: 'SSMos ilifanya kikao cha mafunzo ya msaada wa kwanza kwa mafanikio huko Lubumbashi. Mafunzo haya ya siku tatu yaliwaruhusu washiriki 42 kutoka sekta tofauti za viwanda kupata ujuzi muhimu wa kuingilia kati kwa ufanisi katika kesi ya dharura mahali pa kazi.',
     category: 'training',
     date: '2024-01-10',
-    image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=800',
+    image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800',
     author: 'Marie Kabongo'
   },
   {
