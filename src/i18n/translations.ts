@@ -37,6 +37,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'stats.trainings': 'Formations dispensées',
     'stats.experts': 'Experts mobilisés',
     'stats.years': 'Années d\'expérience',
+    'hero.partners': 'Partenaires',
+    'hero.years': 'Ans d\'expérience',
     
     // About page
     'about.title': 'À propos de SSMos',
@@ -152,6 +154,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'stats.trainings': 'Trainings delivered',
     'stats.experts': 'Experts mobilized',
     'stats.years': 'Years of experience',
+    'hero.partners': 'Partners',
+    'hero.years': 'Years Experience',
     
     // About page
     'about.title': 'About SSMos',
@@ -267,6 +271,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'stats.trainings': 'Mateya oyo topesaki',
     'stats.experts': 'Ba experts oyo tosaleli',
     'stats.years': 'Mbula ya expérience',
+    'hero.partners': 'Partenaires',
+    'hero.years': 'Mbula ya expérience',
     
     // Footer
     'footer.description': 'Organisation mpo na santé na sécurité na mosala na RDC.',
@@ -382,6 +388,8 @@ export const translations: Record<Language, Record<string, string>> = {
     'stats.trainings': 'Mafunzo yaliyotolewa',
     'stats.experts': 'Wataalam waliohamasishwa',
     'stats.years': 'Miaka ya uzoefu',
+    'hero.partners': 'Partners',
+    'hero.years': 'Miaka ya uzoefu',
     
     // Footer
     'footer.description': 'Shirika la kukuza afya na usalama kazini nchini DRC.',

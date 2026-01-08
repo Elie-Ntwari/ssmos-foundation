@@ -189,11 +189,11 @@ const Index = () => {
               >
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-secondary" />
-                  <span className="text-white/70 text-sm">{stats.companies}+ {language === 'en' ? 'Partners' : 'Partenaires'}</span>
+                  <span className="text-white/70 text-sm">{stats.companies}+ {t('hero.partners')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-secondary" />
-                  <span className="text-white/70 text-sm">{stats.years} {language === 'en' ? 'Years Experience' : 'Ans d\'expérience'}</span>
+                  <span className="text-white/70 text-sm">{stats.years} {t('hero.years')}</span>
                 </div>
               </motion.div>
             </motion.div>
@@ -265,10 +265,10 @@ const Index = () => {
                     <IconComponent className="h-7 w-7 text-white" />
                   </div>
                   <h3 className="font-display text-xl font-semibold text-foreground mb-2">
-                    {language === 'en' ? area.titleEn : area.title}
+                    {language === 'en' ? area.titleEn : language === 'ln' ? area.titleLn : language === 'sw' ? area.titleSw : area.title}
                   </h3>
                   <p className="text-muted-foreground text-sm">
-                    {language === 'en' ? area.descriptionEn : area.description}
+                    {language === 'en' ? area.descriptionEn : language === 'ln' ? area.descriptionLn : language === 'sw' ? area.descriptionSw : area.description}
                   </p>
                 </motion.div>
               );
@@ -367,10 +367,10 @@ const Index = () => {
                     </span>
                   </div>
                   <h3 className="font-display text-lg font-semibold text-foreground group-hover:text-secondary transition-colors line-clamp-2 mb-2">
-                    {language === 'en' ? article.titleEn : article.title}
+                    {language === 'en' ? article.titleEn : language === 'ln' ? article.titleLn : language === 'sw' ? article.titleSw : article.title}
                   </h3>
                   <p className="text-muted-foreground text-sm line-clamp-2">
-                    {language === 'en' ? article.excerptEn : article.excerpt}
+                    {language === 'en' ? article.excerptEn : language === 'ln' ? article.excerptLn : language === 'sw' ? article.excerptSw : article.excerpt}
                   </p>
                 </Link>
               </motion.div>

@@ -4,10 +4,16 @@ export interface Article {
   id: string;
   title: string;
   titleEn: string;
+  titleLn: string;
+  titleSw: string;
   excerpt: string;
   excerptEn: string;
+  excerptLn: string;
+  excerptSw: string;
   content: string;
   contentEn: string;
+  contentLn: string;
+  contentSw: string;
   category: 'sst' | 'training' | 'regulation' | 'innovation';
   date: string;
   image: string;
@@ -178,10 +184,16 @@ export const articles: Article[] = [
     id: '1',
     title: 'Nouvelle réglementation SST en RDC : ce qui change en 2024',
     titleEn: 'New OHS regulation in DRC: what changes in 2024',
+    titleLn: 'Molakisi ya sika ya SST na RDC: nini ebongwani na 2024',
+    titleSw: 'Kanuni mpya ya OHS nchini DRC: mabadiliko gani mwaka 2024',
     excerpt: 'Le gouvernement congolais vient d\'adopter de nouvelles mesures pour renforcer la protection des travailleurs.',
     excerptEn: 'The Congolese government has just adopted new measures to strengthen worker protection.',
+    excerptLn: 'Gouvernement ya Kongo epesi kobongisa bikelo mpo na kolamina bokabolami ya basali.',
+    excerptSw: 'Serikali ya Kongo imepitisha hatua mpya za kuimarisha ulinzi wa wafanyakazi.',
     content: 'Le gouvernement de la République Démocratique du Congo a récemment promulgué une série de décrets visant à moderniser le cadre réglementaire de la santé et sécurité au travail. Ces nouvelles dispositions, qui entreront en vigueur progressivement, concernent notamment l\'obligation de désigner un responsable SST dans toutes les entreprises de plus de 50 salariés, le renforcement des contrôles par l\'Inspection du Travail, et la mise en place de comités d\'hygiène et de sécurité obligatoires.',
     contentEn: 'The government of the Democratic Republic of Congo has recently enacted a series of decrees aimed at modernizing the regulatory framework for occupational health and safety. These new provisions, which will come into force gradually, concern in particular the obligation to designate an OHS manager in all companies with more than 50 employees, the strengthening of controls by the Labor Inspection, and the establishment of mandatory health and safety committees.',
+    contentLn: 'Gouvernement ya République Démocratique du Congo epesi kobongisa bikelo ya sika ya santé na sécurité au travail. Bikelo oyo ekozala na bokasi ya kala, ezali kolakisa mpo na koyeba moto ya kosunga SST na entreprises nionso oyo ezali na basali oyo eleki 50, kobongisa bokabolami ya Inspection du Travail, na kotiya comité ya hygiène na sécurité oyo esengeli.',
+    contentSw: 'Serikali ya Jamhuri ya Kidemokrasia ya Kongo hivi karibuni imepitisha msururu wa amri zinazolenga kuboresha mfumo wa kanuni wa afya na usalama kazini. Vigezo hivi vipya, ambavyo vitaanza kutumika hatua kwa hatua, vinahusu hasa wajibu wa kuteua meneja wa OHS katika makampuni yote yenye zaidi ya wafanyakazi 50, kuimarisha udhibiti na Ukaguzi wa Kazi, na kuanzisha kamati za lazima za usafi na usalama.',
     category: 'regulation',
     date: '2024-01-15',
     image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800',
@@ -191,10 +203,16 @@ export const articles: Article[] = [
     id: '2',
     title: 'Formation des premiers secouristes : session réussie à Lubumbashi',
     titleEn: 'First aid training: successful session in Lubumbashi',
+    titleLn: 'Formation des premiers secouristes : session réussie à Lubumbashi',
+    titleSw: 'Mafunzo ya msaada wa kwanza: kikao cha mafanikio huko Lubumbashi',
     excerpt: 'Plus de 40 professionnels ont été formés aux gestes de premiers secours lors de notre dernière session.',
     excerptEn: 'More than 40 professionals were trained in first aid during our latest session.',
+    excerptLn: 'Plus de 40 professionnels ont été formés aux gestes de premiers secours lors de notre dernière session.',
+    excerptSw: 'Zaidi ya wataalamu 40 walifunzwa msaada wa kwanza katika kikao chetu cha hivi karibuni.',
     content: 'SSMos a organisé avec succès une session de formation intensive sur les premiers secours en entreprise à Lubumbashi. Cette formation de trois jours a permis à 42 participants issus de différents secteurs industriels d\'acquérir les compétences essentielles pour intervenir efficacement en cas d\'urgence sur leur lieu de travail.',
     contentEn: 'SSMos successfully organized an intensive first aid training session in Lubumbashi. This three-day training enabled 42 participants from different industrial sectors to acquire essential skills to intervene effectively in case of emergency at their workplace.',
+    contentLn: 'SSMos a organisé avec succès une session de formation intensive sur les premiers secours en entreprise à Lubumbashi. Cette formation de trois jours a permis à 42 participants issus de différents secteurs industriels d\'acquérir les compétences essentielles pour intervenir efficacement en cas d\'urgence sur leur lieu de travail.',
+    contentSw: 'SSMos ilifanya kikao cha mafunzo ya msaada wa kwanza kwa mafanikio huko Lubumbashi. Mafunzo haya ya siku tatu yaliwaruhusu washiriki 42 kutoka sekta tofauti za viwanda kupata ujuzi muhimu wa kuingilia kati kwa ufanisi katika kesi ya dharura mahali pa kazi.',
     category: 'training',
     date: '2024-01-10',
     image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=800',
@@ -204,10 +222,16 @@ export const articles: Article[] = [
     id: '3',
     title: 'Prévention des risques chimiques dans le secteur minier',
     titleEn: 'Chemical risk prevention in the mining sector',
+    titleLn: 'Prévention des risques chimiques dans le secteur minier',
+    titleSw: 'Kuzuia hatari za kemikali katika sekta ya madini',
     excerpt: 'Les bonnes pratiques pour protéger les travailleurs exposés aux substances dangereuses.',
     excerptEn: 'Best practices to protect workers exposed to hazardous substances.',
+    excerptLn: 'Les bonnes pratiques pour protéger les travailleurs exposés aux substances dangereuses.',
+    excerptSw: 'Mbinu bora za kulinda wafanyakazi walioathiriwa na vitu hatari.',
     content: 'Le secteur minier congolais emploie des milliers de travailleurs potentiellement exposés à des risques chimiques. SSMos partage son expertise sur les mesures de prévention essentielles : identification des substances dangereuses, équipements de protection individuelle adaptés, formation du personnel, et surveillance médicale renforcée.',
     contentEn: 'The Congolese mining sector employs thousands of workers potentially exposed to chemical risks. SSMos shares its expertise on essential prevention measures: identification of hazardous substances, appropriate personal protective equipment, staff training, and enhanced medical surveillance.',
+    contentLn: 'Le secteur minier congolais emploie des milliers de travailleurs potentiellement exposés à des risques chimiques. SSMos partage son expertise sur les mesures de prévention essentielles : identification des substances dangereuses, équipements de protection individuelle adaptés, formation du personnel, et surveillance médicale renforcée.',
+    contentSw: 'Sekta ya madini ya Kongo inaajiri maelfu ya wafanyakazi ambao wanaweza kuathiriwa na hatari za kemikali. SSMos inashiriki utaalamu wake juu ya hatua muhimu za kuzuia: utambuzi wa vitu hatari, vifaa vya ulinzi wa kibinafsi vinavyofaa, mafunzo ya wafanyakazi, na uangalizi wa matibabu ulioimarishwa.',
     category: 'sst',
     date: '2024-01-05',
     image: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800',
@@ -217,10 +241,16 @@ export const articles: Article[] = [
     id: '4',
     title: 'Lancement de notre application mobile de reporting SST',
     titleEn: 'Launch of our OHS reporting mobile application',
+    titleLn: 'Lancement de notre application mobile de reporting SST',
+    titleSw: 'Uzinduzi wa programu yetu ya simu ya kuripoti OHS',
     excerpt: 'SSMos innove avec une application permettant de signaler les incidents en temps réel.',
     excerptEn: 'SSMos innovates with an application allowing real-time incident reporting.',
+    excerptLn: 'SSMos innove avec une application permettant de signaler les incidents en temps réel.',
+    excerptSw: 'SSMos inabunifu na programu inayoruhusu kuripoti matukio ya papo hapo.',
     content: 'SSMos lance officiellement son application mobile dédiée au reporting des incidents et quasi-incidents en matière de santé et sécurité au travail. Cette solution innovante permet aux employés de signaler rapidement tout événement, avec photos et géolocalisation, facilitant ainsi la réactivité des équipes SST.',
     contentEn: 'SSMos officially launches its mobile application dedicated to reporting incidents and near-misses in occupational health and safety. This innovative solution allows employees to quickly report any event, with photos and geolocation, thus facilitating the responsiveness of OHS teams.',
+    contentLn: 'SSMos lance officiellement son application mobile dédiée au reporting des incidents et quasi-incidents en matière de santé et sécurité au travail. Cette solution innovante permet aux employés de signaler rapidement tout événement, avec photos et géolocalisation, facilitant ainsi la réactivité des équipes SST.',
+    contentSw: 'SSMos inazindua rasmi programu yake ya simu iliyojitolea kuripoti matukio na karibu-matukio katika afya na usalama kazini. Suluhisho hili la ubunifu linaruhusu wafanyakazi kuripoti haraka tukio lolote, pamoja na picha na eneo, hivyo kuwezesha mwitikio wa timu za OHS.',
     category: 'innovation',
     date: '2023-12-20',
     image: 'https://images.unsplash.com/photo-1551650975-87deedd944c3?w=800',
@@ -344,42 +374,66 @@ export const interventionAreas = [
     icon: 'Factory',
     title: 'Secteur Industriel',
     titleEn: 'Industrial Sector',
+    titleLn: 'Secteur Industriel',
+    titleSw: 'Sekta ya Viwanda',
     description: 'Accompagnement des industries manufacturières et extractives',
-    descriptionEn: 'Supporting manufacturing and extractive industries'
+    descriptionEn: 'Supporting manufacturing and extractive industries',
+    descriptionLn: 'Kosunga industries manufacturières na extractives',
+    descriptionSw: 'Kusaidia viwanda vya utengenezaji na uchimbaji'
   },
   {
     icon: 'Building2',
     title: 'BTP & Construction',
     titleEn: 'Construction',
+    titleLn: 'BTP & Construction',
+    titleSw: 'Ujenzi',
     description: 'Sécurité sur les chantiers et sites de construction',
-    descriptionEn: 'Safety on construction sites'
+    descriptionEn: 'Safety on construction sites',
+    descriptionLn: 'Sécurité na chantier na site ya construction',
+    descriptionSw: 'Usalama kwenye tovuti za ujenzi'
   },
   {
     icon: 'Truck',
     title: 'Transport & Logistique',
     titleEn: 'Transport & Logistics',
+    titleLn: 'Transport & Logistique',
+    titleSw: 'Usafiri & Vifaa',
     description: 'Prévention des risques routiers et logistiques',
-    descriptionEn: 'Prevention of road and logistics risks'
+    descriptionEn: 'Prevention of road and logistics risks',
+    descriptionLn: 'Prévention ya risques routiers na logistiques',
+    descriptionSw: 'Kuzuia hatari za barabara na vifaa'
   },
   {
     icon: 'Hospital',
     title: 'Secteur Santé',
     titleEn: 'Healthcare Sector',
+    titleLn: 'Secteur Santé',
+    titleSw: 'Sekta ya Afya',
     description: 'Protection du personnel soignant',
-    descriptionEn: 'Healthcare worker protection'
+    descriptionEn: 'Healthcare worker protection',
+    descriptionLn: 'Protection ya personnel soignant',
+    descriptionSw: 'Ulinzi wa wafanyakazi wa afya'
   },
   {
     icon: 'Pickaxe',
     title: 'Secteur Minier',
     titleEn: 'Mining Sector',
+    titleLn: 'Secteur Minier',
+    titleSw: 'Sekta ya Madini',
     description: 'Expertise en environnements miniers',
-    descriptionEn: 'Expertise in mining environments'
+    descriptionEn: 'Expertise in mining environments',
+    descriptionLn: 'Expertise na environnements miniers',
+    descriptionSw: 'Utaalam katika mazingira ya madini'
   },
   {
     icon: 'Leaf',
     title: 'Agroalimentaire',
     titleEn: 'Agri-food',
+    titleLn: 'Agroalimentaire',
+    titleSw: 'Kilimo-cha chakula',
     description: 'Sécurité alimentaire et agricole',
-    descriptionEn: 'Food and agricultural safety'
+    descriptionEn: 'Food and agricultural safety',
+    descriptionLn: 'Sécurité alimentaire na agricole',
+    descriptionSw: 'Usalama wa chakula na kilimo'
   }
 ];

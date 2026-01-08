@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { languages } from '@/i18n/translations';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -29,7 +30,7 @@ const Header = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
-  const getLangName = (lang: typeof languages[0], currentLang: Language) => {
+  const getLangName = (lang: typeof languages[0], currentLang: string) => {
     switch (currentLang) {
       case 'fr': return lang.nameFr;
       case 'en': return lang.nameEn;
