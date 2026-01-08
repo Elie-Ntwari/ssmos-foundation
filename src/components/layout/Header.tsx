@@ -29,6 +29,16 @@ const Header = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
+  const getLangName = (lang: typeof languages[0], currentLang: Language) => {
+    switch (currentLang) {
+      case 'fr': return lang.nameFr;
+      case 'en': return lang.nameEn;
+      case 'ln': return lang.nameLn;
+      case 'sw': return lang.nameSw;
+      default: return lang.nativeName;
+    }
+  };
+
   const currentLang = languages.find(l => l.code === language);
 
   return (
@@ -37,9 +47,9 @@ const Header = () => {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
-            <motion.img 
-              src={logo} 
-              alt="SSMos Logo" 
+            <motion.img
+              src={logo}
+              alt="SSMos Logo"
               className="h-12 md:h-14 w-auto"
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
@@ -69,7 +79,7 @@ const Header = () => {
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="gap-2">
                   <Globe className="h-4 w-4" />
-                  <span className="hidden sm:inline">{currentLang?.nativeName}</span>
+                  <span className="hidden sm:inline">{currentLang ? getLangName(currentLang, language) : ''}</span>
                   <ChevronDown className="h-3 w-3" />
                 </Button>
               </DropdownMenuTrigger>
@@ -80,7 +90,7 @@ const Header = () => {
                     onClick={() => setLanguage(lang.code)}
                     className={language === lang.code ? 'bg-accent' : ''}
                   >
-                    {lang.nativeName}
+                    {getLangName(lang, language)}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>

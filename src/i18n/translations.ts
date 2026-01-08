@@ -1,11 +1,10 @@
-export type Language = 'fr' | 'en' | 'ln' | 'sw' | 'tsh';
+export type Language = 'fr' | 'en' | 'ln' | 'sw';
 
-export const languages: { code: Language; name: string; nativeName: string }[] = [
-  { code: 'fr', name: 'French', nativeName: 'Français' },
-  { code: 'en', name: 'English', nativeName: 'English' },
-  { code: 'ln', name: 'Lingala', nativeName: 'Lingála' },
-  { code: 'sw', name: 'Swahili', nativeName: 'Kiswahili' },
-  { code: 'tsh', name: 'Tshiluba', nativeName: 'Tshiluba' },
+export const languages: { code: Language; name: string; nativeName: string; nameFr: string; nameEn: string; nameLn: string; nameSw: string }[] = [
+  { code: 'fr', name: 'French', nativeName: 'Français', nameFr: 'Français', nameEn: 'French', nameLn: 'Falansé', nameSw: 'Kifaransa' },
+  { code: 'en', name: 'English', nativeName: 'English', nameFr: 'Anglais', nameEn: 'English', nameLn: 'Lingelesa', nameSw: 'Kiingereza' },
+  { code: 'ln', name: 'Lingala', nativeName: 'Lingála', nameFr: 'Lingala', nameEn: 'Lingala', nameLn: 'Lingála', nameSw: 'Kilingala' },
+  { code: 'sw', name: 'Swahili', nativeName: 'Kiswahili', nameFr: 'Swahili', nameEn: 'Swahili', nameLn: 'Swahili', nameSw: 'Kiswahili' },
 ];
 
 export const translations: Record<Language, Record<string, string>> = {
@@ -282,13 +281,77 @@ export const translations: Record<Language, Record<string, string>> = {
     'cta.ready.title': 'Olingi kobongisa sécurité na mosala?',
     'cta.ready.description': 'Solola na équipe na biso ya experts mpo na koyeba mpe kozwa solutions adaptées.',
     
-    // Common (fallback to French for incomplete translations)
+    // About page
     'about.title': 'Na tina na SSMos',
-    'services.title': 'Misala na biso',
+    'about.intro': 'Présentation générale',
+    'about.intro.text': 'Safety & Santé na Mosala (SSMos) ezali organisation pionnière oyo ezali kosala mpo na kobongisa biloko ya santé na sécurité au travail na République Démocratique du Congo.',
+    'about.context.title': 'Contexte ya création',
+    'about.context.text': 'Na misala ya minene ya santé na sécurité au travail na RDC, SSMos esalemaki mpo na kokabola nzela kati ya normes internationales na pratiques locales, na kopesa solutions oyo ezali kosangana na contexte ya Kongo.',
+    'about.vision.title': 'Vision 2030',
+    'about.vision.text': 'Kokoma leader régional na domaine ya consulting, formation na accompagnement na santé na sécurité au travail, na mpo na kosunga émergence ya culture ya prévention na Afrique centrale.',
+    'about.mission.title': 'Mission na biso',
+    'about.mission.text': 'Kosunga organisations mpo na kotiya systèmes ya management SST oyo ezali malamu, kota formateurs ya prévention na kopromouvoir culture ya sécurité oyo ezali kosila.',
+    'about.goal.title': 'But na biso',
+    'about.goal.text': 'Kobebisa makasi accidents ya mosala na maladies professionnelles na RDC, na mpo na kobongisa bien-être ya travailleurs na productivité ya entreprises.',
+    'about.values.title': 'Valeurs na biso',
+    'about.values.excellence': 'Excellence',
+    'about.values.excellence.desc': 'Tozali kolanda excellence na intervention nionso',
+    'about.values.integrity': 'Intégrité',
+    'about.values.integrity.desc': 'Tozali kosala na éthique na transparence',
+    'about.values.innovation': 'Innovation',
+    'about.values.innovation.desc': 'Tozali kozwa approches novatrices',
+    'about.values.proximity': 'Proximité',
+    'about.values.proximity.desc': 'Tozali kokala pene na partenaires na biso',
+
+    // Services
+    'services.title': 'Misala na biso & Activités',
+    'services.subtitle': 'Solutions complètes mpo na sécurité na mosala na bino',
+    'services.cabinet.title': 'Cabinet SSMos',
+    'services.cabinet.desc': 'Consulting na expertise na santé na sécurité au travail mpo na kosunga organisation na bino na conformité na excellence.',
+    'services.training.title': 'Formations & Renforcement',
+    'services.training.desc': 'Programmes ya formation oyo ezali certifiés na renforcement ya capacités mpo na équipes na bino na matière ya prévention.',
+    'services.audit.title': 'Études & Audits',
+    'services.audit.desc': 'Audits ya conformité, études ya risques na accompagnements personnalisés mpo na koyeba na kobatela risques na bino.',
+    'services.legal.title': 'Conseil Juridique',
+    'services.legal.desc': 'Conseil stratégique na juridique na matière ya réglementation SST nationale na internationale.',
+    'services.digital.title': 'Innovation & Digital',
+    'services.digital.desc': 'Solutions digitales innovantes mpo na gestion na suivi ya système ya management SST na bino.',
+    'services.learnMore': 'Koyeba mingi',
+
+    // News
     'news.title': 'Sango',
+    'news.subtitle': 'Kozala na sango ya sika na SST',
+    'news.readMore': 'Kotanga suite',
+    'news.category.sst': 'SST',
+    'news.category.training': 'Formation',
+    'news.category.regulation': 'Réglementation',
+    'news.category.innovation': 'Innovation',
+    'news.backToList': 'kozonga na sango',
+
+    // Blog
     'blog.title': 'Blogi',
+    'blog.subtitle': 'Articles éducatifs na santé na sécurité au travail',
+    'blog.readMore': 'Kotanga article',
+    'blog.backToList': 'Kozonga na blogi',
+
+    // Team
     'team.title': 'Équipe na biso',
+    'team.subtitle': 'Équipe pluridisciplinaire ya experts oyo ezali dévoués',
+    'team.expertise': 'Domaines d\'expertise',
+
+    // Contact
     'contact.title': 'Koyebana na biso',
+    'contact.subtitle': 'Tozali koyoka na bino',
+    'contact.form.name': 'Nkombo mobimba',
+    'contact.form.email': 'Adresse email',
+    'contact.form.subject': 'Sujet',
+    'contact.form.message': 'Message na bino',
+    'contact.form.submit': 'Kotinda message',
+    'contact.form.success': 'Message etindami na succès!',
+    'contact.info.address': 'Adresse',
+    'contact.info.phone': 'Téléphone',
+    'contact.info.email': 'Email',
+    'contact.info.hours': 'Heures ya mosala',
   },
   sw: {
     // Navigation
@@ -333,58 +396,77 @@ export const translations: Record<Language, Record<string, string>> = {
     'cta.ready.title': 'Uko tayari kuboresha usalama kazini?',
     'cta.ready.description': 'Wasiliana na timu yetu ya wataalam kujadili mahitaji yako na kugundua suluhisho zetu.',
     
-    // Common
+    // About page
     'about.title': 'Kuhusu SSMos',
-    'services.title': 'Huduma Zetu',
+    'about.intro': 'Utangulizi wa jumla',
+    'about.intro.text': 'Safety & Santé na Mosala (SSMos) ni shirika la mwanzoni linalojitolea kukuza na kuboresha hali za afya na usalama kazini nchini Jamhuri ya Kidemokrasia ya Kongo.',
+    'about.context.title': 'Muktadha wa kuundwa',
+    'about.context.text': 'Kwa changamoto kubwa za afya na usalama kazini nchini DRC, SSMos iliundwa ili kujaza pengo kati ya viwango vya kimataifa na mazoea ya ndani, kwa kutoa suluhisho zinazofaa kwa muktadha wa Kongo.',
+    'about.vision.title': 'Maono 2030',
+    'about.vision.text': 'Kuwa kiongozi wa kikanda katika ushauri, mafunzo na usaidizi katika afya na usalama kazini, hivyo kuchangia kuibuka kwa utamaduni wa kuzuia katika Afrika ya Kati.',
+    'about.mission.title': 'Dhamira Yetu',
+    'about.mission.text': 'Kusaidia mashirika kuweka mifumo ya usimamizi wa OHS bora, kufundisha wakazi wa kuzuia na kukuza utamaduni wa usalama endelevu.',
+    'about.goal.title': 'Lengo Letu',
+    'about.goal.text': 'Kupunguza kwa kiasi kikubwa ajali za kazini na magonjwa ya kazini nchini DRC, huku kuboresha ustawi wa wafanyakazi na tija ya makampuni.',
+    'about.values.title': 'Thamani Zetu',
+    'about.values.excellence': 'Ubora',
+    'about.values.excellence.desc': 'Tunafuata ubora katika kila hatua',
+    'about.values.integrity': 'Uadilifu',
+    'about.values.integrity.desc': 'Tunafanya kazi kwa maadili na uwazi',
+    'about.values.innovation': 'Ubunifu',
+    'about.values.innovation.desc': 'Tunatumia mbinu mpya',
+    'about.values.proximity': 'Ukaribu',
+    'about.values.proximity.desc': 'Tunabaki karibu na washirika wetu',
+
+    // Services
+    'services.title': 'Huduma Zetu & Shughuli',
+    'services.subtitle': 'Suluhisho kamili za usalama wako kazini',
+    'services.cabinet.title': 'Kabati la SSMos',
+    'services.cabinet.desc': 'Ushauri na utaalamu katika afya na usalama kazini ili kusaidia shirika lako kufikia kufuata na ubora.',
+    'services.training.title': 'Mafunzo & Kuimarisha',
+    'services.training.desc': 'Mipango ya mafunzo yaliyothibitishwa na kuimarisha uwezo wa timu zako katika masuala ya kuzuia.',
+    'services.audit.title': 'Utafiti & Ukaguzi',
+    'services.audit.desc': 'Ukaguzi wa kufuata, utafiti wa hatari na usaidizi wa kibinafsi ili kutambua na kudhibiti hatari zako.',
+    'services.legal.title': 'Ushauri wa Kisheria',
+    'services.legal.desc': 'Ushauri wa kimkakati na kisheria katika kanuni za OHS za kitaifa na kimataifa.',
+    'services.digital.title': 'Ubunifu & Dijitali',
+    'services.digital.desc': 'Suluhisho za kidijitali za ubunifu kwa usimamizi na ufuatiliaji wa mfumo wako wa usimamizi wa OHS.',
+    'services.learnMore': 'Jifunze zaidi',
+
+    // News
     'news.title': 'Habari',
+    'news.subtitle': 'Kaa na habari za hivi karibuni za OHS',
+    'news.readMore': 'Soma zaidi',
+    'news.category.sst': 'OHS',
+    'news.category.training': 'Mafunzo',
+    'news.category.regulation': 'Kanuni',
+    'news.category.innovation': 'Ubunifu',
+    'news.backToList': 'Rudi kwenye habari',
+
+    // Blog
     'blog.title': 'Blogu',
+    'blog.subtitle': 'Makala ya kielimu kuhusu afya na usalama kazini',
+    'blog.readMore': 'Soma makala',
+    'blog.backToList': 'Rudi kwenye blogu',
+
+    // Team
     'team.title': 'Timu Yetu',
-    'contact.title': 'Wasiliana Nasi',
-  },
-  tsh: {
-    // Navigation
-    'nav.home': 'Kuetu',
-    'nav.about': 'Bua buetu',
-    'nav.services': 'Mudimu',
-    'nav.news': 'Lumu',
-    'nav.blog': 'Blogu',
-    'nav.team': 'Tshisumbu',
-    'nav.contact': 'Kutuilangana',
-    
-    // Hero
-    'hero.title': 'Kubika mu Mutshima wa Mudimu',
-    'hero.subtitle': 'Safety & Santé na Mosala udiambuluisha bisalela bia Congo ku buimpe bua muoyo mu mudimu',
-    'hero.cta.primary': 'Kumanya midimu yetu',
-    'hero.cta.secondary': 'Kutuilangana',
-    
-    // Home sections
-    'home.about.title': 'Tuetu nnganyi?',
-    'home.about.description': 'SSMos udi tshisumbu tshiasala bua muoyo ne bukubi mu mudimu mu RDC.',
-    'home.axes.title': 'Bintu bietu bia mudimu',
-    'home.stats.title': 'Tshienzedi tshietu mu nomba',
-    'home.news.title': 'Lumu lua mushidi',
-    'home.news.viewAll': 'Mona lumu luonso',
-    
-    // Footer
-    'footer.description': 'Tshisumbu tshia muoyo ne bukubi mu mudimu mu RDC.',
-    'footer.quickLinks': 'Nshindamenu wa lukasa',
-    'footer.services': 'Midimu yetu',
-    'footer.contact': 'Kutuilangana',
-    'footer.rights': 'Buonso bukuatshishibue.',
-    'footer.designedBy': 'Tshia elama kudi',
-    'footer.newsletter': 'Mukanda',
-    'footer.newsletter.placeholder': 'Email webe',
-    'footer.newsletter.subscribe': 'Kudifunda',
-    'cta.ready.title': 'Udi mulamuke bua kubongela bukubi mu mudimu?',
-    'cta.ready.description': 'Langana ne tshisumbu tshietu tshia experts bua kuyukila bua bintu biebe.',
-    
-    // Common
-    'about.title': 'Bua SSMos',
-    'services.title': 'Midimu Yetu',
-    'news.title': 'Lumu',
-    'blog.title': 'Blogu',
-    'team.title': 'Tshisumbu Tshietu',
-    'contact.title': 'Kutuilangana',
+    'team.subtitle': 'Timu ya watu wengi ya wataalam waliojitolea',
+    'team.expertise': 'Maeneo ya utaalamu',
+
+    // Contact
+    'contact.title': 'Wasiliana nasi',
+    'contact.subtitle': 'Tupo tayari kukusikiliza',
+    'contact.form.name': 'Jina kamili',
+    'contact.form.email': 'Anwani ya barua pepe',
+    'contact.form.subject': 'Mada',
+    'contact.form.message': 'Ujumbe wako',
+    'contact.form.submit': 'Tuma ujumbe',
+    'contact.form.success': 'Ujumbe umetumwa kwa mafanikio!',
+    'contact.info.address': 'Anwani',
+    'contact.info.phone': 'Simu',
+    'contact.info.email': 'Barua pepe',
+    'contact.info.hours': 'Saa za kazi',
   },
 };
 

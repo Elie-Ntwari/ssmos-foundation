@@ -141,13 +141,51 @@ const Index = () => {
                   </Link>
                 </Button>
               </motion.div>
+            </motion.div>
+
+            {/* Right Content - Logo/Visual */}
+            <motion.div
+              className="hidden lg:flex flex-col items-center justify-center space-y-6"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
+            >
+              <div className="relative">
+                {/* Glow Effect */}
+                <div className="absolute inset-0 bg-secondary/20 blur-[60px] rounded-full" />
+
+                {/* Logo Container */}
+                <motion.div
+                  className="relative bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <img
+                    src={logo}
+                    alt="SSMos Logo"
+                    className="w-72 h-auto drop-shadow-2xl"
+                  />
+                </motion.div>
+
+                {/* Decorative Elements */}
+                <motion.div
+                  className="absolute -top-4 -right-4 w-20 h-20 bg-secondary/30 rounded-2xl backdrop-blur-sm"
+                  animate={{ rotate: [0, 10, 0] }}
+                  transition={{ duration: 6, repeat: Infinity }}
+                />
+                <motion.div
+                  className="absolute -bottom-6 -left-6 w-16 h-16 bg-white/10 rounded-xl backdrop-blur-sm"
+                  animate={{ rotate: [0, -10, 0] }}
+                  transition={{ duration: 5, repeat: Infinity }}
+                />
+              </div>
 
               {/* Trust Indicators */}
-              <motion.div 
-                className="mt-10 flex items-center gap-6"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.7 }}
+              <motion.div
+                className="flex items-center gap-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
               >
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-secondary" />
@@ -158,44 +196,6 @@ const Index = () => {
                   <span className="text-white/70 text-sm">{stats.years} {language === 'en' ? 'Years Experience' : 'Ans d\'expérience'}</span>
                 </div>
               </motion.div>
-            </motion.div>
-
-            {/* Right Content - Logo/Visual */}
-            <motion.div 
-              className="hidden lg:flex items-center justify-center"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
-            >
-              <div className="relative">
-                {/* Glow Effect */}
-                <div className="absolute inset-0 bg-secondary/20 blur-[60px] rounded-full" />
-                
-                {/* Logo Container */}
-                <motion.div 
-                  className="relative bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20"
-                  whileHover={{ scale: 1.02 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <img 
-                    src={logo} 
-                    alt="SSMos Logo" 
-                    className="w-72 h-auto drop-shadow-2xl"
-                  />
-                </motion.div>
-                
-                {/* Decorative Elements */}
-                <motion.div 
-                  className="absolute -top-4 -right-4 w-20 h-20 bg-secondary/30 rounded-2xl backdrop-blur-sm"
-                  animate={{ rotate: [0, 10, 0] }}
-                  transition={{ duration: 6, repeat: Infinity }}
-                />
-                <motion.div 
-                  className="absolute -bottom-6 -left-6 w-16 h-16 bg-white/10 rounded-xl backdrop-blur-sm"
-                  animate={{ rotate: [0, -10, 0] }}
-                  transition={{ duration: 5, repeat: Infinity }}
-                />
-              </div>
             </motion.div>
           </div>
         </div>
