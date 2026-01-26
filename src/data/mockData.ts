@@ -4,16 +4,10 @@ export interface Article {
   id: string;
   title: string;
   titleEn: string;
-  titleLn: string;
-  titleSw: string;
   excerpt: string;
   excerptEn: string;
-  excerptLn: string;
-  excerptSw: string;
   content: string;
   contentEn: string;
-  contentLn: string;
-  contentSw: string;
   category: 'sst' | 'training' | 'regulation' | 'innovation';
   date: string;
   image: string;
@@ -72,110 +66,179 @@ export const services: Service[] = [
     icon: 'Briefcase',
     title: 'Cabinet SSMos',
     titleEn: 'SSMos Cabinet',
-    shortDesc: 'Consulting et expertise en santé et sécurité au travail pour accompagner votre organisation vers la conformité et l\'excellence.',
-    shortDescEn: 'Consulting and expertise in occupational health and safety to support your organization towards compliance and excellence.',
-    fullDesc: 'Le Cabinet SSMos offre une gamme complète de services de conseil en santé et sécurité au travail. Nos experts accompagnent les entreprises dans la mise en conformité réglementaire, l\'élaboration de politiques SST, et le développement de systèmes de management intégrés.',
-    fullDescEn: 'SSMos Cabinet offers a complete range of occupational health and safety consulting services. Our experts support companies in regulatory compliance, OHS policy development, and integrated management systems.',
+    shortDesc: 'Le Cabinet SSMos offre une gamme complète de services de Sécurité et Santé du travail. Nos experts accompagnent les entreprises, organisations publiques et privées, ainsi que des communautés dans la mise en conformité réglementaire en matière de la sécurité et santé au travail.',
+    shortDescEn: 'The SSMos Cabinet offers a complete range of Occupational Safety and Health services. Our experts support companies, public and private organizations, as well as communities in regulatory compliance regarding occupational safety and health.',
+    fullDesc: 'Le Cabinet SSMos offre une gamme complète de services de Sécurité et Santé du travail. Nos experts accompagnent les entreprises, organisations publiques et privées, ainsi que des communautés dans la mise en conformité réglementaire en matière de la sécurité et santé au travail.',
+    fullDescEn: 'The SSMos Cabinet offers a complete range of Occupational Safety and Health services. Our experts support companies, public and private organizations, as well as communities in regulatory compliance regarding occupational safety and health.',
     features: [
-      'Diagnostic SST complet',
-      'Accompagnement à la certification',
-      'Mise en place de systèmes de management',
-      'Veille réglementaire'
+      'L\'assistance aux services de la médecine du travail',
+      'L\'assistance aux services de la sécurité au travail',
+      'Accompagnement à la certification ISO 45001',
+      'L\'élaboration et mise en place des politique SST'
     ],
     featuresEn: [
-      'Complete OHS diagnosis',
-      'Certification support',
-      'Management systems implementation',
-      'Regulatory monitoring'
+      'Assistance to occupational medicine services',
+      'Assistance to occupational safety services',
+      'ISO 45001 certification support',
+      'Development and implementation of OHS policies'
     ]
   },
   {
     id: 'training',
     icon: 'GraduationCap',
-    title: 'Formations & Renforcement',
-    titleEn: 'Training & Capacity Building',
-    shortDesc: 'Programmes de formation certifiants et renforcement des capacités pour vos équipes en matière de prévention.',
-    shortDescEn: 'Certified training programs and capacity building for your teams in prevention matters.',
-    fullDesc: 'Notre département formation propose des programmes adaptés à tous les niveaux, des opérateurs aux dirigeants. Nous délivrons des formations certifiantes reconnues et assurons le suivi post-formation.',
-    fullDescEn: 'Our training department offers programs adapted to all levels, from operators to executives. We deliver recognized certified training and ensure post-training follow-up.',
+    title: 'Formation et renforcement des capacités',
+    titleEn: 'Training and Capacity Building',
+    shortDesc: 'Programmes des formations certifiantes, diplômantes et continues en matière de la sécurité et santé au travail pour l\'acquisition des compétences et le renforcement des capacités pour vos personnels.',
+    shortDescEn: 'Certified, diploma and continuous training programs in occupational safety and health for skills acquisition and capacity building for your staff.',
+    fullDesc: 'Programmes des formations certifiantes, diplômantes et continues en matière de la sécurité et santé au travail pour l\'acquisition des compétences et le renforcement des capacités pour vos personnels.',
+    fullDescEn: 'Certified, diploma and continuous training programs in occupational safety and health for skills acquisition and capacity building for your staff.',
     features: [
-      'Formations certifiantes SST',
-      'Séminaires de sensibilisation',
-      'Formation des formateurs',
+      'Formations des travailleurs',
+      'Formations des responsables d\'entreprise',
+      'Formations des membres de comités SST',
+      'Formations des formateurs',
       'E-learning disponible'
     ],
     featuresEn: [
-      'OHS certified training',
-      'Awareness seminars',
+      'Worker training',
+      'Company manager training',
+      'OHS committee member training',
       'Train the trainer programs',
       'E-learning available'
     ]
   },
   {
-    id: 'audit',
-    icon: 'ClipboardCheck',
-    title: 'Études & Audits',
-    titleEn: 'Studies & Audits',
-    shortDesc: 'Audits de conformité, études de risques et accompagnements personnalisés pour identifier et maîtriser vos risques.',
-    shortDescEn: 'Compliance audits, risk studies and personalized support to identify and control your risks.',
-    fullDesc: 'Nous réalisons des audits approfondis et des études de risques selon les normes internationales. Nos rapports détaillés incluent des recommandations concrètes et un plan d\'action priorisé.',
-    fullDescEn: 'We conduct in-depth audits and risk studies according to international standards. Our detailed reports include concrete recommendations and a prioritized action plan.',
+    id: 'research',
+    icon: 'Search',
+    title: 'Études et recherche',
+    titleEn: 'Studies and Research',
+    shortDesc: 'Un service technique chargé de collecter, analyser et produire des données scientifiques et opérationnelles sur les conditions de travail, les accidents du travail et les maladies professionnelles ainsi que le bien-être au travail.',
+    shortDescEn: 'A technical service responsible for collecting, analyzing and producing scientific and operational data on working conditions, workplace accidents and occupational diseases as well as well-being at work.',
+    fullDesc: 'Un service technique chargé de collecter, analyser et produire des données scientifiques et opérationnelles sur les conditions de travail, les accidents du travail et les maladies professionnelles ainsi que le bien-être au travail, afin d\'orienter les actions de prévention et les politiques de sécurité et santé au travail.',
+    fullDescEn: 'A technical service responsible for collecting, analyzing and producing scientific and operational data on working conditions, workplace accidents and occupational diseases as well as well-being at work, in order to guide prevention actions and occupational safety and health policies.',
     features: [
-      'Audits de conformité légale',
-      'Évaluation des risques professionnels',
-      'Audits de certification ISO',
-      'Plans d\'action correctifs'
+      'Observatoire des données statiques en SST (collecte et analyses des données en SST)',
+      'Études des risques professionnels : AT/MP',
+      'Recherche appliquée en prévention des risques professionnels',
+      'Production de rapports, documentations et diffusion'
     ],
     featuresEn: [
-      'Legal compliance audits',
-      'Occupational risk assessment',
-      'ISO certification audits',
-      'Corrective action plans'
+      'OHS statistical data observatory (collection and analysis of OHS data)',
+      'Occupational risk studies: workplace accidents/occupational diseases',
+      'Applied research in occupational risk prevention',
+      'Production of reports, documentation and dissemination'
     ]
   },
   {
-    id: 'legal',
-    icon: 'Scale',
-    title: 'Conseil Juridique',
-    titleEn: 'Legal Advice',
-    shortDesc: 'Conseil stratégique et juridique en matière de réglementation SST nationale et internationale.',
-    shortDescEn: 'Strategic and legal advice on national and international OHS regulations.',
-    fullDesc: 'Notre équipe juridique spécialisée vous accompagne dans la compréhension et l\'application des textes réglementaires en matière de SST. Nous assurons une veille permanente sur l\'évolution du cadre légal.',
-    fullDescEn: 'Our specialized legal team supports you in understanding and applying OHS regulatory texts. We ensure permanent monitoring of legal framework developments.',
+    id: 'audit',
+    icon: 'ClipboardCheck',
+    title: 'Audits et diagnostic',
+    titleEn: 'Audits and Diagnostics',
+    shortDesc: 'Un service chargé d\'évaluer de manière systématique et objective le niveau de conformité, de performance et de maîtrise des risques professionnels au sein des entreprises.',
+    shortDescEn: 'A service responsible for systematically and objectively assessing the level of compliance, performance and control of occupational risks within companies.',
+    fullDesc: 'Un service chargé d\'évaluer de manière systématique et objective le niveau de conformité, de performance et de maîtrise des risques professionnels au sein des entreprises, afin d\'identifier les écarts, proposer des actions correctives et améliorer durablement les conditions de travail.',
+    fullDescEn: 'A service responsible for systematically and objectively assessing the level of compliance, performance and control of occupational risks within companies, in order to identify gaps, propose corrective actions and sustainably improve working conditions.',
     features: [
-      'Veille juridique SST',
-      'Conseil en conformité',
-      'Accompagnement contentieux',
-      'Formation réglementaire'
+      'Audits SST : Audit de conformité réglementaire, A. organisationnel, A. des postes de travail, A. des équipements et EPI',
+      'Diagnostics des risques professionnels',
+      'Évaluation des systèmes SST',
+      'Recommandations et mesures correctives',
+      'Veille réglementaire'
     ],
     featuresEn: [
-      'OHS legal monitoring',
-      'Compliance advice',
-      'Litigation support',
-      'Regulatory training'
+      'OHS Audits: Regulatory compliance audit, Organizational audit, Workstation audit, Equipment and PPE audit',
+      'Occupational risk diagnostics',
+      'OHS system evaluation',
+      'Recommendations and corrective measures',
+      'Regulatory monitoring'
+    ]
+  },
+  {
+    id: 'conseil',
+    icon: 'MessageSquare',
+    title: 'Conseil et promotion en SST',
+    titleEn: 'OHS Advice and Promotion',
+    shortDesc: 'Une unité stratégique chargée d\'accompagner, informer, sensibiliser et mobiliser les acteurs du monde du travail afin de renforcer la culture de prévention.',
+    shortDescEn: 'A strategic unit responsible for supporting, informing, raising awareness and mobilizing stakeholders in the world of work to strengthen the prevention culture.',
+    fullDesc: 'Une unité stratégique chargée d\'accompagner, informer, sensibiliser et mobiliser les acteurs du monde du travail afin de renforcer la culture de prévention, améliorer les comportements sécuritaires, sanitaires et promouvoir des environnements de travail sains et sûrs.',
+    fullDescEn: 'A strategic unit responsible for supporting, informing, raising awareness and mobilizing stakeholders in the world of work to strengthen the prevention culture, improve safety and health behaviors and promote healthy and safe work environments.',
+    features: [
+      'Activités des conseil techniques SST : Ateliers et conférences',
+      'Activités de communication : Campagnes, journées des sensibilisations',
+      'Activités promotionnelles'
+    ],
+    featuresEn: [
+      'OHS technical advice activities: Workshops and conferences',
+      'Communication activities: Campaigns, awareness days',
+      'Promotional activities'
     ]
   },
   {
     id: 'digital',
     icon: 'Cpu',
-    title: 'Innovation & Digital',
-    titleEn: 'Innovation & Digital',
-    shortDesc: 'Solutions digitales innovantes pour la gestion et le suivi de votre système de management SST.',
-    shortDescEn: 'Innovative digital solutions for managing and monitoring your OHS management system.',
-    fullDesc: 'SSMos développe des outils digitaux sur mesure pour moderniser la gestion SST. Applications mobiles, tableaux de bord, systèmes de reporting automatisés - nous vous accompagnons dans la transformation digitale de votre prévention.',
-    fullDescEn: 'SSMos develops custom digital tools to modernize OHS management. Mobile apps, dashboards, automated reporting systems - we support you in the digital transformation of your prevention.',
+    title: 'Innovation et digitalisation',
+    titleEn: 'Innovation and Digitalization',
+    shortDesc: 'Une unité stratégique chargée de développer, intégrer et utiliser les outils numériques et solutions innovantes afin d\'améliorer la prévention des risques professionnels.',
+    shortDescEn: 'A strategic unit responsible for developing, integrating and using digital tools and innovative solutions to improve occupational risk prevention.',
+    fullDesc: 'Une unité stratégique chargée de développer, intégrer et utiliser les outils numériques et solutions innovantes afin d\'améliorer la prévention des risques professionnels, renforcer la surveillance des conditions de travail et moderniser les pratiques de gestion SST.',
+    fullDescEn: 'A strategic unit responsible for developing, integrating and using digital tools and innovative solutions to improve occupational risk prevention, strengthen monitoring of working conditions and modernize OHS management practices.',
     features: [
       'Applications mobiles SST',
       'Tableaux de bord temps réel',
       'Digitalisation des processus',
-      'Intelligence artificielle'
+      'Intelligence artificielle pour la SST'
     ],
     featuresEn: [
       'OHS mobile applications',
       'Real-time dashboards',
       'Process digitalization',
-      'Artificial intelligence'
+      'Artificial intelligence for OHS'
     ]
+  }
+];
+
+export const interventionAreas = [
+  {
+    icon: 'Factory',
+    title: 'Industrie & Manufacture',
+    titleEn: 'Industry & Manufacturing',
+    description: 'Accompagnement SST pour les usines et sites de production',
+    descriptionEn: 'OHS support for factories and production sites'
+  },
+  {
+    icon: 'Building2',
+    title: 'BTP & Construction',
+    titleEn: 'Construction & Building',
+    description: 'Prévention des risques sur les chantiers de construction',
+    descriptionEn: 'Risk prevention on construction sites'
+  },
+  {
+    icon: 'Truck',
+    title: 'Transport & Logistique',
+    titleEn: 'Transport & Logistics',
+    description: 'Sécurité dans le secteur du transport et de la logistique',
+    descriptionEn: 'Safety in transport and logistics sector'
+  },
+  {
+    icon: 'Hospital',
+    title: 'Santé & Services',
+    titleEn: 'Health & Services',
+    description: 'Protection du personnel soignant et des travailleurs de services',
+    descriptionEn: 'Protection of healthcare and service workers'
+  },
+  {
+    icon: 'Pickaxe',
+    title: 'Mines & Extraction',
+    titleEn: 'Mining & Extraction',
+    description: 'Expertise SST pour le secteur minier congolais',
+    descriptionEn: 'OHS expertise for the Congolese mining sector'
+  },
+  {
+    icon: 'Leaf',
+    title: 'Agriculture & Environnement',
+    titleEn: 'Agriculture & Environment',
+    description: 'Solutions SST adaptées au secteur agricole',
+    descriptionEn: 'OHS solutions adapted to the agricultural sector'
   }
 ];
 
@@ -184,16 +247,10 @@ export const articles: Article[] = [
     id: '1',
     title: 'Nouvelle réglementation SST en RDC : ce qui change en 2024',
     titleEn: 'New OHS regulation in DRC: what changes in 2024',
-    titleLn: 'Molakisi ya sika ya SST na RDC: nini ebongwani na 2024',
-    titleSw: 'Kanuni mpya ya OHS nchini DRC: mabadiliko gani mwaka 2024',
     excerpt: 'Le gouvernement congolais vient d\'adopter de nouvelles mesures pour renforcer la protection des travailleurs.',
     excerptEn: 'The Congolese government has just adopted new measures to strengthen worker protection.',
-    excerptLn: 'Gouvernement ya Kongo epesi kobongisa bikelo mpo na kolamina bokabolami ya basali.',
-    excerptSw: 'Serikali ya Kongo imepitisha hatua mpya za kuimarisha ulinzi wa wafanyakazi.',
     content: 'Le gouvernement de la République Démocratique du Congo a récemment promulgué une série de décrets visant à moderniser le cadre réglementaire de la santé et sécurité au travail. Ces nouvelles dispositions, qui entreront en vigueur progressivement, concernent notamment l\'obligation de désigner un responsable SST dans toutes les entreprises de plus de 50 salariés, le renforcement des contrôles par l\'Inspection du Travail, et la mise en place de comités d\'hygiène et de sécurité obligatoires.',
     contentEn: 'The government of the Democratic Republic of Congo has recently enacted a series of decrees aimed at modernizing the regulatory framework for occupational health and safety. These new provisions, which will come into force gradually, concern in particular the obligation to designate an OHS manager in all companies with more than 50 employees, the strengthening of controls by the Labor Inspection, and the establishment of mandatory health and safety committees.',
-    contentLn: 'Gouvernement ya République Démocratique du Congo epesi kobongisa bikelo ya sika ya santé na sécurité au travail. Bikelo oyo ekozala na bokasi ya kala, ezali kolakisa mpo na koyeba moto ya kosunga SST na entreprises nionso oyo ezali na basali oyo eleki 50, kobongisa bokabolami ya Inspection du Travail, na kotiya comité ya hygiène na sécurité oyo esengeli.',
-    contentSw: 'Serikali ya Jamhuri ya Kidemokrasia ya Kongo hivi karibuni imepitisha msururu wa amri zinazolenga kuboresha mfumo wa kanuni wa afya na usalama kazini. Vigezo hivi vipya, ambavyo vitaanza kutumika hatua kwa hatua, vinahusu hasa wajibu wa kuteua meneja wa OHS katika makampuni yote yenye zaidi ya wafanyakazi 50, kuimarisha udhibiti na Ukaguzi wa Kazi, na kuanzisha kamati za lazima za usafi na usalama.',
     category: 'regulation',
     date: '2024-01-15',
     image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800',
@@ -203,35 +260,23 @@ export const articles: Article[] = [
     id: '2',
     title: 'Formation des premiers secouristes : session réussie à Lubumbashi',
     titleEn: 'First aid training: successful session in Lubumbashi',
-    titleLn: 'Formation des premiers secouristes : session réussie à Lubumbashi',
-    titleSw: 'Mafunzo ya msaada wa kwanza: kikao cha mafanikio huko Lubumbashi',
     excerpt: 'Plus de 40 professionnels ont été formés aux gestes de premiers secours lors de notre dernière session.',
     excerptEn: 'More than 40 professionals were trained in first aid during our latest session.',
-    excerptLn: 'Plus de 40 professionnels ont été formés aux gestes de premiers secours lors de notre dernière session.',
-    excerptSw: 'Zaidi ya wataalamu 40 walifunzwa msaada wa kwanza katika kikao chetu cha hivi karibuni.',
     content: 'SSMos a organisé avec succès une session de formation intensive sur les premiers secours en entreprise à Lubumbashi. Cette formation de trois jours a permis à 42 participants issus de différents secteurs industriels d\'acquérir les compétences essentielles pour intervenir efficacement en cas d\'urgence sur leur lieu de travail.',
     contentEn: 'SSMos successfully organized an intensive first aid training session in Lubumbashi. This three-day training enabled 42 participants from different industrial sectors to acquire essential skills to intervene effectively in case of emergency at their workplace.',
-    contentLn: 'SSMos a organisé avec succès une session de formation intensive sur les premiers secours en entreprise à Lubumbashi. Cette formation de trois jours a permis à 42 participants issus de différents secteurs industriels d\'acquérir les compétences essentielles pour intervenir efficacement en cas d\'urgence sur leur lieu de travail.',
-    contentSw: 'SSMos ilifanya kikao cha mafunzo ya msaada wa kwanza kwa mafanikio huko Lubumbashi. Mafunzo haya ya siku tatu yaliwaruhusu washiriki 42 kutoka sekta tofauti za viwanda kupata ujuzi muhimu wa kuingilia kati kwa ufanisi katika kesi ya dharura mahali pa kazi.',
     category: 'training',
     date: '2024-01-10',
-    image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800',
+    image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=800',
     author: 'Marie Kabongo'
   },
   {
     id: '3',
     title: 'Prévention des risques chimiques dans le secteur minier',
     titleEn: 'Chemical risk prevention in the mining sector',
-    titleLn: 'Prévention des risques chimiques dans le secteur minier',
-    titleSw: 'Kuzuia hatari za kemikali katika sekta ya madini',
     excerpt: 'Les bonnes pratiques pour protéger les travailleurs exposés aux substances dangereuses.',
     excerptEn: 'Best practices to protect workers exposed to hazardous substances.',
-    excerptLn: 'Les bonnes pratiques pour protéger les travailleurs exposés aux substances dangereuses.',
-    excerptSw: 'Mbinu bora za kulinda wafanyakazi walioathiriwa na vitu hatari.',
     content: 'Le secteur minier congolais emploie des milliers de travailleurs potentiellement exposés à des risques chimiques. SSMos partage son expertise sur les mesures de prévention essentielles : identification des substances dangereuses, équipements de protection individuelle adaptés, formation du personnel, et surveillance médicale renforcée.',
     contentEn: 'The Congolese mining sector employs thousands of workers potentially exposed to chemical risks. SSMos shares its expertise on essential prevention measures: identification of hazardous substances, appropriate personal protective equipment, staff training, and enhanced medical surveillance.',
-    contentLn: 'Le secteur minier congolais emploie des milliers de travailleurs potentiellement exposés à des risques chimiques. SSMos partage son expertise sur les mesures de prévention essentielles : identification des substances dangereuses, équipements de protection individuelle adaptés, formation du personnel, et surveillance médicale renforcée.',
-    contentSw: 'Sekta ya madini ya Kongo inaajiri maelfu ya wafanyakazi ambao wanaweza kuathiriwa na hatari za kemikali. SSMos inashiriki utaalamu wake juu ya hatua muhimu za kuzuia: utambuzi wa vitu hatari, vifaa vya ulinzi wa kibinafsi vinavyofaa, mafunzo ya wafanyakazi, na uangalizi wa matibabu ulioimarishwa.',
     category: 'sst',
     date: '2024-01-05',
     image: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800',
@@ -241,16 +286,10 @@ export const articles: Article[] = [
     id: '4',
     title: 'Lancement de notre application mobile de reporting SST',
     titleEn: 'Launch of our OHS reporting mobile application',
-    titleLn: 'Lancement de notre application mobile de reporting SST',
-    titleSw: 'Uzinduzi wa programu yetu ya simu ya kuripoti OHS',
     excerpt: 'SSMos innove avec une application permettant de signaler les incidents en temps réel.',
     excerptEn: 'SSMos innovates with an application allowing real-time incident reporting.',
-    excerptLn: 'SSMos innove avec une application permettant de signaler les incidents en temps réel.',
-    excerptSw: 'SSMos inabunifu na programu inayoruhusu kuripoti matukio ya papo hapo.',
     content: 'SSMos lance officiellement son application mobile dédiée au reporting des incidents et quasi-incidents en matière de santé et sécurité au travail. Cette solution innovante permet aux employés de signaler rapidement tout événement, avec photos et géolocalisation, facilitant ainsi la réactivité des équipes SST.',
     contentEn: 'SSMos officially launches its mobile application dedicated to reporting incidents and near-misses in occupational health and safety. This innovative solution allows employees to quickly report any event, with photos and geolocation, thus facilitating the responsiveness of OHS teams.',
-    contentLn: 'SSMos lance officiellement son application mobile dédiée au reporting des incidents et quasi-incidents en matière de santé et sécurité au travail. Cette solution innovante permet aux employés de signaler rapidement tout événement, avec photos et géolocalisation, facilitant ainsi la réactivité des équipes SST.',
-    contentSw: 'SSMos inazindua rasmi programu yake ya simu iliyojitolea kuripoti matukio na karibu-matukio katika afya na usalama kazini. Suluhisho hili la ubunifu linaruhusu wafanyakazi kuripoti haraka tukio lolote, pamoja na picha na eneo, hivyo kuwezesha mwitikio wa timu za OHS.',
     category: 'innovation',
     date: '2023-12-20',
     image: 'https://images.unsplash.com/photo-1551650975-87deedd944c3?w=800',
@@ -361,79 +400,17 @@ export const teamMembers: TeamMember[] = [
     name: 'Esther Lumumba',
     role: 'Coordinatrice Projets',
     roleEn: 'Project Coordinator',
-    bio: 'Gestionnaire de projets expérimentée dans l\'accompagnement des entreprises.',
-    bioEn: 'Experienced project manager in supporting companies.',
-    expertise: ['Gestion de projets', 'Accompagnement clients', 'Coordination'],
-    expertiseEn: ['Project management', 'Client support', 'Coordination'],
+    bio: 'Gestionnaire de projets expérimentée avec expertise en déploiement de programmes SST.',
+    bioEn: 'Experienced project manager with expertise in OHS program deployment.',
+    expertise: ['Gestion de projets', 'Déploiement SST', 'Relations clients'],
+    expertiseEn: ['Project management', 'OHS deployment', 'Client relations'],
     image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400'
   }
 ];
 
-export const interventionAreas = [
-  {
-    icon: 'Factory',
-    title: 'Secteur Industriel',
-    titleEn: 'Industrial Sector',
-    titleLn: 'Secteur Industriel',
-    titleSw: 'Sekta ya Viwanda',
-    description: 'Accompagnement des industries manufacturières et extractives',
-    descriptionEn: 'Supporting manufacturing and extractive industries',
-    descriptionLn: 'Kosunga industries manufacturières na extractives',
-    descriptionSw: 'Kusaidia viwanda vya utengenezaji na uchimbaji'
-  },
-  {
-    icon: 'Building2',
-    title: 'BTP & Construction',
-    titleEn: 'Construction',
-    titleLn: 'BTP & Construction',
-    titleSw: 'Ujenzi',
-    description: 'Sécurité sur les chantiers et sites de construction',
-    descriptionEn: 'Safety on construction sites',
-    descriptionLn: 'Sécurité na chantier na site ya construction',
-    descriptionSw: 'Usalama kwenye tovuti za ujenzi'
-  },
-  {
-    icon: 'Truck',
-    title: 'Transport & Logistique',
-    titleEn: 'Transport & Logistics',
-    titleLn: 'Transport & Logistique',
-    titleSw: 'Usafiri & Vifaa',
-    description: 'Prévention des risques routiers et logistiques',
-    descriptionEn: 'Prevention of road and logistics risks',
-    descriptionLn: 'Prévention ya risques routiers na logistiques',
-    descriptionSw: 'Kuzuia hatari za barabara na vifaa'
-  },
-  {
-    icon: 'Hospital',
-    title: 'Secteur Santé',
-    titleEn: 'Healthcare Sector',
-    titleLn: 'Secteur Santé',
-    titleSw: 'Sekta ya Afya',
-    description: 'Protection du personnel soignant',
-    descriptionEn: 'Healthcare worker protection',
-    descriptionLn: 'Protection ya personnel soignant',
-    descriptionSw: 'Ulinzi wa wafanyakazi wa afya'
-  },
-  {
-    icon: 'Pickaxe',
-    title: 'Secteur Minier',
-    titleEn: 'Mining Sector',
-    titleLn: 'Secteur Minier',
-    titleSw: 'Sekta ya Madini',
-    description: 'Expertise en environnements miniers',
-    descriptionEn: 'Expertise in mining environments',
-    descriptionLn: 'Expertise na environnements miniers',
-    descriptionSw: 'Utaalam katika mazingira ya madini'
-  },
-  {
-    icon: 'Leaf',
-    title: 'Agroalimentaire',
-    titleEn: 'Agri-food',
-    titleLn: 'Agroalimentaire',
-    titleSw: 'Kilimo-cha chakula',
-    description: 'Sécurité alimentaire et agricole',
-    descriptionEn: 'Food and agricultural safety',
-    descriptionLn: 'Sécurité alimentaire na agricole',
-    descriptionSw: 'Usalama wa chakula na kilimo'
-  }
-];
+export const contactInfo = {
+  address: 'Avenue de la Paix, N°123, Kinshasa, RDC',
+  phone: '+243 812 345 678',
+  email: 'contact@ssmos.cd',
+  hours: 'Lun - Ven: 8h00 - 17h00'
+};
