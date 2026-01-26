@@ -23,7 +23,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.contact': 'Contact',
     
     // Hero
-    'hero.title': 'SSMos : Pour un travail sûr et sain en RDC, aujourd\'hui et demain',
+    'hero.title': 'Pour un travail sûr et sain en RDC, aujourd\'hui et demain',
     'hero.subtitle': 'SSMos accompagne le monde du travail congolais vers l\'excellence en sécurité et santé au travail',
     'hero.cta.primary': 'Découvrir nos services',
     'hero.cta.secondary': 'Nous contacter',
@@ -147,7 +147,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.contact': 'Contact',
     
     // Hero
-    'hero.title': 'SSMos: For safe and healthy work in DRC, today and tomorrow',
+    'hero.title': 'For safe and healthy work in DRC, today and tomorrow',
     'hero.subtitle': 'SSMos supports the Congolese working world towards excellence in occupational safety and health',
     'hero.cta.primary': 'Discover our services',
     'hero.cta.secondary': 'Contact us',
@@ -271,7 +271,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.contact': 'Koyebana',
     
     // Hero
-    'hero.title': 'SSMos: Mpo na mosala ya malamu na RDC, lelo na lobi',
+    'hero.title': 'Mpo na mosala ya malamu na RDC, lelo na lobi',
     'hero.subtitle': 'SSMos esungaka mokili ya mosala ya Congo mpo na excellence na sécurité na santé na mosala',
     'hero.cta.primary': 'Koyeba misala na biso',
     'hero.cta.secondary': 'Kosolola na biso',
@@ -395,7 +395,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.contact': 'Wasiliana',
     
     // Hero
-    'hero.title': 'SSMos: Kwa kazi salama na afya nchini DRC, leo na kesho',
+    'hero.title': 'Kwa kazi salama na afya nchini DRC, leo na kesho',
     'hero.subtitle': 'SSMos inasaidia ulimwengu wa kazi wa Kongo kuelekea ubora katika usalama na afya kazini',
     'hero.cta.primary': 'Gundua huduma zetu',
     'hero.cta.secondary': 'Wasiliana nasi',
