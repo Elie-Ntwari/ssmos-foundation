@@ -63,7 +63,7 @@ const Index = () => {
             }} />
           </div>
           
-          {/* Floating Particles */}
+          {/* Floating Particles with enhanced animation */}
           {[...Array(5)].map((_, i) => (
             <motion.div
               key={i}
@@ -74,15 +74,48 @@ const Index = () => {
               }}
               animate={{
                 y: [-15, 15, -15],
+                x: [0, (i % 2 === 0 ? 10 : -10), 0],
                 opacity: [0.2, 0.6, 0.2],
+                scale: [1, 1.3, 1],
               }}
               transition={{
-                duration: 4 + i,
+                duration: 4 + i * 0.5,
                 repeat: Infinity,
                 delay: i * 0.5,
+                ease: "easeInOut"
               }}
             />
           ))}
+          
+          {/* Animated connecting lines */}
+          <motion.svg 
+            className="absolute inset-0 w-full h-full opacity-10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.1 }}
+            transition={{ delay: 1, duration: 2 }}
+          >
+            {[...Array(3)].map((_, i) => (
+              <motion.line
+                key={i}
+                x1={`${20 + i * 25}%`}
+                y1="20%"
+                x2={`${30 + i * 20}%`}
+                y2="80%"
+                stroke="rgba(255, 255, 255, 0.1)"
+                strokeWidth="1"
+                animate={{
+                  pathLength: [0, 1, 0],
+                  opacity: [0, 0.2, 0]
+                }}
+                transition={{
+                  duration: 3 + i,
+                  repeat: Infinity,
+                  delay: i * 0.8,
+                  ease: "easeInOut"
+                }}
+              />
+            ))}
+          </motion.svg>
         </div>
 
         <div className="container mx-auto px-4 md:px-6 lg:px-8 relative z-10">
@@ -96,31 +129,68 @@ const Index = () => {
             >
               {/* Badge */}
               <motion.div 
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 shadow-sm"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 shadow-sm relative overflow-hidden"
+                initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
               >
-                <div className="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse" />
-                <span className="text-white/90 text-xs md:text-sm font-medium">Safety & Santé na Mosala</span>
+                {/* Shimmer effect */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                  animate={{ x: ['-100%', '200%'] }}
+                  transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 }}
+                />
+                <motion.div 
+                  className="w-1.5 h-1.5 bg-secondary rounded-full relative z-10"
+                  animate={{ 
+                    scale: [1, 1.3, 1],
+                    opacity: [0.8, 1, 0.8]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+                <span className="text-white/90 text-xs md:text-sm font-medium relative z-10">Safety & Santé na Mosala</span>
               </motion.div>
 
               <motion.h1 
-                className="font-display text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-[1.1] tracking-tight"
+                className="font-display text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-[1.1] tracking-tight relative"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.6 }}
+                transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               >
-                {t('hero.title')}
+                {/* Text reveal animation */}
+                <motion.span
+                  className="inline-block"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4, duration: 0.6 }}
+                >
+                  {t('hero.title')}
+                </motion.span>
+                {/* Subtle glow effect */}
+                <motion.div
+                  className="absolute -inset-4 bg-secondary/10 blur-2xl -z-10"
+                  animate={{ 
+                    opacity: [0.3, 0.5, 0.3],
+                    scale: [1, 1.1, 1]
+                  }}
+                  transition={{ duration: 4, repeat: Infinity }}
+                />
               </motion.h1>
               
               <motion.p 
-                className="text-base md:text-lg lg:text-xl text-white/85 leading-relaxed max-w-xl"
+                className="text-base md:text-lg lg:text-xl text-white/85 leading-relaxed max-w-xl relative"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.6 }}
+                transition={{ delay: 0.5, duration: 0.7, ease: "easeOut" }}
               >
-                {t('hero.subtitle')}
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.6, duration: 0.8 }}
+                >
+                  {t('hero.subtitle')}
+                </motion.span>
               </motion.p>
 
               {/* CTA Buttons */}
@@ -128,74 +198,232 @@ const Index = () => {
                 className="flex flex-col sm:flex-row gap-3 pt-2"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.6 }}
+                transition={{ delay: 0.6, duration: 0.6 }}
               >
-                <Button asChild className="bg-secondary text-primary font-semibold text-sm md:text-base px-6 py-5 md:px-8 md:py-6 hover:bg-secondary/90 shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl">
-                  <Link to="/services" className="flex items-center justify-center gap-2">
-                    {t('hero.cta.primary')}
-                    <ArrowRight className="h-4 w-4 md:h-5 md:w-5" />
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" className="border-2 border-white/40 text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all duration-300 text-sm md:text-base px-6 py-5 md:px-8 md:py-6 font-semibold hover:border-white/60">
-                  <Link to="/contact" className="flex items-center justify-center">
-                    {t('hero.cta.secondary')}
-                  </Link>
-                </Button>
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                >
+                  <Button asChild className="bg-secondary text-primary font-semibold text-sm md:text-base px-6 py-5 md:px-8 md:py-6 hover:bg-secondary/90 shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl relative overflow-hidden group">
+                    <Link to="/services" className="flex items-center justify-center gap-2 relative z-10">
+                      <motion.span
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                        initial={{ x: '-100%' }}
+                        whileHover={{ x: '200%' }}
+                        transition={{ duration: 0.6 }}
+                      />
+                      {t('hero.cta.primary')}
+                      <motion.span
+                        animate={{ x: [0, 4, 0] }}
+                        transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 0.5 }}
+                      >
+                        <ArrowRight className="h-4 w-4 md:h-5 md:w-5" />
+                      </motion.span>
+                    </Link>
+                  </Button>
+                </motion.div>
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                >
+                  <Button asChild variant="outline" className="border-2 border-white/40 text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all duration-300 text-sm md:text-base px-6 py-5 md:px-8 md:py-6 font-semibold hover:border-white/60 relative overflow-hidden group">
+                    <Link to="/contact" className="flex items-center justify-center relative z-10">
+                      <motion.span
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                        initial={{ x: '-100%' }}
+                        whileHover={{ x: '200%' }}
+                        transition={{ duration: 0.6 }}
+                      />
+                      {t('hero.cta.secondary')}
+                    </Link>
+                  </Button>
+                </motion.div>
               </motion.div>
             </motion.div>
 
             {/* Right Content - Logo/Visual */}
             <motion.div
-              className="hidden lg:flex flex-col items-center justify-center space-y-5"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
+              className="hidden lg:flex flex-col items-center justify-center space-y-6"
+              initial={{ opacity: 0, scale: 0.8, rotateY: -15 }}
+              animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+              transition={{ delay: 0.4, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >
-              <div className="relative">
-                {/* Glow Effect */}
-                <div className="absolute inset-0 bg-secondary/20 blur-[30px] rounded-full" />
+              <div className="relative w-full max-w-md">
+                {/* Multi-layer Glow Effects */}
+                <motion.div 
+                  className="absolute inset-0 bg-secondary/25 blur-[40px] rounded-full -z-10"
+                  animate={{ 
+                    scale: [1, 1.1, 1],
+                    opacity: [0.3, 0.5, 0.3],
+                    x: [0, 10, 0],
+                    y: [0, -10, 0]
+                  }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                />
+                <motion.div 
+                  className="absolute inset-0 bg-secondary/15 blur-[60px] rounded-full -z-10"
+                  animate={{ 
+                    scale: [1, 1.15, 1],
+                    opacity: [0.2, 0.35, 0.2],
+                    x: [0, -15, 0],
+                    y: [0, 15, 0]
+                  }}
+                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                />
 
-                {/* Logo Container - WHITE BACKGROUND */}
+                {/* Logo Container - Modern Card Design */}
                 <motion.div
-                  className="relative bg-white rounded-2xl p-6 shadow-xl"
-                  whileHover={{ scale: 1.02 }}
-                  transition={{ type: "spring", stiffness: 300 }}
+                  className="relative bg-white rounded-3xl p-8 md:p-10 shadow-2xl border border-white/20 backdrop-blur-sm"
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
+                  whileHover={{ 
+                    scale: 1.03,
+                    y: -5,
+                    boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+                    transition: { type: "spring", stiffness: 300, damping: 20 }
+                  }}
                 >
-                  <img
-                    src={logo}
-                    alt="SSMos Logo"
-                    className="w-56 h-auto"
+                  {/* Subtle gradient overlay with animation */}
+                  <motion.div 
+                    className="absolute inset-0 bg-gradient-to-br from-white to-gray-50/50 rounded-3xl opacity-50"
+                    animate={{ 
+                      backgroundPosition: ['0% 0%', '100% 100%']
+                    }}
+                    transition={{ duration: 8, repeat: Infinity, repeatType: "reverse" }}
+                  />
+                  
+                  {/* Animated border glow */}
+                  <motion.div
+                    className="absolute inset-0 rounded-3xl bg-gradient-to-r from-secondary/20 via-secondary/40 to-secondary/20 opacity-0"
+                    whileHover={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                    style={{ 
+                      backgroundSize: '200% 200%',
+                      backgroundPosition: '0% 50%'
+                    }}
+                    animate={{
+                      backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                    }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                  />
+                  
+                  {/* Logo Image with subtle float */}
+                  <motion.div 
+                    className="relative z-10 flex items-center justify-center"
+                    animate={{ 
+                      y: [0, -8, 0]
+                    }}
+                    transition={{ 
+                      duration: 4, 
+                      repeat: Infinity, 
+                      ease: "easeInOut" 
+                    }}
+                  >
+                    <motion.img
+                      src={logo}
+                      alt="SSMos Logo"
+                      className="w-full max-w-[280px] h-auto drop-shadow-lg"
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ type: "spring", stiffness: 400 }}
+                    />
+                  </motion.div>
+
+                  {/* Decorative Corner Accents */}
+                  <motion.div
+                    className="absolute -top-2 -right-2 w-20 h-20 bg-gradient-to-br from-secondary/40 to-secondary/20 rounded-2xl backdrop-blur-md border border-secondary/30"
+                    animate={{ 
+                      rotate: [0, 5, 0, -5, 0],
+                      scale: [1, 1.05, 1, 1.08, 1],
+                      x: [0, 2, 0, -2, 0],
+                      y: [0, -2, 0, 2, 0]
+                    }}
+                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                  <motion.div
+                    className="absolute -bottom-2 -left-2 w-16 h-16 bg-gradient-to-tr from-white/30 to-white/10 rounded-xl backdrop-blur-md border border-white/20"
+                    animate={{ 
+                      rotate: [0, -5, 0, 5, 0],
+                      scale: [1, 1.05, 1, 1.08, 1],
+                      x: [0, -2, 0, 2, 0],
+                      y: [0, 2, 0, -2, 0]
+                    }}
+                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                  
+                  {/* Bottom accent line with animation */}
+                  <motion.div 
+                    className="absolute bottom-0 left-1/2 -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-transparent via-secondary/50 to-transparent rounded-full"
+                    animate={{ 
+                      width: ['6rem', '8rem', '6rem'],
+                      opacity: [0.5, 0.8, 0.5]
+                    }}
+                    transition={{ duration: 3, repeat: Infinity }}
                   />
                 </motion.div>
-
-                {/* Decorative Elements */}
-                <motion.div
-                  className="absolute -top-3 -right-3 w-16 h-16 bg-secondary/30 rounded-xl backdrop-blur-sm"
-                  animate={{ rotate: [0, 10, 0] }}
-                  transition={{ duration: 6, repeat: Infinity }}
-                />
-                <motion.div
-                  className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/20 rounded-lg backdrop-blur-sm"
-                  animate={{ rotate: [0, -10, 0] }}
-                  transition={{ duration: 5, repeat: Infinity }}
-                />
               </div>
 
-              {/* Trust Indicators */}
+              {/* Trust Indicators - Enhanced Design */}
               <motion.div
-                className="flex items-center gap-6"
+                className="flex items-center gap-8 pt-2"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
+                transition={{ delay: 0.8, duration: 0.6 }}
               >
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-secondary" />
-                  <span className="text-white/70 text-xs md:text-sm">{stats.companies}+ {t('hero.partners')}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-secondary" />
-                  <span className="text-white/70 text-xs md:text-sm">{stats.years} {t('hero.years')}</span>
-                </div>
+                <motion.div 
+                  className="flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/15 transition-colors relative overflow-hidden group"
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  transition={{ type: "spring", stiffness: 400 }}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.9, duration: 0.5 }}
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                    initial={{ x: '-100%' }}
+                    whileHover={{ x: '200%' }}
+                    transition={{ duration: 0.6 }}
+                  />
+                  <motion.div 
+                    className="p-1.5 bg-secondary/20 rounded-full relative z-10"
+                    animate={{ 
+                      scale: [1, 1.1, 1],
+                      rotate: [0, 5, 0]
+                    }}
+                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
+                  >
+                    <CheckCircle className="h-4 w-4 text-secondary" />
+                  </motion.div>
+                  <span className="text-white/90 text-sm font-medium relative z-10">{stats.companies}+ {t('hero.partners')}</span>
+                </motion.div>
+                <motion.div 
+                  className="flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/15 transition-colors relative overflow-hidden group"
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  transition={{ type: "spring", stiffness: 400 }}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 1, duration: 0.5 }}
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                    initial={{ x: '-100%' }}
+                    whileHover={{ x: '200%' }}
+                    transition={{ duration: 0.6 }}
+                  />
+                  <motion.div 
+                    className="p-1.5 bg-secondary/20 rounded-full relative z-10"
+                    animate={{ 
+                      scale: [1, 1.1, 1],
+                      rotate: [0, -5, 0]
+                    }}
+                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 1.2 }}
+                  >
+                    <CheckCircle className="h-4 w-4 text-secondary" />
+                  </motion.div>
+                  <span className="text-white/90 text-sm font-medium relative z-10">{stats.years} {t('hero.years')}</span>
+                </motion.div>
               </motion.div>
             </motion.div>
           </div>
