@@ -34,47 +34,47 @@ const Index = () => {
   return (
     <Layout>
       {/* Hero Section - Modern & Professional */}
-      <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-gradient-to-br from-primary via-primary to-[hsl(214,79%,28%)]">
+      <section className="relative min-h-[85vh] flex items-center overflow-hidden bg-gradient-to-br from-primary via-primary to-[hsl(214,79%,28%)] py-12 md:py-16 lg:py-20">
         {/* Animated Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
           {/* Gradient Orbs */}
           <motion.div 
-            className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full bg-secondary/20 blur-[100px]"
+            className="absolute -top-32 -right-32 w-[400px] h-[400px] rounded-full bg-secondary/15 blur-[80px]"
             animate={{ 
-              scale: [1, 1.2, 1],
-              opacity: [0.3, 0.5, 0.3] 
+              scale: [1, 1.15, 1],
+              opacity: [0.25, 0.4, 0.25] 
             }}
             transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.div 
-            className="absolute top-1/2 -left-32 w-[400px] h-[400px] rounded-full bg-secondary/15 blur-[80px]"
+            className="absolute top-1/2 -left-32 w-[350px] h-[350px] rounded-full bg-secondary/12 blur-[70px]"
             animate={{ 
-              scale: [1.2, 1, 1.2],
-              opacity: [0.2, 0.4, 0.2] 
+              scale: [1.15, 1, 1.15],
+              opacity: [0.15, 0.3, 0.15] 
             }}
             transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
           />
           
           {/* Grid Pattern */}
-          <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0 opacity-[0.03]">
             <div className="absolute inset-0" style={{
               backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-              backgroundSize: '50px 50px'
+              backgroundSize: '40px 40px'
             }} />
           </div>
           
           {/* Floating Particles */}
-          {[...Array(6)].map((_, i) => (
+          {[...Array(5)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-2 h-2 bg-secondary/40 rounded-full"
+              className="absolute w-1.5 h-1.5 bg-secondary/30 rounded-full"
               style={{
-                left: `${20 + i * 15}%`,
+                left: `${20 + i * 18}%`,
                 top: `${30 + (i % 3) * 20}%`,
               }}
               animate={{
-                y: [-20, 20, -20],
-                opacity: [0.3, 0.8, 0.3],
+                y: [-15, 15, -15],
+                opacity: [0.2, 0.6, 0.2],
               }}
               transition={{
                 duration: 4 + i,
@@ -85,27 +85,28 @@ const Index = () => {
           ))}
         </div>
 
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="container mx-auto px-4 md:px-6 lg:px-8 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center">
             {/* Left Content */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
+              className="space-y-6"
             >
               {/* Badge */}
               <motion.div 
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6"
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 shadow-sm"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
               >
-                <div className="w-2 h-2 bg-secondary rounded-full animate-pulse" />
-                <span className="text-white/90 text-sm font-medium">Safety & Santé na Mosala</span>
+                <div className="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse" />
+                <span className="text-white/90 text-xs md:text-sm font-medium">Safety & Santé na Mosala</span>
               </motion.div>
 
               <motion.h1 
-                className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight"
+                className="font-display text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-[1.1] tracking-tight"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
@@ -114,7 +115,7 @@ const Index = () => {
               </motion.h1>
               
               <motion.p 
-                className="text-lg md:text-xl text-white/80 mb-8 leading-relaxed max-w-xl"
+                className="text-base md:text-lg lg:text-xl text-white/85 leading-relaxed max-w-xl"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 0.6 }}
@@ -124,19 +125,19 @@ const Index = () => {
 
               {/* CTA Buttons */}
               <motion.div 
-                className="flex flex-col sm:flex-row gap-4"
+                className="flex flex-col sm:flex-row gap-3 pt-2"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.6 }}
               >
-                <Button asChild size="lg" className="bg-secondary text-primary font-semibold hover:bg-secondary/90 shadow-lg transition-all duration-300 hover:-translate-y-0.5">
-                  <Link to="/services">
+                <Button asChild className="bg-secondary text-primary font-semibold text-sm md:text-base px-6 py-5 md:px-8 md:py-6 hover:bg-secondary/90 shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl">
+                  <Link to="/services" className="flex items-center justify-center gap-2">
                     {t('hero.cta.primary')}
-                    <ArrowRight className="ml-2 h-5 w-5" />
+                    <ArrowRight className="h-4 w-4 md:h-5 md:w-5" />
                   </Link>
                 </Button>
-                <Button asChild size="lg" variant="outline" className="border-2 border-white/40 text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all duration-300">
-                  <Link to="/contact">
+                <Button asChild variant="outline" className="border-2 border-white/40 text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all duration-300 text-sm md:text-base px-6 py-5 md:px-8 md:py-6 font-semibold hover:border-white/60">
+                  <Link to="/contact" className="flex items-center justify-center">
                     {t('hero.cta.secondary')}
                   </Link>
                 </Button>
@@ -145,36 +146,36 @@ const Index = () => {
 
             {/* Right Content - Logo/Visual */}
             <motion.div
-              className="hidden lg:flex flex-col items-center justify-center space-y-6"
+              className="hidden lg:flex flex-col items-center justify-center space-y-5"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.4, duration: 0.8 }}
             >
               <div className="relative">
                 {/* Glow Effect */}
-                <div className="absolute inset-0 bg-secondary/20 blur-[40px] rounded-full" />
+                <div className="absolute inset-0 bg-secondary/20 blur-[30px] rounded-full" />
 
                 {/* Logo Container - WHITE BACKGROUND */}
                 <motion.div
-                  className="relative bg-white rounded-3xl p-8 shadow-2xl"
+                  className="relative bg-white rounded-2xl p-6 shadow-xl"
                   whileHover={{ scale: 1.02 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
                   <img
                     src={logo}
                     alt="SSMos Logo"
-                    className="w-72 h-auto"
+                    className="w-56 h-auto"
                   />
                 </motion.div>
 
                 {/* Decorative Elements */}
                 <motion.div
-                  className="absolute -top-4 -right-4 w-20 h-20 bg-secondary/30 rounded-2xl backdrop-blur-sm"
+                  className="absolute -top-3 -right-3 w-16 h-16 bg-secondary/30 rounded-xl backdrop-blur-sm"
                   animate={{ rotate: [0, 10, 0] }}
                   transition={{ duration: 6, repeat: Infinity }}
                 />
                 <motion.div
-                  className="absolute -bottom-6 -left-6 w-16 h-16 bg-white/20 rounded-xl backdrop-blur-sm"
+                  className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/20 rounded-lg backdrop-blur-sm"
                   animate={{ rotate: [0, -10, 0] }}
                   transition={{ duration: 5, repeat: Infinity }}
                 />
@@ -182,18 +183,18 @@ const Index = () => {
 
               {/* Trust Indicators */}
               <motion.div
-                className="flex items-center gap-8"
+                className="flex items-center gap-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
               >
                 <div className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-secondary" />
-                  <span className="text-white/70 text-sm">{stats.companies}+ {t('hero.partners')}</span>
+                  <CheckCircle className="h-4 w-4 text-secondary" />
+                  <span className="text-white/70 text-xs md:text-sm">{stats.companies}+ {t('hero.partners')}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-secondary" />
-                  <span className="text-white/70 text-sm">{stats.years} {t('hero.years')}</span>
+                  <CheckCircle className="h-4 w-4 text-secondary" />
+                  <span className="text-white/70 text-xs md:text-sm">{stats.years} {t('hero.years')}</span>
                 </div>
               </motion.div>
             </motion.div>
