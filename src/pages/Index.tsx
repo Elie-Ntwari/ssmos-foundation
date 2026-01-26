@@ -152,18 +152,18 @@ const Index = () => {
             >
               <div className="relative">
                 {/* Glow Effect */}
-                <div className="absolute inset-0 bg-secondary/20 blur-[60px] rounded-full" />
+                <div className="absolute inset-0 bg-secondary/20 blur-[40px] rounded-full" />
 
-                {/* Logo Container */}
+                {/* Logo Container - WHITE BACKGROUND */}
                 <motion.div
-                  className="relative bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20"
+                  className="relative bg-white rounded-3xl p-8 shadow-2xl"
                   whileHover={{ scale: 1.02 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
                   <img
                     src={logo}
                     alt="SSMos Logo"
-                    className="w-72 h-auto drop-shadow-2xl"
+                    className="w-72 h-auto"
                   />
                 </motion.div>
 
@@ -174,7 +174,7 @@ const Index = () => {
                   transition={{ duration: 6, repeat: Infinity }}
                 />
                 <motion.div
-                  className="absolute -bottom-6 -left-6 w-16 h-16 bg-white/10 rounded-xl backdrop-blur-sm"
+                  className="absolute -bottom-6 -left-6 w-16 h-16 bg-white/20 rounded-xl backdrop-blur-sm"
                   animate={{ rotate: [0, -10, 0] }}
                   transition={{ duration: 5, repeat: Infinity }}
                 />
