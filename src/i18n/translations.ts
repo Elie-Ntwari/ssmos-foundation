@@ -23,14 +23,14 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.contact': 'Contact',
     
     // Hero
-    'hero.title': 'Pour un travail sûr et sain en RDC, aujourd\'hui et demain',
-    'hero.subtitle': 'SSMos accompagne le monde du travail congolais vers l\'excellence en sécurité et santé au travail',
+    'hero.title': 'Pour un travail sûr et sain, aujourd\'hui et demain',
+    'hero.subtitle': 'SSMos accompagne les travailleurs et organisations en République Démocratique du Congo vers l\'excellence en sécurité et santé au travail',
     'hero.cta.primary': 'Découvrir nos services',
     'hero.cta.secondary': 'Nous contacter',
     
     // Home sections
     'home.about.title': 'Présentation générale',
-    'home.about.description': 'Safety & Santé na Mosala (SSMOS) est une organisation pionnière, privée de prévention des risques professionnels dédiée à la promotion de la sécurité, de la santé au travail et de l\'amélioration durable des conditions de travail en RDC.',
+    'home.about.description': 'Safety & Santé na Mosala (SSMOS) est une organisation pionnière, privée de prévention des risques professionnels en République Démocratique du Congo, dédiée à la promotion de la sécurité, de la santé au travail et de l\'amélioration durable des conditions de travail.',
     'home.axes.title': 'Nos axes d\'intervention',
     'home.stats.title': 'Notre impact en chiffres',
     'home.news.title': 'Dernières actualités',
@@ -147,14 +147,14 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.contact': 'Contact',
     
     // Hero
-    'hero.title': 'For safe and healthy work in DRC, today and tomorrow',
-    'hero.subtitle': 'SSMos supports the Congolese working world towards excellence in occupational safety and health',
+    'hero.title': 'For safe and healthy work, today and tomorrow',
+    'hero.subtitle': 'SSMos supports workers and organizations in the Democratic Republic of Congo towards excellence in occupational safety and health',
     'hero.cta.primary': 'Discover our services',
     'hero.cta.secondary': 'Contact us',
     
     // Home sections
     'home.about.title': 'General Presentation',
-    'home.about.description': 'Safety & Santé na Mosala (SSMOS) is a pioneering private organization dedicated to occupational risk prevention, promoting safety, health at work and the sustainable improvement of working conditions in the DRC.',
+    'home.about.description': 'Safety & Santé na Mosala (SSMOS) is a pioneering private organization for occupational risk prevention in the Democratic Republic of Congo, dedicated to promoting safety, health at work and the sustainable improvement of working conditions.',
     'home.axes.title': 'Our areas of intervention',
     'home.stats.title': 'Our impact in numbers',
     'home.news.title': 'Latest news',

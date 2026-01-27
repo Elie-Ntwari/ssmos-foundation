@@ -54,8 +54,8 @@ export interface Service {
 }
 
 export const stats = {
-  companies: 150,
-  trainings: 500,
+  companies: 3,
+  trainings: 15,
   experts: 25,
   years: 8,
 };

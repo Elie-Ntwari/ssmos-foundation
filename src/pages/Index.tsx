@@ -149,7 +149,7 @@ const Index = () => {
                   }}
                   transition={{ duration: 2, repeat: Infinity }}
                 />
-                <span className="text-white/90 text-xs md:text-sm font-medium relative z-10">Safety & Santé na Mosala</span>
+                <span className="text-white/90 text-xs md:text-sm font-medium relative z-10">Safety & Santé na Mosala - République Démocratique du Congo</span>
               </motion.div>
 
               <motion.h1 
