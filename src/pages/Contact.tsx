@@ -7,31 +7,59 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import Layout from '@/components/layout/Layout';
+import { contactService } from '@/services/contactService';
 
 const Contact = () => {
   const { t, language } = useLanguage();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      const response = await contactService.createMessage({
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        subject: formData.subject.trim(),
+        message: formData.message.trim(),
+      });
 
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    toast({
-      title: t('contact.form.success'),
-      description: language === 'en' 
-        ? 'We will get back to you shortly.' 
-        : 'Nous vous répondrons dans les plus brefs délais.',
-    });
+      if (response.error === false) {
+        setIsSubmitted(true);
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        toast({
+          title: t('contact.form.success'),
+          description: language === 'en' 
+            ? 'We will get back to you shortly.' 
+            : 'Nous vous répondrons dans les plus brefs délais.',
+        });
 
-    // Reset after 3 seconds
-    setTimeout(() => setIsSubmitted(false), 3000);
+        // Reset after 3 seconds
+        setTimeout(() => setIsSubmitted(false), 3000);
+      } else {
+        throw new Error(response.message || 'Erreur lors de l\'envoi du message');
+      }
+    } catch (error: any) {
+      console.error('Erreur lors de l\'envoi du message:', error);
+      toast({
+        title: language === 'en' ? 'Error' : 'Erreur',
+        description: error.response?.data?.message || error.message || (language === 'en' 
+          ? 'Failed to send message. Please try again.' 
+          : 'Échec de l\'envoi du message. Veuillez réessayer.'),
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactInfo = [
@@ -105,6 +133,8 @@ const Contact = () => {
                       id="name"
                       name="name"
                       required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       className="mt-1.5"
                       placeholder={language === 'en' ? 'John Doe' : 'Jean Dupont'}
                     />
@@ -116,6 +146,8 @@ const Contact = () => {
                       name="email"
                       type="email"
                       required
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       className="mt-1.5"
                       placeholder="exemple@email.com"
                     />
@@ -126,6 +158,8 @@ const Contact = () => {
                       id="subject"
                       name="subject"
                       required
+                      value={formData.subject}
+                      onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                       className="mt-1.5"
                       placeholder={language === 'en' ? 'How can we help?' : 'Comment pouvons-nous vous aider ?'}
                     />
@@ -137,6 +171,8 @@ const Contact = () => {
                       name="message"
                       required
                       rows={5}
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       className="mt-1.5 resize-none"
                       placeholder={language === 'en' ? 'Your message...' : 'Votre message...'}
                     />

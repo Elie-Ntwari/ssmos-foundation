@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, Calendar, User } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Calendar, User, Loader2 } from 'lucide-react';
 import { useLanguage } from '@/i18n/LanguageContext';
-import { articles } from '@/data/mockData';
+import { contentService } from '@/services/contentService';
+import { NewsArticle } from '@/types/api';
 import { Button } from '@/components/ui/button';
 import Layout from '@/components/layout/Layout';
 
@@ -10,12 +11,40 @@ const News = () => {
   const { t, language } = useLanguage();
   const { id } = useParams();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [articles, setArticles] = useState<NewsArticle[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const filteredArticles = selectedCategory ? articles.filter(article => article.category === selectedCategory) : articles;
+  useEffect(() => {
+    loadNews();
+  }, []);
+
+  const loadNews = async () => {
+    try {
+      setIsLoading(true);
+      const response = await contentService.getNews();
+      if (response.error === false && response.data && Array.isArray(response.data)) {
+        // Filtrer seulement les articles publiés
+        const publishedNews = response.data.filter(article => article.status === 'published');
+        setArticles(publishedNews);
+      } else {
+        setArticles([]);
+      }
+    } catch (error: any) {
+      console.error('Erreur lors du chargement des actualités:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const filteredArticles = Array.isArray(articles) 
+    ? (selectedCategory 
+        ? articles.filter(article => article.category.toLowerCase() === selectedCategory.toLowerCase())
+        : articles)
+    : [];
 
   // Single article view
   if (id) {
-    const article = articles.find(a => a.id === id);
+    const article = Array.isArray(articles) ? articles.find(a => a.id === parseInt(id)) : undefined;
 
     if (!article) {
       return (
@@ -42,19 +71,22 @@ const News = () => {
               </Link>
             </Button>
             <span className="inline-block px-3 py-1 bg-secondary text-secondary-foreground text-sm font-medium rounded-full mb-4">
-              {t(`news.category.${article.category}`)}
+              {article.category}
             </span>
             <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 max-w-4xl">
-              {language === 'en' ? article.titleEn : language === 'ln' ? article.titleLn : language === 'sw' ? article.titleSw : article.title}
+              {language === 'en' ? (article.title.en || article.title.fr) : 
+               language === 'ln' ? (article.title.ln || article.title.fr) : 
+               language === 'sw' ? (article.title.sw || article.title.fr) : 
+               article.title.fr}
             </h1>
             <div className="flex flex-wrap items-center gap-4 text-white/70 text-sm">
               <span className="flex items-center gap-2">
                 <User className="h-4 w-4" />
-                {article.author}
+                {article.author_name}
               </span>
               <span className="flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
-                {new Date(article.date).toLocaleDateString(language === 'en' ? 'en-US' : language === 'ln' ? 'ln-CD' : language === 'sw' ? 'sw-KE' : 'fr-FR', {
+                {new Date(article.created_at).toLocaleDateString(language === 'en' ? 'en-US' : language === 'ln' ? 'ln-CD' : language === 'sw' ? 'sw-KE' : 'fr-FR', {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric'
@@ -68,14 +100,19 @@ const News = () => {
         <section className="section-padding bg-background">
           <div className="container mx-auto">
             <div className="max-w-3xl mx-auto">
-              <img
-                src={article.image}
-                alt={language === 'en' ? article.titleEn : language === 'ln' ? article.titleLn : language === 'sw' ? article.titleSw : article.title}
-                className="w-full aspect-video object-cover rounded-xl mb-8"
-              />
+              {article.image && (
+                <img
+                  src={article.image}
+                  alt={article.title.fr || article.title.en || 'Actualité'}
+                  className="w-full aspect-video object-cover rounded-xl mb-8"
+                />
+              )}
               <div className="prose prose-lg max-w-none">
-                <p className="text-muted-foreground text-lg leading-relaxed">
-                  {language === 'en' ? article.contentEn : language === 'ln' ? article.contentLn : language === 'sw' ? article.contentSw : article.content}
+                <p className="text-muted-foreground text-lg leading-relaxed whitespace-pre-wrap">
+                  {language === 'en' ? (article.content.en || article.content.fr) : 
+                   language === 'ln' ? (article.content.ln || article.content.fr) : 
+                   language === 'sw' ? (article.content.sw || article.content.fr) : 
+                   article.content.fr}
                 </p>
               </div>
             </div>
@@ -134,42 +171,65 @@ const News = () => {
       {/* Articles Grid */}
       <section className="section-padding bg-background">
         <div className="container mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {filteredArticles.map((article, index) => (
-              <Link
-                key={article.id}
-                to={`/news/${article.id}`}
-                className="card-institutional group opacity-0 animate-fade-up overflow-hidden"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="aspect-video overflow-hidden rounded-lg mb-4 -mt-2 -mx-2">
-                  <img
-                    src={article.image}
-                    alt={language === 'en' ? article.titleEn : language === 'ln' ? article.titleLn : language === 'sw' ? article.titleSw : article.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="px-2.5 py-1 bg-secondary/10 text-secondary text-xs font-medium rounded-full">
-                    {t(`news.category.${article.category}`)}
+          {isLoading ? (
+            <div className="flex justify-center items-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
+              {filteredArticles.map((article, index) => (
+                <Link
+                  key={article.id}
+                  to={`/news/${article.id}`}
+                  className="card-institutional group opacity-0 animate-fade-up overflow-hidden"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className="aspect-video overflow-hidden rounded-lg mb-4 -mt-2 -mx-2">
+                    {article.image ? (
+                      <img
+                        src={article.image}
+                        alt={article.title.fr || article.title.en || 'Actualité'}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-muted flex items-center justify-center">
+                        <Calendar className="h-12 w-12 text-muted-foreground" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="px-2.5 py-1 bg-secondary/10 text-secondary text-xs font-medium rounded-full">
+                      {article.category}
+                    </span>
+                    <span className="text-muted-foreground text-xs">
+                      {new Date(article.created_at).toLocaleDateString(language === 'en' ? 'en-US' : language === 'ln' ? 'ln-CD' : language === 'sw' ? 'sw-KE' : 'fr-FR')}
+                    </span>
+                  </div>
+                  <h2 className="font-display text-xl font-semibold text-foreground group-hover:text-secondary transition-colors mb-2">
+                    {language === 'en' ? (article.title.en || article.title.fr) : 
+                     language === 'ln' ? (article.title.ln || article.title.fr) : 
+                     language === 'sw' ? (article.title.sw || article.title.fr) : 
+                     article.title.fr}
+                  </h2>
+                  <p className="text-muted-foreground text-sm mb-4">
+                    {language === 'en' ? (article.excerpt.en || article.excerpt.fr) : 
+                     language === 'ln' ? (article.excerpt.ln || article.excerpt.fr) : 
+                     language === 'sw' ? (article.excerpt.sw || article.excerpt.fr) : 
+                     article.excerpt.fr}
+                  </p>
+                  <span className="inline-flex items-center text-secondary text-sm font-medium">
+                    {t('news.readMore')}
+                    <ArrowRight className="ml-1 h-4 w-4" />
                   </span>
-                  <span className="text-muted-foreground text-xs">
-                    {new Date(article.date).toLocaleDateString(language === 'en' ? 'en-US' : language === 'ln' ? 'ln-CD' : language === 'sw' ? 'sw-KE' : 'fr-FR')}
-                  </span>
+                </Link>
+              ))}
+              {filteredArticles.length === 0 && !isLoading && (
+                <div className="col-span-full text-center py-12 text-muted-foreground">
+                  <p>{t('news.noArticles') || 'Aucune actualité disponible'}</p>
                 </div>
-                <h2 className="font-display text-xl font-semibold text-foreground group-hover:text-secondary transition-colors mb-2">
-                  {language === 'en' ? article.titleEn : language === 'ln' ? article.titleLn : language === 'sw' ? article.titleSw : article.title}
-                </h2>
-                <p className="text-muted-foreground text-sm mb-4">
-                  {language === 'en' ? article.excerptEn : language === 'ln' ? article.excerptLn : language === 'sw' ? article.excerptSw : article.excerpt}
-                </p>
-                <span className="inline-flex items-center text-secondary text-sm font-medium">
-                  {t('news.readMore')}
-                  <ArrowRight className="ml-1 h-4 w-4" />
-                </span>
-              </Link>
-            ))}
-          </div>
+              )}
+            </div>
+          )}
         </div>
       </section>
     </Layout>

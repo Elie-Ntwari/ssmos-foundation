@@ -1,9 +1,12 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Shield, GraduationCap, ClipboardCheck, Scale, Cpu, Factory, Building2, Truck, Hospital, Pickaxe, Leaf, CheckCircle, Play } from 'lucide-react';
+import { ArrowRight, Shield, GraduationCap, ClipboardCheck, Scale, Cpu, Factory, Building2, Truck, Hospital, Pickaxe, Leaf, CheckCircle, Play, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { contentService } from '@/services/contentService';
+import { NewsArticle } from '@/types/api';
 import { Button } from '@/components/ui/button';
-import { stats, articles, interventionAreas } from '@/data/mockData';
+import { stats, interventionAreas } from '@/data/mockData';
 import Layout from '@/components/layout/Layout';
 import logo from '@/assets/logo.png';
 
@@ -28,8 +31,30 @@ const staggerContainer = {
 
 const Index = () => {
   const { t, language } = useLanguage();
+  const [articles, setArticles] = useState<NewsArticle[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const latestArticles = articles.slice(0, 3);
+  useEffect(() => {
+    loadNews();
+  }, []);
+
+  const loadNews = async () => {
+    try {
+      setIsLoading(true);
+      const response = await contentService.getNews();
+      if (response.error === false && response.data) {
+        // Filtrer seulement les articles publiés
+        const publishedNews = response.data.filter(article => article.status === 'published');
+        setArticles(publishedNews);
+      }
+    } catch (error: any) {
+      console.error('Erreur lors du chargement des actualités:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const latestArticles = Array.isArray(articles) ? articles.slice(0, 3) : [];
 
   return (
     <Layout>
@@ -118,8 +143,8 @@ const Index = () => {
           </motion.svg>
         </div>
 
-        <div className="container mx-auto px-4 md:px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 xl:gap-16 items-center">
             {/* Left Content */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
@@ -153,7 +178,7 @@ const Index = () => {
               </motion.div>
 
               <motion.h1 
-                className="font-display text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-[1.1] tracking-tight relative"
+                className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-[1.1] tracking-tight relative"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -179,7 +204,7 @@ const Index = () => {
               </motion.h1>
               
               <motion.p 
-                className="text-base md:text-lg lg:text-xl text-white/85 leading-relaxed max-w-xl relative"
+                className="text-sm sm:text-base md:text-lg lg:text-xl text-white/85 leading-relaxed max-w-xl relative"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.7, ease: "easeOut" }}
@@ -567,44 +592,67 @@ const Index = () => {
               </Link>
             </Button>
           </div>
-          <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-          >
-            {latestArticles.map((article, index) => (
-              <motion.div key={article.id} variants={fadeInUp}>
-                <Link
-                  to={`/news/${article.id}`}
-                  className="card-institutional group overflow-hidden block"
-                >
-                  <div className="aspect-video overflow-hidden rounded-lg mb-4 -mt-2 -mx-2">
-                    <img
-                      src={article.image}
-                      alt={language === 'en' ? article.titleEn : article.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="px-2.5 py-1 bg-secondary/10 text-secondary text-xs font-medium rounded-full">
-                      {t(`news.category.${article.category}`)}
-                    </span>
-                    <span className="text-muted-foreground text-xs">
-                      {new Date(article.date).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR')}
-                    </span>
-                  </div>
-                  <h3 className="font-display text-lg font-semibold text-foreground group-hover:text-secondary transition-colors line-clamp-2 mb-2">
-                    {language === 'en' ? article.titleEn : language === 'ln' ? article.titleLn : language === 'sw' ? article.titleSw : article.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm line-clamp-2">
-                    {language === 'en' ? article.excerptEn : language === 'ln' ? article.excerptLn : language === 'sw' ? article.excerptSw : article.excerpt}
-                  </p>
-                </Link>
-              </motion.div>
-            ))}
-          </motion.div>
+          {isLoading ? (
+            <div className="flex justify-center items-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+          ) : (
+            <motion.div 
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              variants={staggerContainer}
+              initial="initial"
+              whileInView="animate"
+              viewport={{ once: true }}
+            >
+              {latestArticles.map((article, index) => (
+                <motion.div key={article.id} variants={fadeInUp}>
+                  <Link
+                    to={`/news/${article.id}`}
+                    className="card-institutional group overflow-hidden block"
+                  >
+                    <div className="aspect-video overflow-hidden rounded-lg mb-4 -mt-2 -mx-2">
+                      {article.image ? (
+                        <img
+                          src={article.image}
+                          alt={article.title.fr || article.title.en || 'Actualité'}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-muted flex items-center justify-center">
+                          <Shield className="h-12 w-12 text-muted-foreground" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="px-2.5 py-1 bg-secondary/10 text-secondary text-xs font-medium rounded-full">
+                        {article.category}
+                      </span>
+                      <span className="text-muted-foreground text-xs">
+                        {new Date(article.created_at).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR')}
+                      </span>
+                    </div>
+                    <h3 className="font-display text-lg font-semibold text-foreground group-hover:text-secondary transition-colors line-clamp-2 mb-2">
+                      {language === 'en' ? (article.title.en || article.title.fr) : 
+                       language === 'ln' ? (article.title.ln || article.title.fr) : 
+                       language === 'sw' ? (article.title.sw || article.title.fr) : 
+                       article.title.fr}
+                    </h3>
+                    <p className="text-muted-foreground text-sm line-clamp-2">
+                      {language === 'en' ? (article.excerpt.en || article.excerpt.fr) : 
+                       language === 'ln' ? (article.excerpt.ln || article.excerpt.fr) : 
+                       language === 'sw' ? (article.excerpt.sw || article.excerpt.fr) : 
+                       article.excerpt.fr}
+                    </p>
+                  </Link>
+                </motion.div>
+              ))}
+              {latestArticles.length === 0 && !isLoading && (
+                <div className="col-span-full text-center py-12 text-muted-foreground">
+                  <p>{t('home.news.noArticles') || 'Aucune actualité disponible'}</p>
+                </div>
+              )}
+            </motion.div>
+          )}
           <div className="mt-8 text-center sm:hidden">
             <Button asChild variant="outline">
               <Link to="/news">

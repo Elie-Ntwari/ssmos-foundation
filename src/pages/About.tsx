@@ -1,6 +1,9 @@
-import { Target, Eye, Heart, Award, Shield, Lightbulb, ShieldCheck } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Target, Eye, Heart, Award, Shield, Lightbulb, ShieldCheck, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { contentService } from '@/services/contentService';
+import { InstitutionalPage } from '@/types/api';
 import Layout from '@/components/layout/Layout';
 
 const fadeInUp = {
@@ -18,7 +21,42 @@ const staggerContainer = {
 };
 
 const About = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const [pages, setPages] = useState<Record<string, InstitutionalPage>>({});
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    loadPages();
+  }, []);
+
+  const loadPages = async () => {
+    try {
+      setIsLoading(true);
+      const response = await contentService.getPages();
+      if (response.error === false && response.data && Array.isArray(response.data)) {
+        // Créer un objet avec le slug comme clé pour un accès rapide
+        const pagesMap: Record<string, InstitutionalPage> = {};
+        response.data.forEach(page => {
+          pagesMap[page.slug] = page;
+        });
+        setPages(pagesMap);
+      }
+    } catch (error: any) {
+      console.error('Erreur lors du chargement des pages institutionnelles:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Fonction helper pour obtenir le contenu dans la langue actuelle
+  const getContent = (page: InstitutionalPage | undefined, field: 'title' | 'content'): string => {
+    if (!page) return '';
+    const content = page[field];
+    if (typeof content === 'object' && content !== null) {
+      return content[language] || content.fr || content.en || '';
+    }
+    return '';
+  };
 
   const values = [
     {
@@ -43,6 +81,12 @@ const About = () => {
     },
   ];
 
+  // Pages institutionnelles
+  const presentationPage = pages['presentation'];
+  const contextePage = pages['contexte'];
+  const visionPage = pages['vision'];
+  const missionPage = pages['mission'];
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -62,7 +106,11 @@ const About = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            Safety & Santé na Mosala
+            {isLoading ? (
+              <Loader2 className="h-5 w-5 animate-spin inline-block" />
+            ) : (
+              getContent(presentationPage, 'content') || 'Safety & Santé na Mosala'
+            )}
           </motion.p>
         </div>
       </section>
@@ -71,23 +119,31 @@ const About = () => {
       <section className="section-padding bg-background">
         <div className="container mx-auto">
           <div className="max-w-4xl mx-auto">
-            <motion.h2 
-              className="font-display text-2xl md:text-3xl font-bold text-foreground mb-6"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              {t('about.intro')}
-            </motion.h2>
-            <motion.p 
-              className="text-muted-foreground text-lg leading-relaxed mb-8"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-            >
-              {t('about.intro.text')}
-            </motion.p>
+            {isLoading ? (
+              <div className="flex justify-center items-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            ) : (
+              <>
+                <motion.h2 
+                  className="font-display text-2xl md:text-3xl font-bold text-foreground mb-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                >
+                  {getContent(presentationPage, 'title') || t('about.intro')}
+                </motion.h2>
+                <motion.p 
+                  className="text-muted-foreground text-lg leading-relaxed mb-8"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.1 }}
+                >
+                  {getContent(presentationPage, 'content') || t('about.intro.text')}
+                </motion.p>
+              </>
+            )}
             <div className="grid md:grid-cols-2 gap-8">
               <motion.div 
                 className="card-institutional"
@@ -97,10 +153,14 @@ const About = () => {
                 transition={{ delay: 0.2 }}
               >
                 <h3 className="font-display text-xl font-semibold text-foreground mb-3">
-                  {t('about.context.title')}
+                  {isLoading ? (
+                    <Loader2 className="h-5 w-5 animate-spin inline-block" />
+                  ) : (
+                    getContent(contextePage, 'title') || t('about.context.title')
+                  )}
                 </h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  {t('about.context.text')}
+                  {isLoading ? '' : getContent(contextePage, 'content') || t('about.context.text')}
                 </p>
               </motion.div>
               <motion.div 
@@ -111,10 +171,14 @@ const About = () => {
                 transition={{ delay: 0.3 }}
               >
                 <h3 className="font-display text-xl font-semibold text-foreground mb-3">
-                  {t('about.vision.title')}
+                  {isLoading ? (
+                    <Loader2 className="h-5 w-5 animate-spin inline-block" />
+                  ) : (
+                    getContent(visionPage, 'title') || t('about.vision.title')
+                  )}
                 </h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  {t('about.vision.text')}
+                  {isLoading ? '' : getContent(visionPage, 'content') || t('about.vision.text')}
                 </p>
               </motion.div>
             </div>
@@ -137,10 +201,14 @@ const About = () => {
               </div>
               <div>
                 <h3 className="font-display text-xl font-semibold text-foreground mb-3">
-                  {t('about.mission.title')}
+                  {isLoading ? (
+                    <Loader2 className="h-5 w-5 animate-spin inline-block" />
+                  ) : (
+                    getContent(missionPage, 'title') || t('about.mission.title')
+                  )}
                 </h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  {t('about.mission.text')}
+                  {isLoading ? '' : getContent(missionPage, 'content') || t('about.mission.text')}
                 </p>
               </div>
             </motion.div>
@@ -218,10 +286,14 @@ const About = () => {
           >
             <Heart className="h-12 w-12 text-secondary mx-auto mb-6" />
             <h2 className="font-display text-3xl md:text-4xl font-bold text-white mb-6">
-              {t('about.vision.title')}
+              {isLoading ? (
+                <Loader2 className="h-8 w-8 animate-spin inline-block" />
+              ) : (
+                getContent(visionPage, 'title') || t('about.vision.title')
+              )}
             </h2>
             <p className="text-white/85 text-lg leading-relaxed">
-              {t('about.vision.text')}
+              {isLoading ? '' : getContent(visionPage, 'content') || t('about.vision.text')}
             </p>
           </motion.div>
         </div>
