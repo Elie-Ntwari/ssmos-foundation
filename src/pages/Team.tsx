@@ -1,31 +1,48 @@
 import { useState, useEffect } from 'react';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { contentService } from '@/services/contentService';
-import { TeamMember } from '@/types/api';
+import { TeamMember, TeamPage } from '@/types/api';
 import { Loader2 } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
 
 const Team = () => {
   const { t, language } = useLanguage();
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [teamPage, setTeamPage] = useState<TeamPage | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingPage, setIsLoadingPage] = useState(true);
 
   useEffect(() => {
-    loadTeamMembers();
+    loadTeamData();
   }, []);
 
-  const loadTeamMembers = async () => {
+  const loadTeamData = async () => {
     try {
       setIsLoading(true);
-      const response = await contentService.getTeamMembers();
-      if (response.error === false && response.data) {
-        setTeamMembers(response.data);
+      setIsLoadingPage(true);
+      
+      // Charger les membres de l'équipe
+      const membersResponse = await contentService.getTeamMembers();
+      if (membersResponse.error === false && membersResponse.data) {
+        setTeamMembers(membersResponse.data);
+      }
+
+      // Charger la page équipe
+      const pageResponse = await contentService.getTeamPage();
+      if (pageResponse.error === false && pageResponse.data && pageResponse.data.length > 0) {
+        setTeamPage(pageResponse.data[0]);
       }
     } catch (error: any) {
-      console.error('Erreur lors du chargement des membres:', error);
+      console.error('Erreur lors du chargement des données:', error);
     } finally {
       setIsLoading(false);
+      setIsLoadingPage(false);
     }
+  };
+
+  // Helper pour obtenir le contenu multilingue
+  const getMultilingualContent = (content: { fr?: string; en?: string; ln?: string; sw?: string }): string => {
+    return content[language] || content.fr || content.en || '';
   };
 
   return (
@@ -34,11 +51,16 @@ const Team = () => {
       <section className="hero-gradient py-20 md:py-28">
         <div className="container mx-auto px-4 text-center">
           <h1 className="font-display text-4xl md:text-5xl font-bold text-white mb-4 opacity-0 animate-fade-up">
-            {t('team.title')}
+            {teamPage ? getMultilingualContent(teamPage.title) : t('team.title')}
           </h1>
           <p className="text-white/80 text-lg max-w-2xl mx-auto opacity-0 animate-fade-up stagger-1">
-            {t('team.subtitle')}
+            {teamPage ? getMultilingualContent(teamPage.subtitle) : t('team.subtitle')}
           </p>
+          {teamPage && teamPage.description && getMultilingualContent(teamPage.description) && (
+            <p className="text-white/70 text-base max-w-3xl mx-auto mt-4 opacity-0 animate-fade-up stagger-2">
+              {getMultilingualContent(teamPage.description)}
+            </p>
+          )}
         </div>
       </section>
 

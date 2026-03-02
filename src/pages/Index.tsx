@@ -4,9 +4,9 @@ import { ArrowRight, Shield, GraduationCap, ClipboardCheck, Scale, Cpu, Factory,
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { contentService } from '@/services/contentService';
-import { NewsArticle } from '@/types/api';
+import { NewsArticle, HomePageSection, InterventionAxis } from '@/types/api';
 import { Button } from '@/components/ui/button';
-import { stats, interventionAreas } from '@/data/mockData';
+import { stats } from '@/data/mockData';
 import Layout from '@/components/layout/Layout';
 import logo from '@/assets/logo.png';
 
@@ -32,26 +32,61 @@ const staggerContainer = {
 const Index = () => {
   const { t, language } = useLanguage();
   const [articles, setArticles] = useState<NewsArticle[]>([]);
+  const [homeSections, setHomeSections] = useState<Record<string, HomePageSection>>({});
+  const [interventionAxes, setInterventionAxes] = useState<InterventionAxis[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingSections, setIsLoadingSections] = useState(true);
 
   useEffect(() => {
-    loadNews();
+    loadAllData();
   }, []);
 
-  const loadNews = async () => {
+  const loadAllData = async () => {
     try {
       setIsLoading(true);
-      const response = await contentService.getNews();
-      if (response.error === false && response.data) {
-        // Filtrer seulement les articles publiés
-        const publishedNews = response.data.filter(article => article.status === 'published');
+      setIsLoadingSections(true);
+      
+      // Charger les actualités
+      const newsResponse = await contentService.getNews();
+      if (newsResponse.error === false && newsResponse.data) {
+        const publishedNews = newsResponse.data.filter(article => article.status === 'published');
         setArticles(publishedNews);
       }
+
+      // Charger les sections de la page d'accueil
+      const sectionsResponse = await contentService.getHomeSections();
+      if (sectionsResponse.error === false && sectionsResponse.data) {
+        const sectionsMap: Record<string, HomePageSection> = {};
+        sectionsResponse.data.forEach(section => {
+          sectionsMap[section.section_key] = section;
+        });
+        setHomeSections(sectionsMap);
+      }
+
+      // Charger les axes d'intervention
+      const axesResponse = await contentService.getInterventionAxes();
+      if (axesResponse.error === false && axesResponse.data) {
+        setInterventionAxes(axesResponse.data);
+      }
     } catch (error: any) {
-      console.error('Erreur lors du chargement des actualités:', error);
+      console.error('Erreur lors du chargement des données:', error);
     } finally {
       setIsLoading(false);
+      setIsLoadingSections(false);
     }
+  };
+
+  // Helper pour obtenir le contenu d'une section dans la langue actuelle
+  const getSectionContent = (sectionKey: string): string => {
+    const section = homeSections[sectionKey];
+    if (!section) return '';
+    const content = section.content;
+    return content[language] || content.fr || content.en || '';
+  };
+
+  // Helper pour obtenir le contenu multilingue
+  const getMultilingualContent = (content: { fr?: string; en?: string; ln?: string; sw?: string }): string => {
+    return content[language] || content.fr || content.en || '';
   };
 
   const latestArticles = Array.isArray(articles) ? articles.slice(0, 3) : [];
@@ -190,7 +225,7 @@ const Index = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4, duration: 0.6 }}
                 >
-                  {t('hero.title')}
+                  {getSectionContent('hero_title') || t('hero.title')}
                 </motion.span>
                 {/* Subtle glow effect */}
                 <motion.div
@@ -214,7 +249,7 @@ const Index = () => {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.6, duration: 0.8 }}
                 >
-                  {t('hero.subtitle')}
+                  {getSectionContent('hero_subtitle') || t('hero.subtitle')}
                 </motion.span>
               </motion.p>
 
@@ -473,10 +508,10 @@ const Index = () => {
             transition={{ duration: 0.6 }}
           >
             <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-6">
-              {t('home.about.title')}
+              {getSectionContent('about_title') || t('home.about.title')}
             </h2>
             <p className="text-muted-foreground text-lg leading-relaxed mb-8">
-              {t('home.about.description')}
+              {getSectionContent('about_description') || t('home.about.description')}
             </p>
             <Button asChild variant="outline" className="group">
               <Link to="/about">
@@ -497,37 +532,43 @@ const Index = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            {t('home.axes.title')}
+            {getSectionContent('axes_title') || t('home.axes.title')}
           </motion.h2>
-          <motion.div 
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-          >
-            {interventionAreas.map((area, index) => {
-              const IconComponent = iconMap[area.icon] || Factory;
-              return (
-                <motion.div
-                  key={area.title}
-                  variants={fadeInUp}
-                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                  className="card-institutional group"
-                >
-                  <div className="w-14 h-14 rounded-xl hero-gradient flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <IconComponent className="h-7 w-7 text-white" />
-                  </div>
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-2">
-                    {language === 'en' ? area.titleEn : language === 'ln' ? area.titleLn : language === 'sw' ? area.titleSw : area.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm">
-                    {language === 'en' ? area.descriptionEn : language === 'ln' ? area.descriptionLn : language === 'sw' ? area.descriptionSw : area.description}
-                  </p>
-                </motion.div>
-              );
-            })}
-          </motion.div>
+          {isLoadingSections ? (
+            <div className="flex justify-center items-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+          ) : (
+            <motion.div 
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+              variants={staggerContainer}
+              initial="initial"
+              whileInView="animate"
+              viewport={{ once: true }}
+            >
+              {interventionAxes.map((axis, index) => {
+                const IconComponent = iconMap[axis.icon] || Factory;
+                return (
+                  <motion.div
+                    key={axis.id}
+                    variants={fadeInUp}
+                    whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                    className="card-institutional group"
+                  >
+                    <div className="w-14 h-14 rounded-xl hero-gradient flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                      <IconComponent className="h-7 w-7 text-white" />
+                    </div>
+                    <h3 className="font-display text-xl font-semibold text-foreground mb-2">
+                      {getMultilingualContent(axis.title)}
+                    </h3>
+                    <p className="text-muted-foreground text-sm">
+                      {getMultilingualContent(axis.description)}
+                    </p>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          )}
         </div>
       </section>
 
@@ -540,7 +581,7 @@ const Index = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            {t('home.stats.title')}
+            {getSectionContent('stats_title') || t('home.stats.title')}
           </motion.h2>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {[
@@ -583,7 +624,7 @@ const Index = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              {t('home.news.title')}
+              {getSectionContent('news_title') || t('home.news.title')}
             </motion.h2>
             <Button asChild variant="outline" className="hidden sm:flex group">
               <Link to="/news">
@@ -673,10 +714,10 @@ const Index = () => {
             viewport={{ once: true }}
           >
             <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-6">
-              {t('cta.ready.title')}
+              {getSectionContent('cta_title') || t('cta.ready.title')}
             </h2>
             <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto">
-              {t('cta.ready.description')}
+              {getSectionContent('cta_description') || t('cta.ready.description')}
             </p>
             <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg transition-all duration-300 hover:-translate-y-0.5">
               <Link to="/contact">

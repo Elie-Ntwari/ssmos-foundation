@@ -5,6 +5,9 @@ import {
   BlogPost,
   InstitutionalPage,
   TeamMember,
+  HomePageSection,
+  InterventionAxis,
+  TeamPage,
   ApiResponse,
 } from '@/types/api';
 
@@ -75,6 +78,34 @@ export const contentService = {
 
   async getTeamMember(id: number): Promise<ApiResponse<TeamMember>> {
     const response = await apiClient.get<ApiResponse<TeamMember>>(`/content/team/${id}/`);
+    return response.data;
+  },
+
+  // Sections de la page d'accueil
+  async getHomeSections(): Promise<ApiResponse<HomePageSection[]>> {
+    const response = await apiClient.get<ApiResponse<HomePageSection[]>>('/content/home-sections/');
+    return response.data;
+  },
+
+  async getHomeSection(sectionKey: string): Promise<ApiResponse<HomePageSection>> {
+    const response = await apiClient.get<ApiResponse<HomePageSection>>(`/content/home-sections/${sectionKey}/`);
+    return response.data;
+  },
+
+  // Axes d'intervention
+  async getInterventionAxes(): Promise<ApiResponse<InterventionAxis[]>> {
+    const response = await apiClient.get<ApiResponse<InterventionAxis[]>>('/content/intervention-axes/');
+    return response.data;
+  },
+
+  async getInterventionAxis(id: number): Promise<ApiResponse<InterventionAxis>> {
+    const response = await apiClient.get<ApiResponse<InterventionAxis>>(`/content/intervention-axes/${id}/`);
+    return response.data;
+  },
+
+  // Page équipe
+  async getTeamPage(): Promise<ApiResponse<TeamPage[]>> {
+    const response = await apiClient.get<ApiResponse<TeamPage[]>>('/content/team-page/');
     return response.data;
   },
 };

@@ -110,3 +110,31 @@ export interface LoginCredentials {
   email: string;
   password: string;
 }
+
+export interface HomePageSection {
+  id: number;
+  section_key: string;
+  content: MultilingualContent;
+  last_modified: string;
+  modified_by?: number;
+}
+
+export interface InterventionAxis {
+  id: number;
+  icon: string;
+  title: MultilingualContent;
+  description: MultilingualContent;
+  order: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TeamPage {
+  id: number;
+  title: MultilingualContent;
+  subtitle: MultilingualContent;
+  description: MultilingualContent;
+  last_modified: string;
+  modified_by?: number;
+}
