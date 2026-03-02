@@ -27,19 +27,43 @@ const About = () => {
 
   useEffect(() => {
     loadPages();
+    
+    // Recharger les données quand la page redevient visible (après modification dans admin)
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        loadPages();
+      }
+    };
+    
+    // Recharger les données quand la fenêtre reprend le focus
+    const handleFocus = () => {
+      loadPages();
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+    };
   }, []);
 
   const loadPages = async () => {
     try {
       setIsLoading(true);
       const response = await contentService.getPages();
+      console.log('About page - Response from API:', response);
       if (response.error === false && response.data && Array.isArray(response.data)) {
         // Créer un objet avec le slug comme clé pour un accès rapide
         const pagesMap: Record<string, InstitutionalPage> = {};
         response.data.forEach(page => {
           pagesMap[page.slug] = page;
         });
+        console.log('About page - Pages map:', pagesMap);
         setPages(pagesMap);
+      } else {
+        console.warn('About page - Invalid response format:', response);
       }
     } catch (error: any) {
       console.error('Erreur lors du chargement des pages institutionnelles:', error);
@@ -86,6 +110,17 @@ const About = () => {
   const contextePage = pages['contexte'];
   const visionPage = pages['vision'];
   const missionPage = pages['mission'];
+  
+  // Debug: afficher les pages chargées
+  useEffect(() => {
+    if (Object.keys(pages).length > 0) {
+      console.log('About page - Available pages:', Object.keys(pages));
+      console.log('About page - Presentation:', presentationPage);
+      console.log('About page - Contexte:', contextePage);
+      console.log('About page - Vision:', visionPage);
+      console.log('About page - Mission:', missionPage);
+    }
+  }, [pages, presentationPage, contextePage, visionPage, missionPage]);
 
   return (
     <Layout>

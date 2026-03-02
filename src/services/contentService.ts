@@ -61,7 +61,9 @@ export const contentService = {
 
   // Pages institutionnelles
   async getPages(): Promise<ApiResponse<InstitutionalPage[]>> {
-    const response = await apiClient.get<ApiResponse<InstitutionalPage[]>>('/content/pages/');
+    const response = await apiClient.get<ApiResponse<InstitutionalPage[]>>('/content/pages/', {
+      params: { _t: Date.now() } // Éviter le cache
+    });
     return response.data;
   },
 
@@ -83,7 +85,9 @@ export const contentService = {
 
   // Sections de la page d'accueil
   async getHomeSections(): Promise<ApiResponse<HomePageSection[]>> {
-    const response = await apiClient.get<ApiResponse<HomePageSection[]>>('/content/home-sections/');
+    const response = await apiClient.get<ApiResponse<HomePageSection[]>>('/content/home-sections/', {
+      params: { _t: Date.now() } // Éviter le cache
+    });
     return response.data;
   },
 
@@ -105,7 +109,9 @@ export const contentService = {
 
   // Page équipe
   async getTeamPage(): Promise<ApiResponse<TeamPage[]>> {
-    const response = await apiClient.get<ApiResponse<TeamPage[]>>('/content/team-page/');
+    const response = await apiClient.get<ApiResponse<TeamPage[]>>('/content/team-page/', {
+      params: { _t: Date.now() } // Éviter le cache
+    });
     return response.data;
   },
 };

@@ -76,7 +76,7 @@ const Contact = () => {
     {
       icon: Mail,
       label: t('contact.info.email'),
-      value: 'contact@ssmos.cd',
+      value: 'contact@ssmos.org',
     },
     {
       icon: Clock,

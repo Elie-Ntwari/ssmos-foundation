@@ -224,8 +224,30 @@ const News = () => {
                 </Link>
               ))}
               {filteredArticles.length === 0 && !isLoading && (
-                <div className="col-span-full text-center py-12 text-muted-foreground">
-                  <p>{t('news.noArticles') || 'Aucune actualité disponible'}</p>
+                <div className="col-span-full text-center py-16">
+                  <div className="max-w-md mx-auto">
+                    <Calendar className="h-16 w-16 text-muted-foreground/50 mx-auto mb-4" />
+                    <h3 className="font-display text-lg font-semibold text-foreground mb-2">
+                      {selectedCategory 
+                        ? language === 'en' 
+                          ? 'No articles in this category'
+                          : language === 'ln'
+                          ? 'Ba articles te na esika oyo'
+                          : language === 'sw'
+                          ? 'Hakuna makala katika kategoria hii'
+                          : 'Aucun article dans cette catégorie'
+                        : language === 'en'
+                        ? 'No news yet'
+                        : language === 'ln'
+                        ? 'Sango te awa'
+                        : language === 'sw'
+                        ? 'Hakuna habari bado'
+                        : 'Aucune actualité pour le moment'}
+                    </h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed">
+                      {t('news.noArticles')}
+                    </p>
+                  </div>
                 </div>
               )}
             </div>

@@ -35,6 +35,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'home.stats.title': 'Notre impact en chiffres',
     'home.news.title': 'Dernières actualités',
     'home.news.viewAll': 'Voir toutes les actualités',
+    'home.news.noArticles': 'Aucune actualité récente. Revenez bientôt pour découvrir nos dernières nouvelles.',
     
     // Stats
     'stats.companies': 'Entreprises accompagnées',
@@ -95,10 +96,11 @@ export const translations: Record<Language, Record<string, string>> = {
     'news.category.regulation': 'Réglementation',
     'news.category.innovation': 'Innovation',
     'news.backToList': 'Retour aux actualités',
+    'news.noArticles': 'Aucune actualité pour le moment. Revenez bientôt pour découvrir nos dernières nouvelles et mises à jour en sécurité et santé au travail.',
     
     // Blog
     'blog.title': 'Blog',
-    'blog.subtitle': 'Articles éducatifs sur la santé et sécurité au travail',
+    'blog.subtitle': 'Parce que la sécurité ne doit pas être une simple contrainte réglementaire, mais une priorité partagée, nous avons conçu cette série d\'articles éducatifs.',
     'blog.readMore': 'Lire l\'article',
     'blog.backToList': 'Retour au blog',
     
@@ -106,6 +108,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'team.title': 'Notre Équipe',
     'team.subtitle': 'Une équipe pluridisciplinaire d\'experts dévoués',
     'team.expertise': 'Domaines d\'expertise',
+    'team.noMembers': 'Aucun membre disponible',
     
     // Contact
     'contact.title': 'Contactez-nous',
@@ -159,6 +162,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'home.stats.title': 'Our impact in numbers',
     'home.news.title': 'Latest news',
     'home.news.viewAll': 'View all news',
+    'home.news.noArticles': 'No recent news. Check back soon for our latest updates.',
     
     // Stats
     'stats.companies': 'Companies supported',
@@ -219,10 +223,11 @@ export const translations: Record<Language, Record<string, string>> = {
     'news.category.regulation': 'Regulation',
     'news.category.innovation': 'Innovation',
     'news.backToList': 'Back to news',
+    'news.noArticles': 'No news at the moment. Check back soon to discover our latest updates and news on occupational safety and health.',
     
     // Blog
     'blog.title': 'Blog',
-    'blog.subtitle': 'Educational articles on occupational health and safety',
+    'blog.subtitle': 'Because safety should not be just a regulatory constraint, but a shared priority, we have designed this series of educational articles.',
     'blog.readMore': 'Read article',
     'blog.backToList': 'Back to blog',
     
@@ -230,6 +235,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'team.title': 'Our Team',
     'team.subtitle': 'A multidisciplinary team of dedicated experts',
     'team.expertise': 'Areas of expertise',
+    'team.noMembers': 'No members available',
     
     // Contact
     'contact.title': 'Contact us',
@@ -283,6 +289,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'home.stats.title': 'Mbongwana na biso na bitangi',
     'home.news.title': 'Sango ya sika',
     'home.news.viewAll': 'Tala sango nionso',
+    'home.news.noArticles': 'Sango ya sika te. Zonga lisusu mpo na koyeba sango na biso.',
     
     // Stats
     'stats.companies': 'Ba entreprises oyo tosungaki',
@@ -358,10 +365,11 @@ export const translations: Record<Language, Record<string, string>> = {
     'news.category.regulation': 'Réglementation',
     'news.category.innovation': 'Innovation',
     'news.backToList': 'Kozonga na sango',
-
+    'news.noArticles': 'Sango te awa. Zonga lisusu mpo na koyeba sango ya sika na biso na makambo ya bobateli mpe bomoyi ya mosala.',
+    
     // Blog
     'blog.title': 'Blogi',
-    'blog.subtitle': 'Ba articles éducatifs mpo na santé na sécurité na mosala',
+    'blog.subtitle': 'Mpo ete bobateli esengeli te kozala makambo ya mibeko kaka, kasi esika ya ntina oyo bato nyonso bazali na yango, tokomaki ba articles oyo ya koyekola.',
     'blog.readMore': 'Kotanga article',
     'blog.backToList': 'Kozonga na blogi',
 
@@ -369,6 +377,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'team.title': 'Équipe na biso',
     'team.subtitle': 'Équipe pluridisciplinaire ya ba experts',
     'team.expertise': 'Domaines ya expertise',
+    'team.noMembers': 'Bato te oyo ezali awa',
 
     // Contact
     'contact.title': 'Kosolola na biso',
@@ -407,6 +416,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'home.stats.title': 'Athari yetu kwa nambari',
     'home.news.title': 'Habari za hivi karibuni',
     'home.news.viewAll': 'Tazama habari zote',
+    'home.news.noArticles': 'Hakuna habari za hivi karibuni. Rudi hivi karibuni kwa habari mpya.',
     
     // Stats
     'stats.companies': 'Makampuni yaliyosaidiwa',
@@ -482,10 +492,11 @@ export const translations: Record<Language, Record<string, string>> = {
     'news.category.regulation': 'Kanuni',
     'news.category.innovation': 'Uvumbuzi',
     'news.backToList': 'Rudi kwenye habari',
-
+    'news.noArticles': 'Hakuna habari kwa sasa. Rudi hivi karibuni kujifunza habari mpya na sasisho zetu kuhusu usalama na afya ya kazi.',
+    
     // Blog
     'blog.title': 'Blogu',
-    'blog.subtitle': 'Makala ya elimu kuhusu afya na usalama kazini',
+    'blog.subtitle': 'Kwa sababu usalama haupaswi kuwa kikwazo cha kisheria tu, lakini kipaumbele cha pamoja, tumebuni safu hii ya makala ya elimu.',
     'blog.readMore': 'Soma makala',
     'blog.backToList': 'Rudi kwenye blogu',
 
@@ -493,6 +504,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'team.title': 'Timu Yetu',
     'team.subtitle': 'Timu ya taaluma nyingi ya wataalamu',
     'team.expertise': 'Maeneo ya utaalamu',
+    'team.noMembers': 'Hakuna wanachama waliopo',
 
     // Contact
     'contact.title': 'Wasiliana nasi',

@@ -689,7 +689,10 @@ const Index = () => {
               ))}
               {latestArticles.length === 0 && !isLoading && (
                 <div className="col-span-full text-center py-12 text-muted-foreground">
-                  <p>{t('home.news.noArticles') || 'Aucune actualité disponible'}</p>
+                  <div className="text-center">
+                    <Calendar className="h-12 w-12 text-muted-foreground/50 mx-auto mb-3" />
+                    <p className="text-muted-foreground text-sm">{t('home.news.noArticles')}</p>
+                  </div>
                 </div>
               )}
             </motion.div>
