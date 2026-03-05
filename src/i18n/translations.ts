@@ -94,7 +94,10 @@ export const translations: Record<Language, Record<string, string>> = {
     'news.category.sst': 'SST',
     'news.category.training': 'Formation',
     'news.category.regulation': 'Réglementation',
+    'news.category.reglementation': 'Réglementation',
     'news.category.innovation': 'Innovation',
+    'news.category.evenement': 'Événement',
+    'news.category.event': 'Événement',
     'news.backToList': 'Retour aux actualités',
     'news.noArticles': 'Aucune actualité pour le moment. Revenez bientôt pour découvrir nos dernières nouvelles et mises à jour en sécurité et santé au travail.',
     
@@ -221,7 +224,10 @@ export const translations: Record<Language, Record<string, string>> = {
     'news.category.sst': 'OHS',
     'news.category.training': 'Training',
     'news.category.regulation': 'Regulation',
+    'news.category.reglementation': 'Regulation',
     'news.category.innovation': 'Innovation',
+    'news.category.evenement': 'Event',
+    'news.category.event': 'Event',
     'news.backToList': 'Back to news',
     'news.noArticles': 'No news at the moment. Check back soon to discover our latest updates and news on occupational safety and health.',
     
@@ -363,7 +369,10 @@ export const translations: Record<Language, Record<string, string>> = {
     'news.category.sst': 'SST',
     'news.category.training': 'Formation',
     'news.category.regulation': 'Réglementation',
+    'news.category.reglementation': 'Réglementation',
     'news.category.innovation': 'Innovation',
+    'news.category.evenement': 'Lisanga',
+    'news.category.event': 'Lisanga',
     'news.backToList': 'Kozonga na sango',
     'news.noArticles': 'Sango te awa. Zonga lisusu mpo na koyeba sango ya sika na biso na makambo ya bobateli mpe bomoyi ya mosala.',
     
@@ -490,7 +499,10 @@ export const translations: Record<Language, Record<string, string>> = {
     'news.category.sst': 'OHS',
     'news.category.training': 'Mafunzo',
     'news.category.regulation': 'Kanuni',
+    'news.category.reglementation': 'Kanuni',
     'news.category.innovation': 'Uvumbuzi',
+    'news.category.evenement': 'Tukio',
+    'news.category.event': 'Tukio',
     'news.backToList': 'Rudi kwenye habari',
     'news.noArticles': 'Hakuna habari kwa sasa. Rudi hivi karibuni kujifunza habari mpya na sasisho zetu kuhusu usalama na afya ya kazi.',
     

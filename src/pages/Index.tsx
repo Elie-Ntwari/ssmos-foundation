@@ -7,6 +7,7 @@ import { contentService } from '@/services/contentService';
 import { NewsArticle, HomePageSection, InterventionAxis } from '@/types/api';
 import { Button } from '@/components/ui/button';
 import { stats } from '@/data/mockData';
+import { getMultilingualContent as getContent } from '@/utils/multilingual';
 import Layout from '@/components/layout/Layout';
 import logo from '@/assets/logo.png';
 
@@ -84,9 +85,9 @@ const Index = () => {
     return content[language] || content.fr || content.en || '';
   };
 
-  // Helper pour obtenir le contenu multilingue
+  // Helper pour obtenir le contenu multilingue (utilise la langue actuelle)
   const getMultilingualContent = (content: { fr?: string; en?: string; ln?: string; sw?: string }): string => {
-    return content[language] || content.fr || content.en || '';
+    return getContent(content, language);
   };
 
   const latestArticles = Array.isArray(articles) ? articles.slice(0, 3) : [];
@@ -673,16 +674,10 @@ const Index = () => {
                       </span>
                     </div>
                     <h3 className="font-display text-lg font-semibold text-foreground group-hover:text-secondary transition-colors line-clamp-2 mb-2">
-                      {language === 'en' ? (article.title.en || article.title.fr) : 
-                       language === 'ln' ? (article.title.ln || article.title.fr) : 
-                       language === 'sw' ? (article.title.sw || article.title.fr) : 
-                       article.title.fr}
+                      {getMultilingualContent(article.title)}
                     </h3>
                     <p className="text-muted-foreground text-sm line-clamp-2">
-                      {language === 'en' ? (article.excerpt.en || article.excerpt.fr) : 
-                       language === 'ln' ? (article.excerpt.ln || article.excerpt.fr) : 
-                       language === 'sw' ? (article.excerpt.sw || article.excerpt.fr) : 
-                       article.excerpt.fr}
+                      {getMultilingualContent(article.excerpt)}
                     </p>
                   </Link>
                 </motion.div>

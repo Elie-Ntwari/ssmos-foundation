@@ -5,6 +5,7 @@ import { useLanguage } from '@/i18n/LanguageContext';
 import { contentService } from '@/services/contentService';
 import { NewsArticle } from '@/types/api';
 import { Button } from '@/components/ui/button';
+import { getMultilingualContent as getContent } from '@/utils/multilingual';
 import Layout from '@/components/layout/Layout';
 
 const News = () => {
@@ -34,6 +35,34 @@ const News = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Extraire les catégories uniques depuis les articles
+  const categories = Array.from(new Set(
+    articles.map(article => article.category).filter(Boolean)
+  )).sort();
+
+  // Helper pour obtenir le contenu multilingue (utilise la langue actuelle)
+  const getMultilingualContent = (content: { fr?: string; en?: string; ln?: string; sw?: string }): string => {
+    return getContent(content, language);
+  };
+
+  // Helper pour normaliser le nom de catégorie (enlever accents, mettre en minuscules)
+  const normalizeCategory = (cat: string): string => {
+    return cat
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // Enlever les accents
+      .replace(/[^a-z0-9]/g, ''); // Enlever les caractères spéciaux
+  };
+
+  // Helper pour obtenir le nom traduit d'une catégorie
+  const getCategoryName = (category: string): string => {
+    const normalized = normalizeCategory(category);
+    const translationKey = `news.category.${normalized}`;
+    const translated = t(translationKey);
+    // Si la traduction retourne la clé elle-même, utiliser le nom original
+    return translated === translationKey ? category : translated;
   };
 
   const filteredArticles = Array.isArray(articles) 
@@ -74,10 +103,7 @@ const News = () => {
               {article.category}
             </span>
             <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 max-w-4xl">
-              {language === 'en' ? (article.title.en || article.title.fr) : 
-               language === 'ln' ? (article.title.ln || article.title.fr) : 
-               language === 'sw' ? (article.title.sw || article.title.fr) : 
-               article.title.fr}
+              {getMultilingualContent(article.title)}
             </h1>
             <div className="flex flex-wrap items-center gap-4 text-white/70 text-sm">
               <span className="flex items-center gap-2">
@@ -101,18 +127,15 @@ const News = () => {
           <div className="container mx-auto">
             <div className="max-w-3xl mx-auto">
               {article.image && (
-                <img
-                  src={article.image}
-                  alt={article.title.fr || article.title.en || 'Actualité'}
-                  className="w-full aspect-video object-cover rounded-xl mb-8"
-                />
+                    <img
+                      src={article.image}
+                      alt={getMultilingualContent(article.title)}
+                      className="w-full aspect-video object-cover rounded-xl mb-8"
+                    />
               )}
               <div className="prose prose-lg max-w-none">
                 <p className="text-muted-foreground text-lg leading-relaxed whitespace-pre-wrap">
-                  {language === 'en' ? (article.content.en || article.content.fr) : 
-                   language === 'ln' ? (article.content.ln || article.content.fr) : 
-                   language === 'sw' ? (article.content.sw || article.content.fr) : 
-                   article.content.fr}
+                  {getMultilingualContent(article.content)}
                 </p>
               </div>
             </div>
@@ -151,7 +174,7 @@ const News = () => {
             >
               {t('news.category.all')}
             </button>
-            {['sst', 'training', 'regulation', 'innovation'].map((cat) => (
+            {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
@@ -161,7 +184,7 @@ const News = () => {
                     : 'bg-card border-border hover:bg-secondary hover:text-secondary-foreground'
                 }`}
               >
-                {t(`news.category.${cat}`)}
+                {getCategoryName(cat)}
               </button>
             ))}
           </div>
@@ -188,7 +211,7 @@ const News = () => {
                     {article.image ? (
                       <img
                         src={article.image}
-                        alt={article.title.fr || article.title.en || 'Actualité'}
+                        alt={getMultilingualContent(article.title)}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     ) : (
@@ -206,16 +229,10 @@ const News = () => {
                     </span>
                   </div>
                   <h2 className="font-display text-xl font-semibold text-foreground group-hover:text-secondary transition-colors mb-2">
-                    {language === 'en' ? (article.title.en || article.title.fr) : 
-                     language === 'ln' ? (article.title.ln || article.title.fr) : 
-                     language === 'sw' ? (article.title.sw || article.title.fr) : 
-                     article.title.fr}
+                    {getMultilingualContent(article.title)}
                   </h2>
                   <p className="text-muted-foreground text-sm mb-4">
-                    {language === 'en' ? (article.excerpt.en || article.excerpt.fr) : 
-                     language === 'ln' ? (article.excerpt.ln || article.excerpt.fr) : 
-                     language === 'sw' ? (article.excerpt.sw || article.excerpt.fr) : 
-                     article.excerpt.fr}
+                    {getMultilingualContent(article.excerpt)}
                   </p>
                   <span className="inline-flex items-center text-secondary text-sm font-medium">
                     {t('news.readMore')}

@@ -5,6 +5,7 @@ import { useLanguage } from '@/i18n/LanguageContext';
 import { contentService } from '@/services/contentService';
 import { BlogPost } from '@/types/api';
 import { Button } from '@/components/ui/button';
+import { getMultilingualContent as getContent } from '@/utils/multilingual';
 import Layout from '@/components/layout/Layout';
 
 const Blog = () => {
@@ -33,6 +34,11 @@ const Blog = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Helper pour obtenir le contenu multilingue (utilise la langue actuelle)
+  const getMultilingualContent = (content: { fr?: string; en?: string; ln?: string; sw?: string }): string => {
+    return getContent(content, language);
   };
 
   // Single post view
@@ -64,10 +70,7 @@ const Blog = () => {
               </Link>
             </Button>
             <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 max-w-4xl">
-              {language === 'en' ? (post.title.en || post.title.fr) : 
-               language === 'ln' ? (post.title.ln || post.title.fr) : 
-               language === 'sw' ? (post.title.sw || post.title.fr) : 
-               post.title.fr}
+              {getMultilingualContent(post.title)}
             </h1>
             <div className="flex flex-wrap items-center gap-4 text-white/70 text-sm">
               <span className="flex items-center gap-2">
@@ -93,16 +96,13 @@ const Blog = () => {
               {post.image && (
                 <img
                   src={post.image}
-                  alt={post.title.fr || post.title.en || 'Article'}
+                  alt={getMultilingualContent(post.title)}
                   className="w-full aspect-video object-cover rounded-xl mb-8"
                 />
               )}
               <div className="prose prose-lg max-w-none">
                 <p className="text-muted-foreground text-lg leading-relaxed whitespace-pre-wrap">
-                  {language === 'en' ? (post.content.en || post.content.fr) : 
-                   language === 'ln' ? (post.content.ln || post.content.fr) : 
-                   language === 'sw' ? (post.content.sw || post.content.fr) : 
-                   post.content.fr}
+                  {getMultilingualContent(post.content)}
                 </p>
               </div>
             </div>
@@ -147,7 +147,7 @@ const Blog = () => {
                     {post.image ? (
                       <img
                         src={post.image}
-                        alt={post.title.fr || post.title.en || 'Article'}
+                        alt={getMultilingualContent(post.title)}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     ) : (
@@ -163,16 +163,10 @@ const Blog = () => {
                     </span>
                   </div>
                   <h2 className="font-display text-xl font-semibold text-foreground group-hover:text-secondary transition-colors mb-2 line-clamp-2">
-                    {language === 'en' ? (post.title.en || post.title.fr) : 
-                     language === 'ln' ? (post.title.ln || post.title.fr) : 
-                     language === 'sw' ? (post.title.sw || post.title.fr) : 
-                     post.title.fr}
+                    {getMultilingualContent(post.title)}
                   </h2>
                   <p className="text-muted-foreground text-sm mb-4 line-clamp-3">
-                    {language === 'en' ? (post.excerpt.en || post.excerpt.fr) : 
-                     language === 'ln' ? (post.excerpt.ln || post.excerpt.fr) : 
-                     language === 'sw' ? (post.excerpt.sw || post.excerpt.fr) : 
-                     post.excerpt.fr}
+                    {getMultilingualContent(post.excerpt)}
                   </p>
                   <span className="inline-flex items-center text-secondary text-sm font-medium">
                     {t('blog.readMore')}

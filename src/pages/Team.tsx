@@ -3,6 +3,7 @@ import { useLanguage } from '@/i18n/LanguageContext';
 import { contentService } from '@/services/contentService';
 import { TeamMember, TeamPage } from '@/types/api';
 import { Loader2 } from 'lucide-react';
+import { getMultilingualContent as getContent } from '@/utils/multilingual';
 import Layout from '@/components/layout/Layout';
 
 const Team = () => {
@@ -40,9 +41,9 @@ const Team = () => {
     }
   };
 
-  // Helper pour obtenir le contenu multilingue
+  // Helper pour obtenir le contenu multilingue (utilise la langue actuelle)
   const getMultilingualContent = (content: { fr?: string; en?: string; ln?: string; sw?: string }): string => {
-    return content[language] || content.fr || content.en || '';
+    return getContent(content, language);
   };
 
   return (
@@ -72,60 +73,82 @@ const Team = () => {
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               {Array.isArray(teamMembers) && teamMembers.map((member, index) => (
                 <div
                   key={member.id}
-                  className="card-institutional text-center opacity-0 animate-fade-up"
+                  className="card-institutional text-center opacity-0 animate-fade-up hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <div className="w-28 h-28 mx-auto rounded-full overflow-hidden mb-4 ring-4 ring-secondary/20">
-                    {member.image ? (
-                      <img
-                        src={member.image}
-                        alt={member.name}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-muted flex items-center justify-center">
-                        <span className="text-2xl font-bold text-muted-foreground">
-                          {member.name.charAt(0).toUpperCase()}
-                        </span>
+                  {/* Photo circulaire améliorée */}
+                  <div className="flex justify-center mb-6 -mt-8">
+                    <div className="relative">
+                      <div className="w-32 h-32 rounded-full overflow-hidden ring-4 ring-background shadow-xl">
+                        {member.image ? (
+                          <img
+                            src={member.image}
+                            alt={member.name}
+                            className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                            onError={(e) => {
+                              // Fallback si l'image ne charge pas
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                              const parent = target.parentElement;
+                              if (parent) {
+                                parent.innerHTML = `
+                                  <div class="w-full h-full bg-gradient-to-br from-primary/30 via-secondary/30 to-primary/20 flex items-center justify-center">
+                                    <span class="text-4xl font-bold text-primary">${member.name.charAt(0).toUpperCase()}</span>
+                                  </div>
+                                `;
+                              }
+                            }}
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gradient-to-br from-primary/30 via-secondary/30 to-primary/20 flex items-center justify-center">
+                            <span className="text-4xl font-bold text-primary">
+                              {member.name.charAt(0).toUpperCase()}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Contenu */}
+                  <div className="px-4 pb-4">
+                    <h3 className="font-display text-xl md:text-2xl font-semibold text-foreground mb-2">
+                      {member.name}
+                    </h3>
+                    <p className="text-secondary font-medium text-sm md:text-base mb-4">
+                      {language === 'en' ? (member.role.en || member.role.fr) : 
+                       language === 'ln' ? (member.role.ln || member.role.fr) : 
+                       language === 'sw' ? (member.role.sw || member.role.fr) : 
+                       member.role.fr}
+                    </p>
+                    <p className="text-muted-foreground text-sm md:text-base mb-5 leading-relaxed line-clamp-4">
+                      {language === 'en' ? (member.bio.en || member.bio.fr) : 
+                       language === 'ln' ? (member.bio.ln || member.bio.fr) : 
+                       language === 'sw' ? (member.bio.sw || member.bio.fr) : 
+                       member.bio.fr}
+                    </p>
+                    {member.expertise && member.expertise.length > 0 && (
+                      <div className="mt-6 pt-4 border-t border-border">
+                        <h4 className="text-xs font-semibold text-foreground uppercase tracking-wide mb-3">
+                          {t('team.expertise')}
+                        </h4>
+                        <div className="flex flex-wrap justify-center gap-2">
+                          {member.expertise.map((exp) => (
+                            <span
+                              key={exp}
+                              className="px-3 py-1.5 bg-accent text-accent-foreground text-xs rounded-full font-medium hover:bg-primary/10 hover:text-primary transition-colors duration-200"
+                            >
+                              {exp}
+                            </span>
+                          ))}
+                        </div>
                       </div>
                     )}
                   </div>
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-1">
-                    {member.name}
-                  </h3>
-                  <p className="text-secondary font-medium text-sm mb-3">
-                    {language === 'en' ? (member.role.en || member.role.fr) : 
-                     language === 'ln' ? (member.role.ln || member.role.fr) : 
-                     language === 'sw' ? (member.role.sw || member.role.fr) : 
-                     member.role.fr}
-                  </p>
-                  <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
-                    {language === 'en' ? (member.bio.en || member.bio.fr) : 
-                     language === 'ln' ? (member.bio.ln || member.bio.fr) : 
-                     language === 'sw' ? (member.bio.sw || member.bio.fr) : 
-                     member.bio.fr}
-                  </p>
-                  {member.expertise && member.expertise.length > 0 && (
-                    <div>
-                      <h4 className="text-xs font-semibold text-foreground uppercase tracking-wide mb-2">
-                        {t('team.expertise')}
-                      </h4>
-                      <div className="flex flex-wrap justify-center gap-2">
-                        {member.expertise.map((exp) => (
-                          <span
-                            key={exp}
-                            className="px-2.5 py-1 bg-accent text-accent-foreground text-xs rounded-full"
-                          >
-                            {exp}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
                 </div>
               ))}
               {teamMembers.length === 0 && !isLoading && (

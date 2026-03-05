@@ -6,6 +6,7 @@ import { useLanguage } from '@/i18n/LanguageContext';
 import { contentService } from '@/services/contentService';
 import { Service } from '@/types/api';
 import { Button } from '@/components/ui/button';
+import { getMultilingualContent as getContent } from '@/utils/multilingual';
 import Layout from '@/components/layout/Layout';
 
 const iconMap: Record<string, any> = {
@@ -52,6 +53,11 @@ const Services = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Helper pour obtenir le contenu multilingue (utilise la langue actuelle)
+  const getMultilingualContent = (content: { fr?: string; en?: string; ln?: string; sw?: string }): string => {
+    return getContent(content, language);
   };
 
   // If viewing a specific service
@@ -104,10 +110,7 @@ const Services = () => {
                 <IconComponent className="h-8 w-8 text-secondary-foreground" />
               </div>
               <h1 className="font-display text-3xl md:text-4xl font-bold text-white">
-                {language === 'en' ? (service.title.en || service.title.fr) : 
-                 language === 'ln' ? (service.title.ln || service.title.fr) : 
-                 language === 'sw' ? (service.title.sw || service.title.fr) : 
-                 service.title.fr}
+                {getMultilingualContent(service.title)}
               </h1>
             </motion.div>
           </div>
@@ -123,10 +126,7 @@ const Services = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
               >
-                {language === 'en' ? (service.description.en || service.description.fr) : 
-                 language === 'ln' ? (service.description.ln || service.description.fr) : 
-                 language === 'sw' ? (service.description.sw || service.description.fr) : 
-                 service.description.fr}
+                {getMultilingualContent(service.description)}
               </motion.p>
               
               <motion.h2 
@@ -231,16 +231,10 @@ const Services = () => {
                     </div>
                     <div className="flex-1">
                       <h2 className="font-display text-2xl font-bold text-foreground mb-3">
-                        {language === 'en' ? (service.title.en || service.title.fr) : 
-                         language === 'ln' ? (service.title.ln || service.title.fr) : 
-                         language === 'sw' ? (service.title.sw || service.title.fr) : 
-                         service.title.fr}
+                        {getMultilingualContent(service.title)}
                       </h2>
                       <p className="text-muted-foreground leading-relaxed mb-4">
-                        {language === 'en' ? (service.description.en || service.description.fr) : 
-                         language === 'ln' ? (service.description.ln || service.description.fr) : 
-                         language === 'sw' ? (service.description.sw || service.description.fr) : 
-                         service.description.fr}
+                        {getMultilingualContent(service.description)}
                       </p>
                       <Button asChild variant="outline" className="group">
                         <Link to={`/services/${service.id}`}>
