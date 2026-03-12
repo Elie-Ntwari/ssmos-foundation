@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { stats } from '@/data/mockData';
 import { getMultilingualContent as getContent } from '@/utils/multilingual';
 import Layout from '@/components/layout/Layout';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from '@/components/ui/carousel';
 import logo from '@/assets/logo.png';
 import hero1 from '@/assets/hero-1.png';
 import hero2 from '@/assets/hero-2.png';
@@ -51,6 +52,7 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingSections, setIsLoadingSections] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [axesCarouselApi, setAxesCarouselApi] = useState<CarouselApi | null>(null);
 
   const heroSlides = [
     {
@@ -91,6 +93,14 @@ const Index = () => {
     }, 6000);
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    if (!axesCarouselApi || interventionAxes.length <= 1) return;
+    const timer = setInterval(() => {
+      axesCarouselApi.scrollNext();
+    }, 4500);
+    return () => clearInterval(timer);
+  }, [axesCarouselApi, interventionAxes.length]);
 
   const loadAllData = async () => {
     try {
@@ -186,7 +196,7 @@ const Index = () => {
               transition={{ duration: 2, repeat: Infinity }}
             />
             <span className="text-white/90 text-sm md:text-base font-medium">
-              Safety & Santé na Mosala — République Démocratique du Congo
+              Safety & Santé na Mosala (SSMOS)— République Démocratique du Congo
             </span>
           </motion.div>
 
@@ -378,37 +388,47 @@ const Index = () => {
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
             </div>
           ) : (
-            <motion.div 
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            <motion.div
               variants={staggerContainer}
               initial="initial"
               whileInView="animate"
               viewport={{ once: true }}
             >
-              {interventionAxes.map((axis) => {
-                const axisImage = axisImageMap[axis.icon] || axisIndustrie;
-                return (
-                  <motion.div
-                    key={axis.id}
-                    variants={fadeInUp}
-                    whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                    className="relative group overflow-hidden rounded-2xl min-h-[240px] border border-white/20 shadow-[var(--card-shadow)]"
-                  >
-                    <img
-                      src={axisImage}
-                      alt={getMultilingualContent(axis.title)}
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 hero-gradient opacity-80" />
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.12),transparent_60%)]" />
-                    <div className="relative z-10 h-full flex items-center justify-center p-6 text-center">
-                      <h3 className="font-display text-2xl md:text-3xl font-bold text-white drop-shadow-[0_3px_10px_rgba(0,0,0,0.45)] bg-white/10 border border-white/25 backdrop-blur-sm rounded-2xl px-5 py-3">
-                        {getMultilingualContent(axis.title)}
-                      </h3>
-                    </div>
-                  </motion.div>
-                );
-              })}
+              <Carousel
+                setApi={setAxesCarouselApi}
+                opts={{ align: 'start', loop: true }}
+                className="w-full px-2 sm:px-8 md:px-12"
+              >
+                <CarouselContent className="-ml-4 sm:-ml-6">
+                  {interventionAxes.map((axis) => {
+                    const axisImage = axisImageMap[axis.icon] || axisIndustrie;
+                    return (
+                      <CarouselItem key={axis.id} className="pl-4 sm:pl-6 basis-full md:basis-1/3">
+                        <motion.div
+                          variants={fadeInUp}
+                          whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                          className="relative group overflow-hidden rounded-2xl min-h-[220px] sm:min-h-[250px] md:min-h-[260px] border border-white/20 shadow-[var(--card-shadow)]"
+                        >
+                          <img
+                            src={axisImage}
+                            alt={getMultilingualContent(axis.title)}
+                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
+                          <div className="absolute inset-0 hero-gradient opacity-80" />
+                          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.12),transparent_60%)]" />
+                          <div className="absolute inset-0 z-10 flex items-center justify-center p-4 sm:p-6 text-center">
+                            <h3 className="inline-flex items-center justify-center w-fit max-w-[88%] sm:max-w-[82%] mx-auto font-display text-xl sm:text-2xl md:text-3xl font-bold text-white text-center leading-tight drop-shadow-[0_3px_10px_rgba(0,0,0,0.45)] bg-white/10 border border-white/25 backdrop-blur-sm rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4">
+                              {getMultilingualContent(axis.title)}
+                            </h3>
+                          </div>
+                        </motion.div>
+                      </CarouselItem>
+                    );
+                  })}
+                </CarouselContent>
+                <CarouselPrevious className="hidden sm:inline-flex left-0 md:-left-1 bg-white/90 hover:bg-white text-primary border-primary/20" />
+                <CarouselNext className="hidden sm:inline-flex right-0 md:-right-1 bg-white/90 hover:bg-white text-primary border-primary/20" />
+              </Carousel>
             </motion.div>
           )}
         </div>
