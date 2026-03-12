@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Shield, GraduationCap, ClipboardCheck, Scale, Cpu, Factory, Building2, Truck, Hospital, Pickaxe, Leaf, CheckCircle, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight, Shield, GraduationCap, ClipboardCheck, Scale, Cpu, Factory, Building2, Truck, Hospital, Pickaxe, Leaf, CheckCircle, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { contentService } from '@/services/contentService';
@@ -300,7 +300,7 @@ const Index = () => {
           </div>
 
           {/* Carousel Controls */}
-          <div className="flex items-center justify-between mt-10">
+          <div className="flex items-center mt-10">
             {/* Dots */}
             <div className="flex items-center gap-3">
               {[0, 1, 2].map((i) => (
@@ -314,22 +314,6 @@ const Index = () => {
                   }`}
                 />
               ))}
-            </div>
-
-            {/* Arrows */}
-            <div className="flex gap-2">
-              <button
-                onClick={prevSlide}
-                className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all"
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </button>
-              <button
-                onClick={nextSlide}
-                className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all"
-              >
-                <ChevronRight className="h-5 w-5" />
-              </button>
             </div>
           </div>
         </div>

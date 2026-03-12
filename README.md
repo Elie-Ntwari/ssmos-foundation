@@ -1,41 +1,51 @@
+# SSMos Foundation Website
 
-Follow these steps:
+Site vitrine de **SSMos (Safety & Santé na Mosala)** pour présenter l'organisation, ses services, ses actualités, son blog, son équipe et ses coordonnées.
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## Stack technique
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+- React + TypeScript
+- Vite
+- Tailwind CSS
+- shadcn/ui
+- React Router
+- Framer Motion
 
-# Step 3: Install the necessary dependencies.
-npm i
+## Lancer le projet en local
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Application disponible ensuite sur `http://localhost:8080`.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Scripts utiles
 
-**Use GitHub Codespaces**
+```bash
+npm run dev      # Démarrage en développement
+npm run build    # Build de production
+npm run preview  # Prévisualisation du build
+npm run lint     # Vérification ESLint
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Déploiement et aperçu au partage (Facebook / WhatsApp / X)
 
-## What technologies are used for this project?
+Les métadonnées de partage sont définies dans `index.html` (`og:*` et `twitter:*`).
 
-This project is built with:
+Pour afficher correctement la marque **SSMos** lors du partage :
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- garder un titre/description alignés avec SSMos ;
+- utiliser une image de preview publique (actuellement `/favicon.png`) ;
+- après déploiement, forcer un refresh du cache des réseaux sociaux :
+  - [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/)
+  - [Twitter Card Validator](https://cards-dev.twitter.com/validator)
+
+## Structure principale
+
+- `src/pages` : pages du site
+- `src/components` : composants UI et layout
+- `src/i18n` : traductions
+- `src/services` : appels API
+- `public` : assets statiques publics
 
