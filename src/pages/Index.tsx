@@ -148,8 +148,8 @@ const Index = () => {
               alt={`SSMos Hero ${index + 1}`}
               className="w-full h-full object-cover"
             />
-            {/* Blue overlay for brand consistency */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[hsl(214,97%,19%)/0.88] via-[hsl(214,79%,28%)/0.78] to-[hsl(186,100%,40%)/0.45]" />
+            {/* Same blue tone as top hero sections on other pages */}
+            <div className="absolute inset-0 hero-gradient opacity-80" />
           </motion.div>
         ))}
 

@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, Calendar, User, Loader2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Calendar, ChevronRight, User, Loader2 } from 'lucide-react';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { contentService } from '@/services/contentService';
 import { NewsArticle } from '@/types/api';
 import { Button } from '@/components/ui/button';
 import { getMultilingualContent as getContent } from '@/utils/multilingual';
 import Layout from '@/components/layout/Layout';
+import heroNews from '@/assets/hero-news.png';
 
 const News = () => {
   const { t, language } = useLanguage();
@@ -91,8 +92,19 @@ const News = () => {
     return (
       <Layout>
         {/* Hero */}
-        <section className="hero-gradient py-16 md:py-24">
-          <div className="container mx-auto px-4">
+        <section className="relative overflow-hidden py-16 md:py-24">
+          <div className="absolute inset-0">
+            <img src={heroNews} alt="Actualites SSMos" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 hero-gradient opacity-80" />
+          </div>
+          <div className="container mx-auto px-4 relative z-10">
+            <nav className="flex items-center gap-2 text-white/60 text-sm mb-6">
+              <Link to="/" className="hover:text-white transition-colors">{t('nav.home')}</Link>
+              <ChevronRight className="h-3.5 w-3.5" />
+              <Link to="/news" className="hover:text-white transition-colors">{t('nav.news')}</Link>
+              <ChevronRight className="h-3.5 w-3.5" />
+              <span className="text-white line-clamp-1">{getMultilingualContent(article.title)}</span>
+            </nav>
             <Button asChild variant="ghost" className="text-white/80 hover:text-white mb-6">
               <Link to="/news">
                 <ArrowLeft className="mr-2 h-4 w-4" />
@@ -149,12 +161,21 @@ const News = () => {
   return (
     <Layout>
       {/* Hero */}
-      <section className="hero-gradient py-20 md:py-28">
-        <div className="container mx-auto px-4 text-center">
+      <section className="relative overflow-hidden py-20 md:py-28">
+        <div className="absolute inset-0">
+          <img src={heroNews} alt="Actualites SSMos" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 hero-gradient opacity-80" />
+        </div>
+        <div className="container mx-auto px-4 relative z-10">
+          <nav className="flex items-center gap-2 text-white/60 text-sm mb-6">
+            <Link to="/" className="hover:text-white transition-colors">{t('nav.home')}</Link>
+            <ChevronRight className="h-3.5 w-3.5" />
+            <span className="text-white">{t('nav.news')}</span>
+          </nav>
           <h1 className="font-display text-4xl md:text-5xl font-bold text-white mb-4 opacity-0 animate-fade-up">
             {t('news.title')}
           </h1>
-          <p className="text-white/80 text-lg max-w-2xl mx-auto opacity-0 animate-fade-up stagger-1">
+          <p className="text-white/80 text-lg max-w-2xl opacity-0 animate-fade-up stagger-1">
             {t('news.subtitle')}
           </p>
         </div>

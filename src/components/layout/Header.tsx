@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown, Globe, Target, Eye, Heart, Award, Shield, Lightbulb, ShieldCheck, Building } from 'lucide-react';
+import { Menu, X, ChevronDown, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { Language } from '@/i18n/translations';
@@ -14,11 +14,11 @@ import {
 import logo from '@/assets/logo.png';
 
 const aboutSections = [
-  { id: 'presentation', icon: Building, labelKey: 'about.nav.presentation' },
-  { id: 'contexte', icon: Shield, labelKey: 'about.nav.context' },
-  { id: 'mission', icon: Target, labelKey: 'about.nav.mission' },
-  { id: 'vision', icon: Eye, labelKey: 'about.nav.vision' },
-  { id: 'valeurs', icon: Heart, labelKey: 'about.nav.values' },
+  { id: 'presentation', labelKey: 'about.nav.presentation' },
+  { id: 'contexte', labelKey: 'about.nav.context' },
+  { id: 'mission', labelKey: 'about.nav.mission' },
+  { id: 'vision', labelKey: 'about.nav.vision' },
+  { id: 'valeurs', labelKey: 'about.nav.values' },
 ];
 
 const Header = () => {
@@ -98,17 +98,15 @@ const Header = () => {
                         transition={{ duration: 0.2 }}
                         className="absolute top-full left-0 mt-1 w-64 bg-card rounded-xl border border-border shadow-xl overflow-hidden"
                       >
-                        {aboutSections.map((section, idx) => {
-                          const Icon = section.icon;
+                        {aboutSections.map((section) => {
                           return (
                             <Link
                               key={section.id}
                               to={`/about#${section.id}`}
                               onClick={() => setIsAboutOpen(false)}
-                              className="flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                              className="block px-4 py-3 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
                             >
-                              <Icon className="h-4 w-4 text-secondary" />
-                              <span>{t(section.labelKey)}</span>
+                              {t(section.labelKey)}
                             </Link>
                           );
                         })}
@@ -200,15 +198,13 @@ const Header = () => {
                   {link.hasDropdown && (
                     <div className="ml-4 mt-1 space-y-1">
                       {aboutSections.map((section) => {
-                        const Icon = section.icon;
                         return (
                           <Link
                             key={section.id}
                             to={`/about#${section.id}`}
                             onClick={() => setIsMenuOpen(false)}
-                            className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors"
+                            className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors"
                           >
-                            <Icon className="h-3.5 w-3.5 text-secondary" />
                             {t(section.labelKey)}
                           </Link>
                         );

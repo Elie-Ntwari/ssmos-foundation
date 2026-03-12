@@ -8,6 +8,7 @@ import { Service } from '@/types/api';
 import { Button } from '@/components/ui/button';
 import { getMultilingualContent as getContent } from '@/utils/multilingual';
 import Layout from '@/components/layout/Layout';
+import heroServices from '@/assets/hero-services.png';
 
 const iconMap: Record<string, any> = {
   Briefcase, GraduationCap, ClipboardCheck, Scale, Cpu, Search, MessageSquare
@@ -94,8 +95,12 @@ const Services = () => {
 
     return (
       <Layout>
-        <section className="hero-gradient py-16 md:py-20">
-          <div className="container mx-auto px-4">
+        <section className="relative overflow-hidden py-16 md:py-20">
+          <div className="absolute inset-0">
+            <img src={heroServices} alt="Services SSMos" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 hero-gradient opacity-80" />
+          </div>
+          <div className="container mx-auto px-4 relative z-10">
             {/* Breadcrumb */}
             <nav className="flex items-center gap-2 text-white/60 text-sm mb-6">
               <Link to="/" className="hover:text-white transition-colors">{t('nav.home')}</Link>
@@ -152,8 +157,12 @@ const Services = () => {
 
   return (
     <Layout>
-      <section className="hero-gradient py-16 md:py-20">
-        <div className="container mx-auto px-4">
+      <section className="relative overflow-hidden py-16 md:py-20">
+        <div className="absolute inset-0">
+          <img src={heroServices} alt="Services SSMos" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 hero-gradient opacity-80" />
+        </div>
+        <div className="container mx-auto px-4 relative z-10">
           <nav className="flex items-center gap-2 text-white/60 text-sm mb-6">
             <Link to="/" className="hover:text-white transition-colors">{t('nav.home')}</Link>
             <ChevronRight className="h-3.5 w-3.5" />

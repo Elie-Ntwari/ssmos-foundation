@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, Calendar, User, Clock, Loader2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Calendar, ChevronRight, User, Clock, Loader2 } from 'lucide-react';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { contentService } from '@/services/contentService';
 import { BlogPost } from '@/types/api';
 import { Button } from '@/components/ui/button';
 import { getMultilingualContent as getContent } from '@/utils/multilingual';
 import Layout from '@/components/layout/Layout';
+import heroBlog from '@/assets/hero-blog.png';
 
 const Blog = () => {
   const { t, language } = useLanguage();
@@ -61,8 +62,19 @@ const Blog = () => {
     return (
       <Layout>
         {/* Hero */}
-        <section className="hero-gradient py-16 md:py-24">
-          <div className="container mx-auto px-4">
+        <section className="relative overflow-hidden py-16 md:py-24">
+          <div className="absolute inset-0">
+            <img src={heroBlog} alt="Blog SSMos" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 hero-gradient opacity-80" />
+          </div>
+          <div className="container mx-auto px-4 relative z-10">
+            <nav className="flex items-center gap-2 text-white/60 text-sm mb-6">
+              <Link to="/" className="hover:text-white transition-colors">{t('nav.home')}</Link>
+              <ChevronRight className="h-3.5 w-3.5" />
+              <Link to="/blog" className="hover:text-white transition-colors">{t('nav.blog')}</Link>
+              <ChevronRight className="h-3.5 w-3.5" />
+              <span className="text-white line-clamp-1">{getMultilingualContent(post.title)}</span>
+            </nav>
             <Button asChild variant="ghost" className="text-white/80 hover:text-white mb-6">
               <Link to="/blog">
                 <ArrowLeft className="mr-2 h-4 w-4" />
@@ -116,12 +128,21 @@ const Blog = () => {
   return (
     <Layout>
       {/* Hero */}
-      <section className="hero-gradient py-20 md:py-28">
-        <div className="container mx-auto px-4 text-center">
+      <section className="relative overflow-hidden py-20 md:py-28">
+        <div className="absolute inset-0">
+          <img src={heroBlog} alt="Blog SSMos" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 hero-gradient opacity-80" />
+        </div>
+        <div className="container mx-auto px-4 relative z-10">
+          <nav className="flex items-center gap-2 text-white/60 text-sm mb-6">
+            <Link to="/" className="hover:text-white transition-colors">{t('nav.home')}</Link>
+            <ChevronRight className="h-3.5 w-3.5" />
+            <span className="text-white">{t('nav.blog')}</span>
+          </nav>
           <h1 className="font-display text-4xl md:text-5xl font-bold text-white mb-4 opacity-0 animate-fade-up">
             {t('blog.title')}
           </h1>
-          <p className="text-white/80 text-lg max-w-2xl mx-auto opacity-0 animate-fade-up stagger-1">
+          <p className="text-white/80 text-lg max-w-2xl opacity-0 animate-fade-up stagger-1">
             {t('blog.subtitle')}
           </p>
         </div>

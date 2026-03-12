@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { contentService } from '@/services/contentService';
 import { TeamMember, TeamPage } from '@/types/api';
-import { Loader2 } from 'lucide-react';
+import { ChevronRight, Loader2 } from 'lucide-react';
 import { getMultilingualContent as getContent } from '@/utils/multilingual';
 import Layout from '@/components/layout/Layout';
+import heroTeam from '@/assets/hero-2.png';
 
 const Team = () => {
   const { t, language } = useLanguage();
@@ -49,16 +51,25 @@ const Team = () => {
   return (
     <Layout>
       {/* Hero */}
-      <section className="hero-gradient py-20 md:py-28">
-        <div className="container mx-auto px-4 text-center">
+      <section className="relative overflow-hidden py-20 md:py-28">
+        <div className="absolute inset-0">
+          <img src={heroTeam} alt="Equipe SSMos" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 hero-gradient opacity-80" />
+        </div>
+        <div className="container mx-auto px-4 relative z-10">
+          <nav className="flex items-center gap-2 text-white/60 text-sm mb-6">
+            <Link to="/" className="hover:text-white transition-colors">{t('nav.home')}</Link>
+            <ChevronRight className="h-3.5 w-3.5" />
+            <span className="text-white">{t('nav.team')}</span>
+          </nav>
           <h1 className="font-display text-4xl md:text-5xl font-bold text-white mb-4 opacity-0 animate-fade-up">
             {teamPage ? getMultilingualContent(teamPage.title) : t('team.title')}
           </h1>
-          <p className="text-white/80 text-lg max-w-2xl mx-auto opacity-0 animate-fade-up stagger-1">
+          <p className="text-white/80 text-lg max-w-2xl opacity-0 animate-fade-up stagger-1">
             {teamPage ? getMultilingualContent(teamPage.subtitle) : t('team.subtitle')}
           </p>
           {teamPage && teamPage.description && getMultilingualContent(teamPage.description) && (
-            <p className="text-white/70 text-base max-w-3xl mx-auto mt-4 opacity-0 animate-fade-up stagger-2">
+            <p className="text-white/70 text-base max-w-3xl mt-4 opacity-0 animate-fade-up stagger-2">
               {getMultilingualContent(teamPage.description)}
             </p>
           )}

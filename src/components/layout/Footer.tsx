@@ -2,8 +2,6 @@ import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Facebook, Linkedin, Twitter, ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/i18n/LanguageContext';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import logo from '@/assets/logo.png';
 
 const Footer = () => {
@@ -91,7 +89,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact & Newsletter */}
+          {/* Contact */}
           <div>
             <h4 className="font-display text-lg font-semibold mb-4">{t('footer.contact')}</h4>
             <div className="space-y-3 mb-6">
@@ -111,18 +109,6 @@ const Footer = () => {
                 <span className="text-primary-foreground/80">contact@ssmos.org</span>
               </div>
             </div>
-
-            <h5 className="font-medium text-sm mb-3">{t('footer.newsletter')}</h5>
-            <form className="flex gap-2">
-              <Input
-                type="email"
-                placeholder={t('footer.newsletter.placeholder')}
-                className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50"
-              />
-              <Button variant="secondary" size="sm">
-                {t('footer.newsletter.subscribe')}
-              </Button>
-            </form>
           </div>
         </div>
       </div>
