@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Target, Eye, Heart, Award, Shield, Lightbulb, ShieldCheck, Loader2 } from 'lucide-react';
+import { Target, Eye, Heart, Award, Shield, Lightbulb, ShieldCheck, Loader2, Building, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { contentService } from '@/services/contentService';
 import { InstitutionalPage } from '@/types/api';
@@ -22,57 +23,50 @@ const staggerContainer = {
 
 const About = () => {
   const { t, language } = useLanguage();
+  const location = useLocation();
   const [pages, setPages] = useState<Record<string, InstitutionalPage>>({});
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     loadPages();
-    
-    // Recharger les données quand la page redevient visible (après modification dans admin)
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        loadPages();
-      }
+      if (document.visibilityState === 'visible') loadPages();
     };
-    
-    // Recharger les données quand la fenêtre reprend le focus
-    const handleFocus = () => {
-      loadPages();
-    };
-    
+    const handleFocus = () => loadPages();
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('focus', handleFocus);
-    
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('focus', handleFocus);
     };
   }, []);
 
+  // Scroll to anchor on hash change
+  useEffect(() => {
+    if (location.hash) {
+      const el = document.querySelector(location.hash);
+      if (el) {
+        setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+      }
+    }
+  }, [location.hash, isLoading]);
+
   const loadPages = async () => {
     try {
       setIsLoading(true);
       const response = await contentService.getPages();
-      console.log('About page - Response from API:', response);
       if (response.error === false && response.data && Array.isArray(response.data)) {
-        // Créer un objet avec le slug comme clé pour un accès rapide
         const pagesMap: Record<string, InstitutionalPage> = {};
-        response.data.forEach(page => {
-          pagesMap[page.slug] = page;
-        });
-        console.log('About page - Pages map:', pagesMap);
+        response.data.forEach(page => { pagesMap[page.slug] = page; });
         setPages(pagesMap);
-      } else {
-        console.warn('About page - Invalid response format:', response);
       }
     } catch (error: any) {
-      console.error('Erreur lors du chargement des pages institutionnelles:', error);
+      console.error('Erreur lors du chargement des pages:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Fonction helper pour obtenir le contenu dans la langue actuelle
   const getContent = (page: InstitutionalPage | undefined, field: 'title' | 'content'): string => {
     if (!page) return '';
     const content = page[field];
@@ -83,6 +77,11 @@ const About = () => {
   };
 
   const values = [
+    {
+      icon: ShieldCheck,
+      title: t('about.values.prevention'),
+      description: t('about.values.prevention.desc'),
+    },
     {
       icon: Award,
       title: t('about.values.excellence'),
@@ -98,122 +97,171 @@ const About = () => {
       title: t('about.values.innovation'),
       description: t('about.values.innovation.desc'),
     },
-    {
-      icon: ShieldCheck,
-      title: t('about.values.prevention'),
-      description: t('about.values.prevention.desc'),
-    },
   ];
 
-  // Pages institutionnelles
   const presentationPage = pages['presentation'];
   const contextePage = pages['contexte'];
   const visionPage = pages['vision'];
   const missionPage = pages['mission'];
-  
-  // Debug: afficher les pages chargées
-  useEffect(() => {
-    if (Object.keys(pages).length > 0) {
-      console.log('About page - Available pages:', Object.keys(pages));
-      console.log('About page - Presentation:', presentationPage);
-      console.log('About page - Contexte:', contextePage);
-      console.log('About page - Vision:', visionPage);
-      console.log('About page - Mission:', missionPage);
-    }
-  }, [pages, presentationPage, contextePage, visionPage, missionPage]);
 
   return (
     <Layout>
-      {/* Hero Section */}
-      <section className="hero-gradient py-20 md:py-28">
+      {/* Hero Section - Clean title only */}
+      <section className="hero-gradient py-16 md:py-20">
         <div className="container mx-auto px-4">
+          {/* Breadcrumb */}
+          <motion.nav
+            className="flex items-center gap-2 text-white/60 text-sm mb-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4 }}
+          >
+            <Link to="/" className="hover:text-white transition-colors">{t('nav.home')}</Link>
+            <ChevronRight className="h-3.5 w-3.5" />
+            <span className="text-white">{t('nav.about')}</span>
+          </motion.nav>
+          
           <motion.h1 
-            className="font-display text-4xl md:text-5xl font-bold text-white text-center mb-4"
+            className="font-display text-4xl md:text-5xl font-bold text-white"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            {t('about.title')}
+            {t('nav.about')}
           </motion.h1>
-          <motion.p 
-            className="text-white/80 text-lg text-center max-w-2xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            {isLoading ? (
-              <Loader2 className="h-5 w-5 animate-spin inline-block" />
-            ) : (
-              getContent(presentationPage, 'content') || 'Safety & Santé na Mosala'
-            )}
-          </motion.p>
         </div>
       </section>
 
-      {/* Introduction */}
-      <section className="section-padding bg-background">
+      {/* Section 1: Présentation générale */}
+      <section id="presentation" className="min-h-[85vh] flex items-center section-padding bg-background">
         <div className="container mx-auto">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-5xl mx-auto">
             {isLoading ? (
               <div className="flex justify-center items-center py-12">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
               </div>
             ) : (
-              <>
-                <motion.h2 
-                  className="font-display text-2xl md:text-3xl font-bold text-foreground mb-6"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+              <div className="grid md:grid-cols-5 gap-12 items-center">
+                <motion.div 
+                  className="md:col-span-3 space-y-6"
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
+                  transition={{ duration: 0.7 }}
                 >
-                  {getContent(presentationPage, 'title') || t('about.intro')}
-                </motion.h2>
-                <motion.p 
-                  className="text-muted-foreground text-lg leading-relaxed mb-8"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-secondary/10 text-secondary rounded-full text-sm font-medium">
+                    <Building className="h-4 w-4" />
+                    {t('about.nav.presentation')}
+                  </div>
+                  <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
+                    {getContent(presentationPage, 'title') || t('about.intro')}
+                  </h2>
+                  <p className="text-muted-foreground text-lg leading-relaxed">
+                    {getContent(presentationPage, 'content') || t('about.intro.text')}
+                  </p>
+                </motion.div>
+                <motion.div 
+                  className="md:col-span-2"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
-                  transition={{ delay: 0.1 }}
+                  transition={{ duration: 0.7, delay: 0.2 }}
                 >
-                  {getContent(presentationPage, 'content') || t('about.intro.text')}
-                </motion.p>
-              </>
+                  <div className="relative">
+                    <div className="w-full aspect-square rounded-3xl hero-gradient flex items-center justify-center p-8">
+                      <Building className="h-24 w-24 text-white/80" />
+                    </div>
+                    <motion.div
+                      className="absolute -top-3 -right-3 w-16 h-16 bg-secondary rounded-2xl flex items-center justify-center shadow-lg"
+                      animate={{ rotate: [0, 5, 0, -5, 0] }}
+                      transition={{ duration: 6, repeat: Infinity }}
+                    >
+                      <Shield className="h-8 w-8 text-white" />
+                    </motion.div>
+                  </div>
+                </motion.div>
+              </div>
             )}
-            <div className="grid md:grid-cols-2 gap-8">
-              <motion.div 
-                className="card-institutional"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2 }}
-              >
-                <h3 className="font-display text-xl font-semibold text-foreground mb-3">
-                  {isLoading ? (
-                    <Loader2 className="h-5 w-5 animate-spin inline-block" />
-                  ) : (
-                    getContent(contextePage, 'title') || t('about.context.title')
-                  )}
-                </h3>
-                <p className="text-muted-foreground leading-relaxed">
+          </div>
+        </div>
+      </section>
+
+      {/* Section 2: Contexte de création */}
+      <section id="contexte" className="min-h-[85vh] flex items-center section-padding bg-muted/50">
+        <div className="container mx-auto">
+          <div className="max-w-5xl mx-auto">
+            <motion.div
+              className="space-y-8"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+            >
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-secondary/10 text-secondary rounded-full text-sm font-medium">
+                <Shield className="h-4 w-4" />
+                {t('about.nav.context')}
+              </div>
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
+                {isLoading ? <Loader2 className="h-6 w-6 animate-spin inline-block" /> : getContent(contextePage, 'title') || t('about.context.title')}
+              </h2>
+              <div className="bg-card rounded-2xl border border-border p-8 md:p-12 shadow-sm">
+                <p className="text-muted-foreground text-lg leading-relaxed">
                   {isLoading ? '' : getContent(contextePage, 'content') || t('about.context.text')}
                 </p>
-              </motion.div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 3: Mission & But */}
+      <section id="mission" className="min-h-[85vh] flex items-center section-padding bg-background">
+        <div className="container mx-auto">
+          <div className="max-w-5xl mx-auto">
+            <motion.div
+              className="inline-flex items-center gap-2 px-3 py-1.5 bg-secondary/10 text-secondary rounded-full text-sm font-medium mb-8"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+            >
+              <Target className="h-4 w-4" />
+              {t('about.nav.mission')}
+            </motion.div>
+
+            <div className="grid md:grid-cols-2 gap-8">
               <motion.div 
-                className="card-institutional bg-accent border-secondary/20"
-                initial={{ opacity: 0, x: 20 }}
+                className="bg-card rounded-2xl border border-border p-8 shadow-sm space-y-4"
+                initial={{ opacity: 0, x: -30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: 0.3 }}
+                transition={{ duration: 0.6 }}
               >
-                <h3 className="font-display text-xl font-semibold text-foreground mb-3">
-                  {isLoading ? (
-                    <Loader2 className="h-5 w-5 animate-spin inline-block" />
-                  ) : (
-                    getContent(visionPage, 'title') || t('about.vision.title')
-                  )}
+                <div className="w-14 h-14 rounded-xl hero-gradient flex items-center justify-center">
+                  <Target className="h-7 w-7 text-white" />
+                </div>
+                <h3 className="font-display text-2xl font-bold text-foreground">
+                  {isLoading ? <Loader2 className="h-5 w-5 animate-spin inline-block" /> : getContent(missionPage, 'title') || t('about.mission.title')}
                 </h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  {isLoading ? '' : getContent(visionPage, 'content') || t('about.vision.text')}
+                  {isLoading ? '' : getContent(missionPage, 'content') || t('about.mission.text')}
+                </p>
+              </motion.div>
+
+              <motion.div 
+                className="bg-card rounded-2xl border border-border p-8 shadow-sm space-y-4"
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+              >
+                <div className="w-14 h-14 rounded-xl hero-gradient flex items-center justify-center">
+                  <Eye className="h-7 w-7 text-white" />
+                </div>
+                <h3 className="font-display text-2xl font-bold text-foreground">
+                  {t('about.goal.title')}
+                </h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  {t('about.goal.text')}
                 </p>
               </motion.div>
             </div>
@@ -221,66 +269,51 @@ const About = () => {
         </div>
       </section>
 
-      {/* Mission & Goal */}
-      <section className="section-padding bg-muted/50">
-        <div className="container mx-auto">
-          <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
-            <motion.div 
-              className="flex gap-4"
+      {/* Section 4: Vision 2030 */}
+      <section id="vision" className="min-h-[70vh] flex items-center hero-gradient">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="space-y-6"
             >
-              <div className="w-14 h-14 rounded-xl hero-gradient flex items-center justify-center flex-shrink-0">
-                <Target className="h-7 w-7 text-white" />
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 text-white rounded-full text-sm font-medium border border-white/20">
+                <Eye className="h-4 w-4" />
+                {t('about.nav.vision')}
               </div>
-              <div>
-                <h3 className="font-display text-xl font-semibold text-foreground mb-3">
-                  {isLoading ? (
-                    <Loader2 className="h-5 w-5 animate-spin inline-block" />
-                  ) : (
-                    getContent(missionPage, 'title') || t('about.mission.title')
-                  )}
-                </h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {isLoading ? '' : getContent(missionPage, 'content') || t('about.mission.text')}
-                </p>
-              </div>
-            </motion.div>
-            <motion.div 
-              className="flex gap-4"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-            >
-              <div className="w-14 h-14 rounded-xl hero-gradient flex items-center justify-center flex-shrink-0">
-                <Eye className="h-7 w-7 text-white" />
-              </div>
-              <div>
-                <h3 className="font-display text-xl font-semibold text-foreground mb-3">
-                  {t('about.goal.title')}
-                </h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {t('about.goal.text')}
-                </p>
-              </div>
+              <Heart className="h-12 w-12 text-secondary mx-auto" />
+              <h2 className="font-display text-3xl md:text-5xl font-bold text-white">
+                {isLoading ? <Loader2 className="h-8 w-8 animate-spin inline-block" /> : getContent(visionPage, 'title') || t('about.vision.title')}
+              </h2>
+              <p className="text-white/85 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">
+                {isLoading ? '' : getContent(visionPage, 'content') || t('about.vision.text')}
+              </p>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Values */}
-      <section className="section-padding bg-background">
+      {/* Section 5: Valeurs */}
+      <section id="valeurs" className="min-h-[85vh] flex items-center section-padding bg-background">
         <div className="container mx-auto">
-          <motion.h2 
-            className="font-display text-3xl md:text-4xl font-bold text-foreground text-center mb-12"
+          <motion.div
+            className="text-center mb-12"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            {t('about.values.title')}
-          </motion.h2>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-secondary/10 text-secondary rounded-full text-sm font-medium mb-4">
+              <Heart className="h-4 w-4" />
+              {t('about.nav.values')}
+            </div>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
+              {t('about.values.title')}
+            </h2>
+          </motion.div>
+          
           <motion.div 
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto"
             variants={staggerContainer}
@@ -288,7 +321,7 @@ const About = () => {
             whileInView="animate"
             viewport={{ once: true }}
           >
-            {values.map((value, index) => (
+            {values.map((value) => (
               <motion.div
                 key={value.title}
                 className="text-center card-institutional"
@@ -306,30 +339,6 @@ const About = () => {
                 </p>
               </motion.div>
             ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Commitment Section */}
-      <section className="section-padding hero-gradient">
-        <div className="container mx-auto text-center">
-          <motion.div 
-            className="max-w-3xl mx-auto"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <Heart className="h-12 w-12 text-secondary mx-auto mb-6" />
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-white mb-6">
-              {isLoading ? (
-                <Loader2 className="h-8 w-8 animate-spin inline-block" />
-              ) : (
-                getContent(visionPage, 'title') || t('about.vision.title')
-              )}
-            </h2>
-            <p className="text-white/85 text-lg leading-relaxed">
-              {isLoading ? '' : getContent(visionPage, 'content') || t('about.vision.text')}
-            </p>
           </motion.div>
         </div>
       </section>

@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Shield, GraduationCap, ClipboardCheck, Scale, Cpu, Factory, Building2, Truck, Hospital, Pickaxe, Leaf, CheckCircle, Play, Loader2 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { ArrowRight, Shield, GraduationCap, ClipboardCheck, Scale, Cpu, Factory, Building2, Truck, Hospital, Pickaxe, Leaf, CheckCircle, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { contentService } from '@/services/contentService';
 import { NewsArticle, HomePageSection, InterventionAxis } from '@/types/api';
@@ -10,6 +10,9 @@ import { stats } from '@/data/mockData';
 import { getMultilingualContent as getContent } from '@/utils/multilingual';
 import Layout from '@/components/layout/Layout';
 import logo from '@/assets/logo.png';
+import hero1 from '@/assets/hero-1.png';
+import hero2 from '@/assets/hero-2.png';
+import hero3 from '@/assets/hero-3.png';
 
 const iconMap: Record<string, any> = {
   Factory, Building2, Truck, Hospital, Pickaxe, Leaf,
@@ -37,9 +40,46 @@ const Index = () => {
   const [interventionAxes, setInterventionAxes] = useState<InterventionAxis[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingSections, setIsLoadingSections] = useState(true);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const heroSlides = [
+    {
+      image: hero1,
+      title: getSectionContentStatic('hero_title') || t('hero.title'),
+      subtitle: getSectionContentStatic('hero_subtitle') || t('hero.subtitle'),
+      showLogo: true,
+    },
+    {
+      image: hero2,
+      title: t('hero.slide2.title'),
+      subtitle: t('hero.slide2.subtitle'),
+      showLogo: false,
+    },
+    {
+      image: hero3,
+      title: t('hero.slide3.title'),
+      subtitle: t('hero.slide3.subtitle'),
+      showLogo: false,
+    },
+  ];
+
+  function getSectionContentStatic(sectionKey: string): string {
+    const section = homeSections[sectionKey];
+    if (!section) return '';
+    const content = section.content;
+    return content[language] || content.fr || content.en || '';
+  }
 
   useEffect(() => {
     loadAllData();
+  }, []);
+
+  // Auto-advance carousel
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % 3);
+    }, 6000);
+    return () => clearInterval(timer);
   }, []);
 
   const loadAllData = async () => {
@@ -47,14 +87,12 @@ const Index = () => {
       setIsLoading(true);
       setIsLoadingSections(true);
       
-      // Charger les actualités
       const newsResponse = await contentService.getNews();
       if (newsResponse.error === false && newsResponse.data) {
         const publishedNews = newsResponse.data.filter(article => article.status === 'published');
         setArticles(publishedNews);
       }
 
-      // Charger les sections de la page d'accueil
       const sectionsResponse = await contentService.getHomeSections();
       if (sectionsResponse.error === false && sectionsResponse.data) {
         const sectionsMap: Record<string, HomePageSection> = {};
@@ -64,7 +102,6 @@ const Index = () => {
         setHomeSections(sectionsMap);
       }
 
-      // Charger les axes d'intervention
       const axesResponse = await contentService.getInterventionAxes();
       if (axesResponse.error === false && axesResponse.data) {
         setInterventionAxes(axesResponse.data);
@@ -77,7 +114,6 @@ const Index = () => {
     }
   };
 
-  // Helper pour obtenir le contenu d'une section dans la langue actuelle
   const getSectionContent = (sectionKey: string): string => {
     const section = homeSections[sectionKey];
     if (!section) return '';
@@ -85,413 +121,221 @@ const Index = () => {
     return content[language] || content.fr || content.en || '';
   };
 
-  // Helper pour obtenir le contenu multilingue (utilise la langue actuelle)
   const getMultilingualContent = (content: { fr?: string; en?: string; ln?: string; sw?: string }): string => {
     return getContent(content, language);
   };
 
   const latestArticles = Array.isArray(articles) ? articles.slice(0, 3) : [];
 
+  const nextSlide = useCallback(() => setCurrentSlide((prev) => (prev + 1) % 3), []);
+  const prevSlide = useCallback(() => setCurrentSlide((prev) => (prev - 1 + 3) % 3), []);
+
   return (
     <Layout>
-      {/* Hero Section - Modern & Professional */}
-      <section className="relative min-h-[85vh] flex items-center overflow-hidden bg-gradient-to-br from-primary via-primary to-[hsl(214,79%,28%)] py-12 md:py-16 lg:py-20">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          {/* Gradient Orbs */}
-          <motion.div 
-            className="absolute -top-32 -right-32 w-[400px] h-[400px] rounded-full bg-secondary/15 blur-[80px]"
-            animate={{ 
-              scale: [1, 1.15, 1],
-              opacity: [0.25, 0.4, 0.25] 
-            }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <motion.div 
-            className="absolute top-1/2 -left-32 w-[350px] h-[350px] rounded-full bg-secondary/12 blur-[70px]"
-            animate={{ 
-              scale: [1.15, 1, 1.15],
-              opacity: [0.15, 0.3, 0.15] 
-            }}
-            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          />
-          
-          {/* Grid Pattern */}
-          <div className="absolute inset-0 opacity-[0.03]">
-            <div className="absolute inset-0" style={{
-              backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-              backgroundSize: '40px 40px'
-            }} />
-          </div>
-          
-          {/* Floating Particles with enhanced animation */}
-          {[...Array(5)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-1.5 h-1.5 bg-secondary/30 rounded-full"
-              style={{
-                left: `${20 + i * 18}%`,
-                top: `${30 + (i % 3) * 20}%`,
-              }}
-              animate={{
-                y: [-15, 15, -15],
-                x: [0, (i % 2 === 0 ? 10 : -10), 0],
-                opacity: [0.2, 0.6, 0.2],
-                scale: [1, 1.3, 1],
-              }}
-              transition={{
-                duration: 4 + i * 0.5,
-                repeat: Infinity,
-                delay: i * 0.5,
-                ease: "easeInOut"
-              }}
-            />
-          ))}
-          
-          {/* Animated connecting lines */}
-          <motion.svg 
-            className="absolute inset-0 w-full h-full opacity-10"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.1 }}
-            transition={{ delay: 1, duration: 2 }}
+      {/* Hero Carousel Section */}
+      <section className="relative min-h-[85vh] flex items-center overflow-hidden">
+        {/* Background Images with Crossfade */}
+        {[hero1, hero2, hero3].map((img, index) => (
+          <motion.div
+            key={index}
+            className="absolute inset-0"
+            initial={false}
+            animate={{ opacity: currentSlide === index ? 1 : 0 }}
+            transition={{ duration: 1.2, ease: 'easeInOut' }}
           >
-            {[...Array(3)].map((_, i) => (
-              <motion.line
-                key={i}
-                x1={`${20 + i * 25}%`}
-                y1="20%"
-                x2={`${30 + i * 20}%`}
-                y2="80%"
-                stroke="rgba(255, 255, 255, 0.1)"
-                strokeWidth="1"
-                animate={{
-                  pathLength: [0, 1, 0],
-                  opacity: [0, 0.2, 0]
-                }}
-                transition={{
-                  duration: 3 + i,
-                  repeat: Infinity,
-                  delay: i * 0.8,
-                  ease: "easeInOut"
-                }}
-              />
-            ))}
-          </motion.svg>
+            <img
+              src={img}
+              alt={`SSMos Hero ${index + 1}`}
+              className="w-full h-full object-cover"
+            />
+            {/* Blue overlay for brand consistency */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[hsl(214,97%,19%)/0.88] via-[hsl(214,79%,28%)/0.78] to-[hsl(186,100%,40%)/0.45]" />
+          </motion.div>
+        ))}
+
+        {/* Grid Pattern Overlay */}
+        <div className="absolute inset-0 opacity-[0.03] z-[1]">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+            backgroundSize: '40px 40px'
+          }} />
         </div>
 
+        {/* Content */}
         <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 xl:gap-16 items-center">
-            {/* Left Content */}
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              className="space-y-6"
-            >
-              {/* Badge */}
-              <motion.div 
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 shadow-sm relative overflow-hidden"
-                initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
-              >
-                {/* Shimmer effect */}
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                  animate={{ x: ['-100%', '200%'] }}
-                  transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 }}
-                />
-                <motion.div 
-                  className="w-1.5 h-1.5 bg-secondary rounded-full relative z-10"
-                  animate={{ 
-                    scale: [1, 1.3, 1],
-                    opacity: [0.8, 1, 0.8]
-                  }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
-                <span className="text-white/90 text-xs md:text-sm font-medium relative z-10">Safety & Santé na Mosala - République Démocratique du Congo</span>
-              </motion.div>
+          {/* Top Banner - visible on all slides */}
+          <motion.div 
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 shadow-sm mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <motion.div 
+              className="w-2 h-2 bg-secondary rounded-full"
+              animate={{ scale: [1, 1.3, 1], opacity: [0.8, 1, 0.8] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+            <span className="text-white/90 text-sm md:text-base font-medium">
+              Safety & Santé na Mosala — République Démocratique du Congo
+            </span>
+          </motion.div>
 
-              <motion.h1 
-                className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-[1.1] tracking-tight relative"
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center">
+            {/* Left Content - Animated per slide */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentSlide}
+                initial={{ opacity: 0, x: -40 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 40 }}
+                transition={{ duration: 0.6 }}
+                className="space-y-6"
               >
-                {/* Text reveal animation */}
-                <motion.span
-                  className="inline-block"
+                <motion.h1 
+                  className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-[1.1] tracking-tight"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4, duration: 0.6 }}
+                  transition={{ delay: 0.2, duration: 0.6 }}
                 >
-                  {getSectionContent('hero_title') || t('hero.title')}
-                </motion.span>
-                {/* Subtle glow effect */}
-                <motion.div
-                  className="absolute -inset-4 bg-secondary/10 blur-2xl -z-10"
-                  animate={{ 
-                    opacity: [0.3, 0.5, 0.3],
-                    scale: [1, 1.1, 1]
-                  }}
-                  transition={{ duration: 4, repeat: Infinity }}
-                />
-              </motion.h1>
-              
-              <motion.p 
-                className="text-sm sm:text-base md:text-lg lg:text-xl text-white/85 leading-relaxed max-w-xl relative"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.7, ease: "easeOut" }}
-              >
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.6, duration: 0.8 }}
+                  {heroSlides[currentSlide].title}
+                </motion.h1>
+                
+                <motion.p 
+                  className="text-sm sm:text-base md:text-lg lg:text-xl text-white/85 leading-relaxed max-w-xl"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.35, duration: 0.6 }}
                 >
-                  {getSectionContent('hero_subtitle') || t('hero.subtitle')}
-                </motion.span>
-              </motion.p>
+                  {heroSlides[currentSlide].subtitle}
+                </motion.p>
 
-              {/* CTA Buttons */}
-              <motion.div 
-                className="flex flex-col sm:flex-row gap-3 pt-2"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6, duration: 0.6 }}
-              >
-                <motion.div
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                {/* CTA Buttons */}
+                <motion.div 
+                  className="flex flex-col sm:flex-row gap-3 pt-2"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5, duration: 0.5 }}
                 >
-                  <Button asChild className="bg-secondary text-primary font-semibold text-sm md:text-base px-6 py-5 md:px-8 md:py-6 hover:bg-secondary/90 shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl relative overflow-hidden group">
-                    <Link to="/services" className="flex items-center justify-center gap-2 relative z-10">
-                      <motion.span
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                        initial={{ x: '-100%' }}
-                        whileHover={{ x: '200%' }}
-                        transition={{ duration: 0.6 }}
-                      />
+                  <Button asChild className="bg-secondary text-primary font-semibold text-sm md:text-base px-6 py-5 md:px-8 md:py-6 hover:bg-secondary/90 shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl">
+                    <Link to="/services" className="flex items-center justify-center gap-2">
                       {t('hero.cta.primary')}
-                      <motion.span
-                        animate={{ x: [0, 4, 0] }}
-                        transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 0.5 }}
-                      >
-                        <ArrowRight className="h-4 w-4 md:h-5 md:w-5" />
-                      </motion.span>
+                      <ArrowRight className="h-4 w-4 md:h-5 md:w-5" />
                     </Link>
                   </Button>
-                </motion.div>
-                <motion.div
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                >
-                  <Button asChild variant="outline" className="border-2 border-white/40 text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all duration-300 text-sm md:text-base px-6 py-5 md:px-8 md:py-6 font-semibold hover:border-white/60 relative overflow-hidden group">
-                    <Link to="/contact" className="flex items-center justify-center relative z-10">
-                      <motion.span
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-                        initial={{ x: '-100%' }}
-                        whileHover={{ x: '200%' }}
-                        transition={{ duration: 0.6 }}
-                      />
+                  <Button asChild variant="outline" className="border-2 border-white/40 text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all duration-300 text-sm md:text-base px-6 py-5 md:px-8 md:py-6 font-semibold hover:border-white/60">
+                    <Link to="/contact" className="flex items-center justify-center">
                       {t('hero.cta.secondary')}
                     </Link>
                   </Button>
                 </motion.div>
               </motion.div>
-            </motion.div>
+            </AnimatePresence>
 
-            {/* Right Content - Logo/Visual */}
+            {/* Right Content - Logo Box (visible on slide 1, stats on others) */}
             <motion.div
               className="hidden lg:flex flex-col items-center justify-center space-y-6"
-              initial={{ opacity: 0, scale: 0.8, rotateY: -15 }}
-              animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-              transition={{ delay: 0.4, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
             >
-              <div className="relative w-full max-w-md">
-                {/* Multi-layer Glow Effects */}
-                <motion.div 
-                  className="absolute inset-0 bg-secondary/25 blur-[40px] rounded-full -z-10"
-                  animate={{ 
-                    scale: [1, 1.1, 1],
-                    opacity: [0.3, 0.5, 0.3],
-                    x: [0, 10, 0],
-                    y: [0, -10, 0]
-                  }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                />
-                <motion.div 
-                  className="absolute inset-0 bg-secondary/15 blur-[60px] rounded-full -z-10"
-                  animate={{ 
-                    scale: [1, 1.15, 1],
-                    opacity: [0.2, 0.35, 0.2],
-                    x: [0, -15, 0],
-                    y: [0, 15, 0]
-                  }}
-                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                />
-
-                {/* Logo Container - Modern Card Design */}
-                <motion.div
-                  className="relative bg-white rounded-3xl p-8 md:p-10 shadow-2xl border border-white/20 backdrop-blur-sm"
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
-                  whileHover={{ 
-                    scale: 1.03,
-                    y: -5,
-                    boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
-                    transition: { type: "spring", stiffness: 300, damping: 20 }
-                  }}
-                >
-                  {/* Subtle gradient overlay with animation */}
+              {heroSlides[currentSlide].showLogo ? (
+                <div className="relative w-full max-w-md">
                   <motion.div 
-                    className="absolute inset-0 bg-gradient-to-br from-white to-gray-50/50 rounded-3xl opacity-50"
-                    animate={{ 
-                      backgroundPosition: ['0% 0%', '100% 100%']
-                    }}
-                    transition={{ duration: 8, repeat: Infinity, repeatType: "reverse" }}
+                    className="absolute inset-0 bg-secondary/20 blur-[40px] rounded-full -z-10"
+                    animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
+                    transition={{ duration: 4, repeat: Infinity }}
                   />
-                  
-                  {/* Animated border glow */}
                   <motion.div
-                    className="absolute inset-0 rounded-3xl bg-gradient-to-r from-secondary/20 via-secondary/40 to-secondary/20 opacity-0"
-                    whileHover={{ opacity: 1 }}
-                    transition={{ duration: 0.3 }}
-                    style={{ 
-                      backgroundSize: '200% 200%',
-                      backgroundPosition: '0% 50%'
-                    }}
-                    animate={{
-                      backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
-                    }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                  />
-                  
-                  {/* Logo Image with subtle float */}
-                  <motion.div 
-                    className="relative z-10 flex items-center justify-center"
-                    animate={{ 
-                      y: [0, -8, 0]
-                    }}
-                    transition={{ 
-                      duration: 4, 
-                      repeat: Infinity, 
-                      ease: "easeInOut" 
-                    }}
+                    className="relative bg-white rounded-3xl p-8 md:p-10 shadow-2xl"
+                    whileHover={{ scale: 1.03, y: -5 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   >
-                    <motion.img
-                      src={logo}
-                      alt="SSMos Logo"
-                      className="w-full max-w-[280px] h-auto drop-shadow-lg"
-                      whileHover={{ scale: 1.05 }}
-                      transition={{ type: "spring", stiffness: 400 }}
+                    <motion.div 
+                      className="relative z-10 flex items-center justify-center"
+                      animate={{ y: [0, -8, 0] }}
+                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      <img src={logo} alt="SSMos Logo" className="w-full max-w-[280px] h-auto drop-shadow-lg" />
+                    </motion.div>
+                    <motion.div
+                      className="absolute -top-2 -right-2 w-20 h-20 bg-gradient-to-br from-secondary/40 to-secondary/20 rounded-2xl"
+                      animate={{ rotate: [0, 5, 0, -5, 0], scale: [1, 1.05, 1] }}
+                      transition={{ duration: 6, repeat: Infinity }}
+                    />
+                    <motion.div
+                      className="absolute -bottom-2 -left-2 w-16 h-16 bg-gradient-to-tr from-white/30 to-white/10 rounded-xl border border-white/20"
+                      animate={{ rotate: [0, -5, 0, 5, 0] }}
+                      transition={{ duration: 5, repeat: Infinity }}
                     />
                   </motion.div>
-
-                  {/* Decorative Corner Accents */}
-                  <motion.div
-                    className="absolute -top-2 -right-2 w-20 h-20 bg-gradient-to-br from-secondary/40 to-secondary/20 rounded-2xl backdrop-blur-md border border-secondary/30"
-                    animate={{ 
-                      rotate: [0, 5, 0, -5, 0],
-                      scale: [1, 1.05, 1, 1.08, 1],
-                      x: [0, 2, 0, -2, 0],
-                      y: [0, -2, 0, 2, 0]
-                    }}
-                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                  />
-                  <motion.div
-                    className="absolute -bottom-2 -left-2 w-16 h-16 bg-gradient-to-tr from-white/30 to-white/10 rounded-xl backdrop-blur-md border border-white/20"
-                    animate={{ 
-                      rotate: [0, -5, 0, 5, 0],
-                      scale: [1, 1.05, 1, 1.08, 1],
-                      x: [0, -2, 0, 2, 0],
-                      y: [0, 2, 0, -2, 0]
-                    }}
-                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                  />
-                  
-                  {/* Bottom accent line with animation */}
-                  <motion.div 
-                    className="absolute bottom-0 left-1/2 -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-transparent via-secondary/50 to-transparent rounded-full"
-                    animate={{ 
-                      width: ['6rem', '8rem', '6rem'],
-                      opacity: [0.5, 0.8, 0.5]
-                    }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                  />
-                </motion.div>
-              </div>
-
-              {/* Trust Indicators - Enhanced Design */}
-              <motion.div
-                className="flex items-center gap-8 pt-2"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8, duration: 0.6 }}
-              >
+                </div>
+              ) : (
                 <motion.div 
-                  className="flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/15 transition-colors relative overflow-hidden group"
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  transition={{ type: "spring", stiffness: 400 }}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.9, duration: 0.5 }}
+                  className="grid grid-cols-2 gap-4 w-full max-w-md"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
                 >
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-                    initial={{ x: '-100%' }}
-                    whileHover={{ x: '200%' }}
-                    transition={{ duration: 0.6 }}
-                  />
-                  <motion.div 
-                    className="p-1.5 bg-secondary/20 rounded-full relative z-10"
-                    animate={{ 
-                      scale: [1, 1.1, 1],
-                      rotate: [0, 5, 0]
-                    }}
-                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
-                  >
-                    <CheckCircle className="h-4 w-4 text-secondary" />
-                  </motion.div>
-                  <span className="text-white/90 text-sm font-medium relative z-10">{stats.companies}+ {t('hero.partners')}</span>
+                  {[
+                    { value: `${stats.companies}+`, label: t('stats.companies') },
+                    { value: `${stats.trainings}+`, label: t('stats.trainings') },
+                    { value: `${stats.experts}`, label: t('stats.experts') },
+                    { value: `${stats.years}`, label: t('stats.years') },
+                  ].map((stat, i) => (
+                    <motion.div
+                      key={stat.label}
+                      className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-5 text-center"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4 + i * 0.1 }}
+                      whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,255,255,0.15)' }}
+                    >
+                      <div className="font-display text-3xl font-bold text-secondary mb-1">{stat.value}</div>
+                      <div className="text-white/80 text-xs">{stat.label}</div>
+                    </motion.div>
+                  ))}
                 </motion.div>
-                <motion.div 
-                  className="flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/15 transition-colors relative overflow-hidden group"
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  transition={{ type: "spring", stiffness: 400 }}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 1, duration: 0.5 }}
-                >
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-                    initial={{ x: '-100%' }}
-                    whileHover={{ x: '200%' }}
-                    transition={{ duration: 0.6 }}
-                  />
-                  <motion.div 
-                    className="p-1.5 bg-secondary/20 rounded-full relative z-10"
-                    animate={{ 
-                      scale: [1, 1.1, 1],
-                      rotate: [0, -5, 0]
-                    }}
-                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 1.2 }}
-                  >
-                    <CheckCircle className="h-4 w-4 text-secondary" />
-                  </motion.div>
-                  <span className="text-white/90 text-sm font-medium relative z-10">{stats.years} {t('hero.years')}</span>
-                </motion.div>
-              </motion.div>
+              )}
             </motion.div>
+          </div>
+
+          {/* Carousel Controls */}
+          <div className="flex items-center justify-between mt-10">
+            {/* Dots */}
+            <div className="flex items-center gap-3">
+              {[0, 1, 2].map((i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentSlide(i)}
+                  className={`transition-all duration-300 rounded-full ${
+                    currentSlide === i 
+                      ? 'w-10 h-3 bg-secondary' 
+                      : 'w-3 h-3 bg-white/40 hover:bg-white/60'
+                  }`}
+                />
+              ))}
+            </div>
+
+            {/* Arrows */}
+            <div className="flex gap-2">
+              <button
+                onClick={prevSlide}
+                className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button
+                onClick={nextSlide}
+                className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Bottom Wave */}
-        <div className="absolute bottom-0 left-0 right-0">
+        <div className="absolute bottom-0 left-0 right-0 z-[2]">
           <svg viewBox="0 0 1440 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
             <path d="M0 50L48 45.7C96 41.3 192 32.7 288 30.5C384 28.3 480 32.7 576 39.2C672 45.7 768 54.3 864 54.2C960 54 1056 45 1152 41.7C1248 38.3 1344 40.7 1392 41.8L1440 43V100H1392C1344 100 1248 100 1152 100C1056 100 960 100 864 100C768 100 672 100 576 100C480 100 384 100 288 100C192 100 96 100 48 100H0V50Z" fill="hsl(var(--background))"/>
           </svg>
@@ -547,7 +391,7 @@ const Index = () => {
               whileInView="animate"
               viewport={{ once: true }}
             >
-              {interventionAxes.map((axis, index) => {
+              {interventionAxes.map((axis) => {
                 const IconComponent = iconMap[axis.icon] || Factory;
                 return (
                   <motion.div
@@ -646,7 +490,7 @@ const Index = () => {
               whileInView="animate"
               viewport={{ once: true }}
             >
-              {latestArticles.map((article, index) => (
+              {latestArticles.map((article) => (
                 <motion.div key={article.id} variants={fadeInUp}>
                   <Link
                     to={`/news/${article.id}`}
@@ -684,10 +528,8 @@ const Index = () => {
               ))}
               {latestArticles.length === 0 && !isLoading && (
                 <div className="col-span-full text-center py-12 text-muted-foreground">
-                  <div className="text-center">
-                    <Calendar className="h-12 w-12 text-muted-foreground/50 mx-auto mb-3" />
-                    <p className="text-muted-foreground text-sm">{t('home.news.noArticles')}</p>
-                  </div>
+                  <Shield className="h-12 w-12 text-muted-foreground/50 mx-auto mb-3" />
+                  <p className="text-muted-foreground text-sm">{t('home.news.noArticles')}</p>
                 </div>
               )}
             </motion.div>
