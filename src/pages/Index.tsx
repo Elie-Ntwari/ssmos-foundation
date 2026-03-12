@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Shield, GraduationCap, ClipboardCheck, Scale, Cpu, Factory, Building2, Truck, Hospital, Pickaxe, Leaf, CheckCircle, Loader2 } from 'lucide-react';
+import { ArrowRight, Shield, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { contentService } from '@/services/contentService';
@@ -13,10 +13,20 @@ import logo from '@/assets/logo.png';
 import hero1 from '@/assets/hero-1.png';
 import hero2 from '@/assets/hero-2.png';
 import hero3 from '@/assets/hero-3.png';
+import axisAgriculture from '@/assets/axis-agriculture.png';
+import axisMines from '@/assets/axis-mines.png';
+import axisTransport from '@/assets/axis-transport.png';
+import axisBtp from '@/assets/axis-btp.png';
+import axisSante from '@/assets/axis-sante.png';
+import axisIndustrie from '@/assets/axis-industrie.png';
 
-const iconMap: Record<string, any> = {
-  Factory, Building2, Truck, Hospital, Pickaxe, Leaf,
-  Briefcase: Shield, GraduationCap, ClipboardCheck, Scale, Cpu
+const axisImageMap: Record<string, string> = {
+  Leaf: axisAgriculture,
+  Pickaxe: axisMines,
+  Truck: axisTransport,
+  Building2: axisBtp,
+  Hospital: axisSante,
+  Factory: axisIndustrie
 };
 
 const fadeInUp = {
@@ -376,23 +386,26 @@ const Index = () => {
               viewport={{ once: true }}
             >
               {interventionAxes.map((axis) => {
-                const IconComponent = iconMap[axis.icon] || Factory;
+                const axisImage = axisImageMap[axis.icon] || axisIndustrie;
                 return (
                   <motion.div
                     key={axis.id}
                     variants={fadeInUp}
                     whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                    className="card-institutional group"
+                    className="relative group overflow-hidden rounded-2xl min-h-[240px] border border-white/20 shadow-[var(--card-shadow)]"
                   >
-                    <div className="w-14 h-14 rounded-xl hero-gradient flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                      <IconComponent className="h-7 w-7 text-white" />
+                    <img
+                      src={axisImage}
+                      alt={getMultilingualContent(axis.title)}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 hero-gradient opacity-80" />
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.12),transparent_60%)]" />
+                    <div className="relative z-10 h-full flex items-center justify-center p-6 text-center">
+                      <h3 className="font-display text-2xl md:text-3xl font-bold text-white drop-shadow-[0_3px_10px_rgba(0,0,0,0.45)] bg-white/10 border border-white/25 backdrop-blur-sm rounded-2xl px-5 py-3">
+                        {getMultilingualContent(axis.title)}
+                      </h3>
                     </div>
-                    <h3 className="font-display text-xl font-semibold text-foreground mb-2">
-                      {getMultilingualContent(axis.title)}
-                    </h3>
-                    <p className="text-muted-foreground text-sm">
-                      {getMultilingualContent(axis.description)}
-                    </p>
                   </motion.div>
                 );
               })}

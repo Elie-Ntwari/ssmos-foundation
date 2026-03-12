@@ -65,14 +65,6 @@ const Team = () => {
           <h1 className="font-display text-4xl md:text-5xl font-bold text-white mb-4 opacity-0 animate-fade-up">
             {teamPage ? getMultilingualContent(teamPage.title) : t('team.title')}
           </h1>
-          <p className="text-white/80 text-lg max-w-2xl opacity-0 animate-fade-up stagger-1">
-            {teamPage ? getMultilingualContent(teamPage.subtitle) : t('team.subtitle')}
-          </p>
-          {teamPage && teamPage.description && getMultilingualContent(teamPage.description) && (
-            <p className="text-white/70 text-base max-w-3xl mt-4 opacity-0 animate-fade-up stagger-2">
-              {getMultilingualContent(teamPage.description)}
-            </p>
-          )}
         </div>
       </section>
 

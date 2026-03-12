@@ -106,9 +106,6 @@ const Contact = () => {
           <h1 className="font-display text-4xl md:text-5xl font-bold text-white mb-4 opacity-0 animate-fade-up">
             {t('contact.title')}
           </h1>
-          <p className="text-white/80 text-lg max-w-2xl opacity-0 animate-fade-up stagger-1">
-            {t('contact.subtitle')}
-          </p>
         </div>
       </section>
 

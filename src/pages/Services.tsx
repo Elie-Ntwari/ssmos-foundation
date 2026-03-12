@@ -175,14 +175,6 @@ const Services = () => {
           >
             {t('services.title')}
           </motion.h1>
-          <motion.p 
-            className="text-white/80 text-lg max-w-2xl"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            {t('services.subtitle')}
-          </motion.p>
         </div>
       </section>
 

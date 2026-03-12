@@ -142,9 +142,6 @@ const Blog = () => {
           <h1 className="font-display text-4xl md:text-5xl font-bold text-white mb-4 opacity-0 animate-fade-up">
             {t('blog.title')}
           </h1>
-          <p className="text-white/80 text-lg max-w-2xl opacity-0 animate-fade-up stagger-1">
-            {t('blog.subtitle')}
-          </p>
         </div>
       </section>
 
