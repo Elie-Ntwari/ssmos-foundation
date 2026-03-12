@@ -24,6 +24,7 @@ const aboutSections = [
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const [isMobileAboutOpen, setIsMobileAboutOpen] = useState(false);
   const { t, language, setLanguage, languages } = useLanguage();
   const location = useLocation();
 
@@ -157,7 +158,10 @@ const Header = () => {
               variant="ghost"
               size="icon"
               className="lg:hidden"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              onClick={() => {
+                setIsMenuOpen(!isMenuOpen);
+                if (isMenuOpen) setIsMobileAboutOpen(false);
+              }}
             >
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
@@ -183,33 +187,52 @@ const Header = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05 }}
                 >
-                  <Link
-                    to={link.path}
-                    onClick={() => setIsMenuOpen(false)}
-                    className={`block px-4 py-3 rounded-md text-sm font-medium transition-colors ${
-                      isActive(link.path)
-                        ? 'bg-primary text-primary-foreground'
-                        : 'text-foreground hover:bg-accent'
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
-                  {/* Mobile sub-items for About */}
-                  {link.hasDropdown && (
-                    <div className="ml-4 mt-1 space-y-1">
-                      {aboutSections.map((section) => {
-                        return (
-                          <Link
-                            key={section.id}
-                            to={`/about#${section.id}`}
-                            onClick={() => setIsMenuOpen(false)}
-                            className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors"
-                          >
-                            {t(section.labelKey)}
-                          </Link>
-                        );
-                      })}
-                    </div>
+                  {link.hasDropdown ? (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => setIsMobileAboutOpen((prev) => !prev)}
+                        className={`w-full px-4 py-3 rounded-md text-sm font-medium transition-colors flex items-center justify-between ${
+                          isActive(link.path)
+                            ? 'bg-primary text-primary-foreground'
+                            : 'text-foreground hover:bg-accent'
+                        }`}
+                      >
+                        <span>{link.label}</span>
+                        <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isMobileAboutOpen ? 'rotate-180' : ''}`} />
+                      </button>
+                      {isMobileAboutOpen && (
+                        <div className="ml-4 mt-1 space-y-1">
+                          {aboutSections.map((section) => {
+                            return (
+                              <Link
+                                key={section.id}
+                                to={`/about#${section.id}`}
+                                onClick={() => {
+                                  setIsMenuOpen(false);
+                                  setIsMobileAboutOpen(false);
+                                }}
+                                className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors"
+                              >
+                                {t(section.labelKey)}
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <Link
+                      to={link.path}
+                      onClick={() => setIsMenuOpen(false)}
+                      className={`block px-4 py-3 rounded-md text-sm font-medium transition-colors ${
+                        isActive(link.path)
+                          ? 'bg-primary text-primary-foreground'
+                          : 'text-foreground hover:bg-accent'
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
                   )}
                 </motion.div>
               ))}
