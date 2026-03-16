@@ -63,14 +63,14 @@ const Index = () => {
     },
     {
       image: hero2,
-      title: t('hero.slide2.title'),
-      subtitle: t('hero.slide2.subtitle'),
+      title: getSectionContentStatic('hero_title_2') || t('hero.slide2.title'),
+      subtitle: getSectionContentStatic('hero_subtitle_2') || t('hero.slide2.subtitle'),
       showLogo: false,
     },
     {
       image: hero3,
-      title: t('hero.slide3.title'),
-      subtitle: t('hero.slide3.subtitle'),
+      title: getSectionContentStatic('hero_title_3') || t('hero.slide3.title'),
+      subtitle: getSectionContentStatic('hero_subtitle_3') || t('hero.slide3.subtitle'),
       showLogo: false,
     },
   ];
@@ -399,7 +399,7 @@ const Index = () => {
               >
                 <CarouselContent className="-ml-4 sm:-ml-6">
                   {interventionAxes.map((axis) => {
-                    const axisImage = axisImageMap[axis.icon] || axisIndustrie;
+                    const axisImage = axis.image || axisImageMap[axis.icon] || axisIndustrie;
                     return (
                       <CarouselItem key={axis.id} className="pl-4 sm:pl-6 basis-full md:basis-1/3">
                         <motion.div

@@ -98,7 +98,9 @@ export const contentService = {
 
   // Axes d'intervention
   async getInterventionAxes(): Promise<ApiResponse<InterventionAxis[]>> {
-    const response = await apiClient.get<ApiResponse<InterventionAxis[]>>('/content/intervention-axes/');
+    const response = await apiClient.get<ApiResponse<InterventionAxis[]>>('/content/intervention-axes/', {
+      params: { is_active: true, _t: Date.now() },
+    });
     return response.data;
   },
 

@@ -122,6 +122,7 @@ export interface HomePageSection {
 export interface InterventionAxis {
   id: number;
   icon: string;
+  image?: string;
   title: MultilingualContent;
   description: MultilingualContent;
   order: number;
