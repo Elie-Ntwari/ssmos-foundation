@@ -147,6 +147,7 @@ const Index = () => {
 
   const nextSlide = useCallback(() => setCurrentSlide((prev) => (prev + 1) % 3), []);
   const prevSlide = useCallback(() => setCurrentSlide((prev) => (prev - 1 + 3) % 3), []);
+  const showImpactSection = false;
 
   return (
     <Layout>
@@ -371,10 +372,10 @@ const Index = () => {
       </section>
 
       {/* Intervention Areas */}
-      <section className="section-padding bg-muted/50">
+      <section className="section-padding hero-gradient">
         <div className="container mx-auto">
           <motion.h2 
-            className="font-display text-3xl md:text-4xl font-bold text-foreground text-center mb-12"
+            className="font-display text-3xl md:text-4xl font-bold text-white text-center mb-12"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -432,47 +433,55 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="section-padding hero-gradient">
-        <div className="container mx-auto">
-          <motion.h2 
-            className="font-display text-3xl md:text-4xl font-bold text-white text-center mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            {getSectionContent('stats_title') || t('home.stats.title')}
-          </motion.h2>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              { value: stats.companies, label: t('stats.companies'), suffix: '+' },
-              { value: stats.trainings, label: t('stats.trainings'), suffix: '+' },
-              { value: stats.experts, label: t('stats.experts'), suffix: '' },
-              { value: stats.years, label: t('stats.years'), suffix: '' },
-            ].map((stat, index) => (
+      {/* Impact visual section */}
+      {showImpactSection && (
+        <section className="section-padding hero-gradient overflow-hidden">
+          <div className="container mx-auto">
+            <div className="relative rounded-3xl border border-white/20 bg-white/5 backdrop-blur-md p-8 md:p-12 min-h-[220px] md:min-h-[260px] flex items-center justify-center">
               <motion.div
-                key={stat.label}
-                className="text-center"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <motion.div 
-                  className="font-display text-4xl md:text-5xl font-bold text-secondary mb-2"
-                  initial={{ scale: 0.5 }}
-                  whileInView={{ scale: 1 }}
+                aria-hidden
+                className="absolute -top-20 -left-20 h-48 w-48 rounded-full bg-secondary/30 blur-3xl"
+                animate={{ x: [0, 30, 0], y: [0, -20, 0], scale: [1, 1.12, 1] }}
+                transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+              />
+              <motion.div
+                aria-hidden
+                className="absolute -bottom-16 -right-16 h-56 w-56 rounded-full bg-primary-foreground/20 blur-3xl"
+                animate={{ x: [0, -25, 0], y: [0, 15, 0], scale: [1, 0.92, 1] }}
+                transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+              />
+              <motion.img
+                src={logo}
+                alt="SSMos motif"
+                aria-hidden
+                className="absolute inset-0 m-auto w-36 md:w-44 opacity-[0.1] pointer-events-none select-none"
+                animate={{ y: [0, -6, 0], scale: [1, 1.03, 1] }}
+                transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+              />
+              <div className="relative z-10 text-center">
+                <motion.h2
+                  className="font-display text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white"
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 + 0.2, type: "spring" }}
+                  transition={{ duration: 0.6 }}
                 >
-                  {stat.value}{stat.suffix}
-                </motion.div>
-                <div className="text-white/80 text-sm md:text-base">{stat.label}</div>
-              </motion.div>
-            ))}
+                  <span className="bg-gradient-to-r from-white via-secondary to-white bg-clip-text text-transparent">
+                    SSMOS Impact Vision
+                  </span>
+                </motion.h2>
+                <motion.div
+                  aria-hidden
+                  className="mx-auto mt-5 h-1 rounded-full bg-gradient-to-r from-transparent via-secondary to-transparent"
+                  style={{ width: 'min(360px, 70vw)' }}
+                  animate={{ opacity: [0.4, 1, 0.4], scaleX: [0.85, 1, 0.85] }}
+                  transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
+                />
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Latest News */}
       <section className="section-padding bg-background">
