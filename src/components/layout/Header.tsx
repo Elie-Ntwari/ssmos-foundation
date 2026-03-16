@@ -14,11 +14,12 @@ import {
 import logo from '@/assets/logo.png';
 
 const aboutSections = [
-  { id: 'presentation', labelKey: 'about.nav.presentation' },
-  { id: 'contexte', labelKey: 'about.nav.context' },
-  { id: 'mission', labelKey: 'about.nav.mission' },
-  { id: 'vision', labelKey: 'about.nav.vision' },
-  { id: 'valeurs', labelKey: 'about.nav.values' },
+  { id: 'presentation', path: '/about/presentation', labelKey: 'about.nav.presentation' },
+  { id: 'contexte', path: '/about/contexte', labelKey: 'about.nav.context' },
+  { id: 'mission', path: '/about/mission', labelKey: 'about.nav.mission' },
+  { id: 'but', path: '/about/but', labelKey: 'about.nav.goal' },
+  { id: 'vision', path: '/about/vision', labelKey: 'about.nav.vision' },
+  { id: 'valeurs', path: '/about/valeurs', labelKey: 'about.nav.values' },
 ];
 
 const Header = () => {
@@ -38,7 +39,12 @@ const Header = () => {
     { path: '/contact', label: t('nav.contact') },
   ];
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => {
+    if (path === '/about') {
+      return location.pathname === '/about' || location.pathname.startsWith('/about/');
+    }
+    return location.pathname === path;
+  };
 
   const getLangName = (lang: typeof languages[0], currentLang: Language) => {
     switch (currentLang) {
@@ -77,8 +83,11 @@ const Header = () => {
                   onMouseEnter={() => setIsAboutOpen(true)}
                   onMouseLeave={() => setIsAboutOpen(false)}
                 >
-                  <Link
-                    to={link.path}
+                  <button
+                    type="button"
+                    aria-haspopup="menu"
+                    aria-expanded={isAboutOpen}
+                    onClick={() => setIsAboutOpen((prev) => !prev)}
                     className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 flex items-center gap-1 ${
                       isActive(link.path)
                         ? 'bg-primary text-primary-foreground'
@@ -87,7 +96,7 @@ const Header = () => {
                   >
                     {link.label}
                     <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${isAboutOpen ? 'rotate-180' : ''}`} />
-                  </Link>
+                  </button>
 
                   {/* Dropdown */}
                   <AnimatePresence>
@@ -103,7 +112,7 @@ const Header = () => {
                           return (
                             <Link
                               key={section.id}
-                              to={`/about#${section.id}`}
+                              to={section.path}
                               onClick={() => setIsAboutOpen(false)}
                               className="block px-4 py-3 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
                             >
@@ -207,7 +216,7 @@ const Header = () => {
                             return (
                               <Link
                                 key={section.id}
-                                to={`/about#${section.id}`}
+                                to={section.path}
                                 onClick={() => {
                                   setIsMenuOpen(false);
                                   setIsMobileAboutOpen(false);

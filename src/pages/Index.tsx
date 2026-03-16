@@ -7,7 +7,7 @@ import { contentService } from '@/services/contentService';
 import { NewsArticle, HomePageSection, InterventionAxis } from '@/types/api';
 import { Button } from '@/components/ui/button';
 import { stats } from '@/data/mockData';
-import { getMultilingualContent as getContent } from '@/utils/multilingual';
+import { getFormattedMultilingualContent as getContent } from '@/utils/multilingual';
 import Layout from '@/components/layout/Layout';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from '@/components/ui/carousel';
 import logo from '@/assets/logo.png';
@@ -78,8 +78,7 @@ const Index = () => {
   function getSectionContentStatic(sectionKey: string): string {
     const section = homeSections[sectionKey];
     if (!section) return '';
-    const content = section.content;
-    return content[language] || content.fr || content.en || '';
+    return getContent(section.content, language);
   }
 
   useEffect(() => {
@@ -137,8 +136,7 @@ const Index = () => {
   const getSectionContent = (sectionKey: string): string => {
     const section = homeSections[sectionKey];
     if (!section) return '';
-    const content = section.content;
-    return content[language] || content.fr || content.en || '';
+    return getContent(section.content, language);
   };
 
   const getMultilingualContent = (content: { fr?: string; en?: string; ln?: string; sw?: string }): string => {
@@ -359,11 +357,11 @@ const Index = () => {
             <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-6">
               {getSectionContent('about_title') || t('home.about.title')}
             </h2>
-            <p className="text-muted-foreground text-lg leading-relaxed mb-8">
+            <p className="text-muted-foreground text-lg leading-relaxed mb-8 whitespace-pre-line">
               {getSectionContent('about_description') || t('home.about.description')}
             </p>
             <Button asChild variant="outline" className="group">
-              <Link to="/about">
+              <Link to="/about/presentation">
                 {t('services.learnMore')}
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
@@ -573,7 +571,7 @@ const Index = () => {
             <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-6">
               {getSectionContent('cta_title') || t('cta.ready.title')}
             </h2>
-            <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto">
+            <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto whitespace-pre-line">
               {getSectionContent('cta_description') || t('cta.ready.description')}
             </p>
             <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg transition-all duration-300 hover:-translate-y-0.5">

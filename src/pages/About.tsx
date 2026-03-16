@@ -5,6 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { contentService } from '@/services/contentService';
 import { InstitutionalPage } from '@/types/api';
+import { normalizeCmsText } from '@/utils/multilingual';
 import Layout from '@/components/layout/Layout';
 import heroAbout from '@/assets/hero-about.png';
 
@@ -72,7 +73,7 @@ const About = () => {
     if (!page) return '';
     const content = page[field];
     if (typeof content === 'object' && content !== null) {
-      return content[language] || content.fr || content.en || '';
+      return normalizeCmsText(content[language] || content.fr || content.en || '');
     }
     return '';
   };
@@ -157,7 +158,7 @@ const About = () => {
                   <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
                     {getContent(presentationPage, 'title') || t('about.intro')}
                   </h2>
-                  <p className="text-muted-foreground text-lg leading-relaxed">
+                  <p className="text-muted-foreground text-lg leading-relaxed whitespace-pre-line">
                     {getContent(presentationPage, 'content') || t('about.intro.text')}
                   </p>
                 </motion.div>
@@ -241,7 +242,7 @@ const About = () => {
                 <div className="w-14 h-14 rounded-xl hero-gradient flex items-center justify-center mb-6">
                   <Shield className="h-7 w-7 text-white" />
                 </div>
-                <p className="text-muted-foreground text-lg leading-relaxed">
+                <p className="text-muted-foreground text-lg leading-relaxed whitespace-pre-line">
                   {isLoading ? '' : getContent(contextePage, 'content') || t('about.context.text')}
                 </p>
               </div>
@@ -268,7 +269,7 @@ const About = () => {
                 <h3 className="font-display text-2xl font-bold text-foreground">
                   {isLoading ? <Loader2 className="h-5 w-5 animate-spin inline-block" /> : getContent(missionPage, 'title') || t('about.mission.title')}
                 </h3>
-                <p className="text-muted-foreground leading-relaxed">
+                <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
                   {isLoading ? '' : getContent(missionPage, 'content') || t('about.mission.text')}
                 </p>
               </motion.div>
@@ -309,7 +310,7 @@ const About = () => {
               <h2 className="font-display text-3xl md:text-5xl font-bold text-white">
                 {isLoading ? <Loader2 className="h-8 w-8 animate-spin inline-block" /> : getContent(visionPage, 'title') || t('about.vision.title')}
               </h2>
-              <p className="text-white/85 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">
+              <p className="text-white/85 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto whitespace-pre-line">
                 {isLoading ? '' : getContent(visionPage, 'content') || t('about.vision.text')}
               </p>
             </motion.div>

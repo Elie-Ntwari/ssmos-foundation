@@ -6,7 +6,7 @@ import { useLanguage } from '@/i18n/LanguageContext';
 import { contentService } from '@/services/contentService';
 import { Service } from '@/types/api';
 import { Button } from '@/components/ui/button';
-import { getMultilingualContent as getContent } from '@/utils/multilingual';
+import { getFormattedMultilingualContent as getContent } from '@/utils/multilingual';
 import Layout from '@/components/layout/Layout';
 import heroServices from '@/assets/hero-services.png';
 
@@ -128,7 +128,7 @@ const Services = () => {
           <div className="container mx-auto">
             <div className="max-w-4xl">
               <motion.p 
-                className="text-lg text-muted-foreground leading-relaxed mb-8"
+                className="text-lg text-muted-foreground leading-relaxed mb-8 whitespace-pre-line"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
@@ -209,7 +209,7 @@ const Services = () => {
                       <h2 className="font-display text-2xl font-bold text-foreground mb-3">
                         {getMultilingualContent(service.title)}
                       </h2>
-                      <p className="text-muted-foreground leading-relaxed mb-4">
+                      <p className="text-muted-foreground leading-relaxed mb-4 whitespace-pre-line">
                         {getMultilingualContent(service.description)}
                       </p>
                       <Button asChild variant="outline" className="group">

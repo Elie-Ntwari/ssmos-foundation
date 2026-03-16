@@ -5,7 +5,7 @@ import { useLanguage } from '@/i18n/LanguageContext';
 import { contentService } from '@/services/contentService';
 import { NewsArticle } from '@/types/api';
 import { Button } from '@/components/ui/button';
-import { getMultilingualContent as getContent } from '@/utils/multilingual';
+import { getFormattedMultilingualContent as getContent } from '@/utils/multilingual';
 import Layout from '@/components/layout/Layout';
 import heroNews from '@/assets/hero-news.png';
 

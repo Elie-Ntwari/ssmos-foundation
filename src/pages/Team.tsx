@@ -4,7 +4,7 @@ import { useLanguage } from '@/i18n/LanguageContext';
 import { contentService } from '@/services/contentService';
 import { TeamMember, TeamPage } from '@/types/api';
 import { ChevronRight, Loader2 } from 'lucide-react';
-import { getMultilingualContent as getContent } from '@/utils/multilingual';
+import { getFormattedMultilingualContent as getContent } from '@/utils/multilingual';
 import Layout from '@/components/layout/Layout';
 import heroTeam from '@/assets/hero-2.png';
 
@@ -123,16 +123,10 @@ const Team = () => {
                       {member.name}
                     </h3>
                     <p className="text-secondary font-medium text-sm md:text-base mb-4">
-                      {language === 'en' ? (member.role.en || member.role.fr) : 
-                       language === 'ln' ? (member.role.ln || member.role.fr) : 
-                       language === 'sw' ? (member.role.sw || member.role.fr) : 
-                       member.role.fr}
+                      {getMultilingualContent(member.role)}
                     </p>
-                    <p className="text-muted-foreground text-sm md:text-base mb-5 leading-relaxed line-clamp-4">
-                      {language === 'en' ? (member.bio.en || member.bio.fr) : 
-                       language === 'ln' ? (member.bio.ln || member.bio.fr) : 
-                       language === 'sw' ? (member.bio.sw || member.bio.fr) : 
-                       member.bio.fr}
+                    <p className="text-muted-foreground text-sm md:text-base mb-5 leading-relaxed line-clamp-4 whitespace-pre-line">
+                      {getMultilingualContent(member.bio)}
                     </p>
                     {member.expertise && member.expertise.length > 0 && (
                       <div className="mt-6 pt-4 border-t border-border">

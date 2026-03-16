@@ -25,7 +25,8 @@ export const translations: Record<Language, Record<string, string>> = {
     // About nav sections
     'about.nav.presentation': 'Présentation générale',
     'about.nav.context': 'Contexte de création',
-    'about.nav.mission': 'Mission & But',
+    'about.nav.mission': 'Notre Mission',
+    'about.nav.goal': 'Notre But',
     'about.nav.vision': 'Notre Vision',
     'about.nav.values': 'Nos Valeurs',
     
@@ -166,7 +167,8 @@ export const translations: Record<Language, Record<string, string>> = {
     // About nav sections
     'about.nav.presentation': 'General Presentation',
     'about.nav.context': 'Creation Context',
-    'about.nav.mission': 'Mission & Goal',
+    'about.nav.mission': 'Our Mission',
+    'about.nav.goal': 'Our Goal',
     'about.nav.vision': 'Our Vision',
     'about.nav.values': 'Our Values',
     
@@ -307,7 +309,8 @@ export const translations: Record<Language, Record<string, string>> = {
     // About nav sections
     'about.nav.presentation': 'Botálisi ya mobimba',
     'about.nav.context': 'Contexte ya bozalisi',
-    'about.nav.mission': 'Mission & But',
+    'about.nav.mission': 'Mission na biso',
+    'about.nav.goal': 'But na biso',
     'about.nav.vision': 'Vision na Biso',
     'about.nav.values': 'Valeurs na biso',
     
@@ -448,7 +451,8 @@ export const translations: Record<Language, Record<string, string>> = {
     // About nav sections
     'about.nav.presentation': 'Maelezo ya jumla',
     'about.nav.context': 'Muktadha wa uumbaji',
-    'about.nav.mission': 'Misheni & Lengo',
+    'about.nav.mission': 'Misheni Yetu',
+    'about.nav.goal': 'Lengo Letu',
     'about.nav.vision': 'Dira Yetu',
     'about.nav.values': 'Maadili Yetu',
     
