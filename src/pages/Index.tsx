@@ -371,7 +371,7 @@ const Index = () => {
             <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-6">
               {getSectionContent('about_title') || t('home.about.title')}
             </h2>
-            <p className="text-muted-foreground text-lg leading-relaxed mb-8 whitespace-pre-line">
+            <p className="text-muted-foreground text-lg leading-relaxed mb-8 whitespace-pre-line text-justify">
               {getSectionContent('about_description') || t('home.about.description')}
             </p>
             <Button asChild variant="outline" className="group">
