@@ -448,6 +448,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.services': 'Huduma',
     'nav.news': 'Habari',
     'nav.blog': 'Blogu',
+    'nav.publications': 'Machapisho',
     'nav.team': 'Timu',
     'nav.contact': 'Wasiliana',
     
