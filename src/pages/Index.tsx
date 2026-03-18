@@ -573,7 +573,7 @@ const Index = () => {
           )}
           <div className="mt-8 text-center sm:hidden">
             <Button asChild variant="outline">
-              <Link to="/news">
+              <Link to="/publications">
                 {t('home.news.viewAll')}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
