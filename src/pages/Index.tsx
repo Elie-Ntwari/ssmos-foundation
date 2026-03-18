@@ -195,7 +195,7 @@ const Index = () => {
               transition={{ duration: 2, repeat: Infinity }}
             />
             <span className="text-white/90 text-sm md:text-base font-medium">
-              Safety & Santé na Mosala (SSMOS)— République Démocratique du Congo
+              Safety & Santé na Mosala (SSMos)— République Démocratique du Congo
             </span>
           </motion.div>
 
