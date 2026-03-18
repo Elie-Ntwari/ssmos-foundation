@@ -509,7 +509,7 @@ const Index = () => {
               {getSectionContent('news_title') || t('home.news.title')}
             </motion.h2>
             <Button asChild variant="outline" className="hidden sm:flex group">
-              <Link to="/news">
+              <Link to="/publications">
                 {t('home.news.viewAll')}
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
