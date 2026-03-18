@@ -209,6 +209,7 @@ const Services = () => {
                 return (
                   <motion.div
                     key={service.id}
+                    id={service.category || ''}
                     className="card-institutional flex flex-col md:flex-row gap-6"
                     variants={fadeInUp}
                     whileHover={{ y: -5, transition: { duration: 0.2 } }}
