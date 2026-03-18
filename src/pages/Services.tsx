@@ -221,7 +221,7 @@ const Services = () => {
                       <h2 className="font-display text-2xl font-bold text-foreground mb-3">
                         {getMultilingualContent(service.title)}
                       </h2>
-                      <p className="text-muted-foreground leading-relaxed mb-4 whitespace-pre-line">
+                      <p className="text-muted-foreground leading-relaxed mb-4 whitespace-pre-line text-justify">
                         {getMultilingualContent(service.description)}
                       </p>
                       <Button asChild variant="outline" className="group">
