@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useLocation } from 'react-router-dom';
 import { Briefcase, GraduationCap, ClipboardCheck, Scale, Cpu, ArrowRight, CheckCircle, ArrowLeft, Search, MessageSquare, Loader2, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/i18n/LanguageContext';
