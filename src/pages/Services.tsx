@@ -31,12 +31,23 @@ const staggerContainer = {
 const Services = () => {
   const { t, language } = useLanguage();
   const { id } = useParams();
+  const location = useLocation();
   const [services, setServices] = useState<Service[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     loadServices();
   }, []);
+
+  // Scroll to anchor when hash changes
+  useEffect(() => {
+    if (location.hash && !isLoading) {
+      const el = document.querySelector(location.hash);
+      if (el) {
+        setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+      }
+    }
+  }, [location.hash, isLoading]);
 
   const loadServices = async () => {
     try {
