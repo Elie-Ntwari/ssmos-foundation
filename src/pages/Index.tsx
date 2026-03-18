@@ -530,7 +530,7 @@ const Index = () => {
               {latestArticles.map((article) => (
                 <motion.div key={article.id} variants={fadeInUp}>
                   <Link
-                    to={`/news/${article.id}`}
+                    to={`/publications/news/${article.id}`}
                     className="card-institutional group overflow-hidden block"
                   >
                     <div className="aspect-video overflow-hidden rounded-lg mb-4 -mt-2 -mx-2">
