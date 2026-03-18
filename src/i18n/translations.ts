@@ -305,6 +305,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.services': 'Misala',
     'nav.news': 'Sango',
     'nav.blog': 'Blogi',
+    'nav.publications': 'Mikanda',
     'nav.team': 'Équipe',
     'nav.contact': 'Koyebana',
     
