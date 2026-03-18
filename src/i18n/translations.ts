@@ -19,6 +19,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.services': 'Services',
     'nav.news': 'Actualités',
     'nav.blog': 'Blog',
+    'nav.publications': 'Publications',
     'nav.team': 'Équipe',
     'nav.contact': 'Contact',
     
