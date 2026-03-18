@@ -195,7 +195,7 @@ const Index = () => {
               transition={{ duration: 2, repeat: Infinity }}
             />
             <span className="text-white/90 text-sm md:text-base font-medium">
-              Safety & Santé na Mosala (SSMOS)— République Démocratique du Congo
+              Safety & Santé na Mosala (SSMos)— République Démocratique du Congo
             </span>
           </motion.div>
 
@@ -257,35 +257,48 @@ const Index = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.4, duration: 0.8 }}
             >
+              {/* Logo always visible */}
+              <motion.div
+                className="relative bg-white rounded-2xl p-4 md:p-6 shadow-2xl mb-6 w-fit mx-auto"
+                whileHover={{ scale: 1.03, y: -3 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              >
+                <motion.img
+                  src={logo}
+                  alt="SSMos Logo"
+                  className="w-32 md:w-40 h-auto drop-shadow-lg"
+                  animate={{ y: [0, -4, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                />
+              </motion.div>
+
               {heroSlides[currentSlide].showLogo ? (
-                <div className="relative w-full max-w-md">
+                <div className="w-full max-w-md">
+                  {/* Stats grid on slide 1 too */}
                   <motion.div 
-                    className="absolute inset-0 bg-secondary/20 blur-[40px] rounded-full -z-10"
-                    animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
-                    transition={{ duration: 4, repeat: Infinity }}
-                  />
-                  <motion.div
-                    className="relative bg-white rounded-3xl p-8 md:p-10 shadow-2xl"
-                    whileHover={{ scale: 1.03, y: -5 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    className="grid grid-cols-2 gap-3 w-full"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.3 }}
                   >
-                    <motion.div 
-                      className="relative z-10 flex items-center justify-center"
-                      animate={{ y: [0, -8, 0] }}
-                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      <img src={logo} alt="SSMos Logo" className="w-full max-w-[280px] h-auto drop-shadow-lg" />
-                    </motion.div>
-                    <motion.div
-                      className="absolute -top-2 -right-2 w-20 h-20 bg-gradient-to-br from-secondary/40 to-secondary/20 rounded-2xl"
-                      animate={{ rotate: [0, 5, 0, -5, 0], scale: [1, 1.05, 1] }}
-                      transition={{ duration: 6, repeat: Infinity }}
-                    />
-                    <motion.div
-                      className="absolute -bottom-2 -left-2 w-16 h-16 bg-gradient-to-tr from-white/30 to-white/10 rounded-xl border border-white/20"
-                      animate={{ rotate: [0, -5, 0, 5, 0] }}
-                      transition={{ duration: 5, repeat: Infinity }}
-                    />
+                    {[
+                      { value: `${stats.companies}+`, label: t('stats.companies') },
+                      { value: `${stats.trainings}+`, label: t('stats.trainings') },
+                      { value: `${stats.experts}`, label: t('stats.experts') },
+                      { value: `${stats.years}`, label: t('stats.years') },
+                    ].map((stat, i) => (
+                      <motion.div
+                        key={stat.label}
+                        className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 text-center"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4 + i * 0.1 }}
+                        whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,255,255,0.15)' }}
+                      >
+                        <div className="font-display text-2xl font-bold text-secondary mb-0.5">{stat.value}</div>
+                        <div className="text-white/80 text-xs">{stat.label}</div>
+                      </motion.div>
+                    ))}
                   </motion.div>
                 </div>
               ) : (
@@ -358,7 +371,7 @@ const Index = () => {
             <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-6">
               {getSectionContent('about_title') || t('home.about.title')}
             </h2>
-            <p className="text-muted-foreground text-lg leading-relaxed mb-8 whitespace-pre-line">
+            <p className="text-muted-foreground text-lg leading-relaxed mb-8 whitespace-pre-line text-justify">
               {getSectionContent('about_description') || t('home.about.description')}
             </p>
             <Button asChild variant="outline" className="group">
@@ -496,7 +509,7 @@ const Index = () => {
               {getSectionContent('news_title') || t('home.news.title')}
             </motion.h2>
             <Button asChild variant="outline" className="hidden sm:flex group">
-              <Link to="/news">
+              <Link to="/publications">
                 {t('home.news.viewAll')}
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
@@ -517,7 +530,7 @@ const Index = () => {
               {latestArticles.map((article) => (
                 <motion.div key={article.id} variants={fadeInUp}>
                   <Link
-                    to={`/news/${article.id}`}
+                    to={`/publications/news/${article.id}`}
                     className="card-institutional group overflow-hidden block"
                   >
                     <div className="aspect-video overflow-hidden rounded-lg mb-4 -mt-2 -mx-2">
@@ -560,7 +573,7 @@ const Index = () => {
           )}
           <div className="mt-8 text-center sm:hidden">
             <Button asChild variant="outline">
-              <Link to="/news">
+              <Link to="/publications">
                 {t('home.news.viewAll')}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>

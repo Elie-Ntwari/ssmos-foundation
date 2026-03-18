@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ChevronRight, Loader2, Building, Shield, Target, Eye, ShieldCheck, Award, Lightbulb } from 'lucide-react';
+import { ChevronRight, Loader2, Building, Shield, Target, Eye, ShieldCheck, Award, Lightbulb, Heart, Users, Handshake } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '@/i18n/LanguageContext';
@@ -7,7 +7,11 @@ import { contentService } from '@/services/contentService';
 import { InstitutionalPage } from '@/types/api';
 import { normalizeCmsText } from '@/utils/multilingual';
 import Layout from '@/components/layout/Layout';
-import heroAbout from '@/assets/hero-about.png';
+import heroPresentation from '@/assets/hero-about-presentation.jpg';
+import heroContext from '@/assets/hero-about-context.jpg';
+import heroMission from '@/assets/hero-about-mission.jpg';
+import heroVision from '@/assets/hero-about-vision.jpg';
+import heroValues from '@/assets/hero-about-values.jpg';
 
 const fadeInUp = {
   initial: { opacity: 0, y: 30 },
@@ -18,7 +22,7 @@ const fadeInUp = {
 const staggerContainer = {
   animate: {
     transition: {
-      staggerChildren: 0.1
+      staggerChildren: 0.15
     }
   }
 };
@@ -43,7 +47,6 @@ const About = () => {
     };
   }, []);
 
-  // Scroll to anchor on hash change
   useEffect(() => {
     if (location.hash) {
       const el = document.querySelector(location.hash);
@@ -83,21 +86,25 @@ const About = () => {
       icon: ShieldCheck,
       title: t('about.values.prevention'),
       description: t('about.values.prevention.desc'),
+      color: 'from-blue-500 to-cyan-500',
     },
     {
       icon: Award,
       title: t('about.values.excellence'),
       description: t('about.values.excellence.desc'),
+      color: 'from-cyan-500 to-teal-500',
     },
     {
       icon: Shield,
       title: t('about.values.integrity'),
       description: t('about.values.integrity.desc'),
+      color: 'from-indigo-500 to-blue-500',
     },
     {
       icon: Lightbulb,
       title: t('about.values.innovation'),
       description: t('about.values.innovation.desc'),
+      color: 'from-teal-500 to-emerald-500',
     },
   ];
 
@@ -108,14 +115,13 @@ const About = () => {
 
   return (
     <Layout>
-      {/* Hero Section - Clean title only */}
+      {/* Hero Section */}
       <section className="relative overflow-hidden py-16 md:py-20">
         <div className="absolute inset-0">
-          <img src={heroAbout} alt="Qui sommes-nous" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 hero-gradient opacity-80" />
+          <img src={heroPresentation} alt="Qui sommes-nous" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 hero-gradient opacity-85 backdrop-blur-[2px]" />
         </div>
         <div className="container mx-auto px-4 relative z-10">
-          {/* Breadcrumb */}
           <motion.nav
             className="flex items-center gap-2 text-white/60 text-sm mb-6"
             initial={{ opacity: 0 }}
@@ -141,7 +147,7 @@ const About = () => {
       {/* Section 1: Présentation générale */}
       <section id="presentation" className="min-h-[85vh] flex items-center section-padding bg-background">
         <div className="container mx-auto">
-          <div className="max-w-5xl mx-auto">
+          <div className="max-w-6xl mx-auto">
             {isLoading ? (
               <div className="flex justify-center items-center py-12">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -155,10 +161,14 @@ const About = () => {
                   viewport={{ once: true }}
                   transition={{ duration: 0.7 }}
                 >
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/10">
+                    <Building className="h-4 w-4 text-primary" />
+                    <span className="text-primary text-sm font-medium">{t('about.nav.presentation')}</span>
+                  </div>
                   <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
                     {getContent(presentationPage, 'title') || t('about.intro')}
                   </h2>
-                  <p className="text-muted-foreground text-lg leading-relaxed whitespace-pre-line">
+                  <p className="text-muted-foreground text-lg leading-relaxed text-justify whitespace-pre-line">
                     {getContent(presentationPage, 'content') || t('about.intro.text')}
                   </p>
                 </motion.div>
@@ -169,17 +179,9 @@ const About = () => {
                   viewport={{ once: true }}
                   transition={{ duration: 0.7, delay: 0.2 }}
                 >
-                  <div className="w-full aspect-square rounded-3xl hero-gradient p-8 border border-white/20 relative overflow-hidden">
-                    <motion.div
-                      className="absolute -inset-10 rounded-full border border-white/15"
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                    />
-                    <motion.div
-                      className="absolute inset-6 rounded-full border border-white/20"
-                      animate={{ rotate: -360 }}
-                      transition={{ duration: 16, repeat: Infinity, ease: 'linear' }}
-                    />
+                  <div className="w-full aspect-square rounded-3xl overflow-hidden relative group">
+                    <img src={heroPresentation} alt="Présentation SSMos" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                    <div className="absolute inset-0 hero-gradient opacity-60" />
                     <div className="absolute inset-0 flex items-center justify-center">
                       <motion.div
                         className="w-24 h-24 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center backdrop-blur-sm"
@@ -189,31 +191,9 @@ const About = () => {
                         <Building className="h-10 w-10 text-white" />
                       </motion.div>
                     </div>
-                    <motion.div
-                      className="absolute top-6 right-6 w-12 h-12 rounded-xl bg-white/10 border border-white/30 flex items-center justify-center"
-                      animate={{ y: [0, -5, 0], rotate: [0, 6, 0] }}
-                      transition={{ duration: 5, repeat: Infinity }}
-                    >
-                      <Shield className="h-6 w-6 text-white" />
-                    </motion.div>
-                    <motion.div
-                      className="absolute bottom-8 left-8 w-12 h-12 rounded-xl bg-white/10 border border-white/30 flex items-center justify-center"
-                      animate={{ y: [0, 5, 0], rotate: [0, -6, 0] }}
-                      transition={{ duration: 5.5, repeat: Infinity }}
-                    >
-                      <Target className="h-6 w-6 text-white" />
-                    </motion.div>
-                    <motion.div
-                      className="absolute bottom-6 right-10 w-10 h-10 rounded-lg bg-secondary/40 border border-white/25 flex items-center justify-center"
-                      animate={{ scale: [1, 1.15, 1], opacity: [0.75, 1, 0.75] }}
-                      transition={{ duration: 3, repeat: Infinity }}
-                    >
-                      <Eye className="h-5 w-5 text-white" />
-                    </motion.div>
-                    <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/15 to-transparent" />
                     <div className="absolute bottom-5 left-6 right-6 text-center">
                       <p className="text-white/90 text-sm tracking-wide uppercase font-medium">
-                        Safety. Sante. Excellence.
+                        Safety. Santé. Excellence.
                       </p>
                     </div>
                   </div>
@@ -225,139 +205,230 @@ const About = () => {
       </section>
 
       {/* Section 2: Contexte de création */}
-      <section id="contexte" className="min-h-[85vh] flex items-center section-padding bg-muted/50">
-        <div className="container mx-auto">
-          <div className="max-w-5xl mx-auto">
-            <motion.div
-              className="space-y-8"
-              initial={{ opacity: 0, y: 40 }}
+      <section id="contexte" className="relative overflow-hidden">
+        {/* Hero banner for this section */}
+        <div className="relative py-16 md:py-20">
+          <div className="absolute inset-0">
+            <img src={heroContext} alt="Contexte" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 hero-gradient opacity-85 backdrop-blur-[2px]" />
+          </div>
+          <div className="container mx-auto px-4 relative z-10">
+            <motion.h2 
+              className="font-display text-3xl md:text-5xl font-bold text-white"
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
             >
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
-                {isLoading ? <Loader2 className="h-6 w-6 animate-spin inline-block" /> : getContent(contextePage, 'title') || t('about.context.title')}
-              </h2>
-              <div className="bg-card rounded-2xl border border-border p-8 md:p-12 shadow-sm">
-                <div className="w-14 h-14 rounded-xl hero-gradient flex items-center justify-center mb-6">
-                  <Shield className="h-7 w-7 text-white" />
-                </div>
-                <p className="text-muted-foreground text-lg leading-relaxed whitespace-pre-line">
-                  {isLoading ? '' : getContent(contextePage, 'content') || t('about.context.text')}
-                </p>
-              </div>
-            </motion.div>
+              {isLoading ? <Loader2 className="h-6 w-6 animate-spin inline-block" /> : getContent(contextePage, 'title') || t('about.context.title')}
+            </motion.h2>
           </div>
         </div>
-      </section>
-
-      {/* Section 3: Mission & But */}
-      <section id="mission" className="min-h-[85vh] flex items-center section-padding bg-background">
-        <div className="container mx-auto">
-          <div className="max-w-5xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-8">
-              <motion.div 
-                className="bg-card rounded-2xl border border-border p-8 shadow-sm space-y-4"
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
+        <div className="section-padding bg-muted/50">
+          <div className="container mx-auto">
+            <div className="max-w-5xl mx-auto">
+              <motion.div
+                className="bg-card rounded-2xl border border-border p-8 md:p-12 shadow-sm"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
+                transition={{ duration: 0.7 }}
               >
-                <div className="w-14 h-14 rounded-xl hero-gradient flex items-center justify-center">
-                  <Target className="h-7 w-7 text-white" />
+                <div className="flex items-start gap-6">
+                  <div className="w-16 h-16 rounded-xl hero-gradient flex items-center justify-center flex-shrink-0">
+                    <Shield className="h-8 w-8 text-white" />
+                  </div>
+                  <p className="text-muted-foreground text-lg leading-relaxed text-justify whitespace-pre-line">
+                    {isLoading ? '' : getContent(contextePage, 'content') || t('about.context.text')}
+                  </p>
                 </div>
-                <h3 className="font-display text-2xl font-bold text-foreground">
-                  {isLoading ? <Loader2 className="h-5 w-5 animate-spin inline-block" /> : getContent(missionPage, 'title') || t('about.mission.title')}
-                </h3>
-                <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                  {isLoading ? '' : getContent(missionPage, 'content') || t('about.mission.text')}
-                </p>
-              </motion.div>
-
-              <motion.div 
-                className="bg-card rounded-2xl border border-border p-8 shadow-sm space-y-4"
-                initial={{ opacity: 0, x: 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-              >
-                <div className="w-14 h-14 rounded-xl hero-gradient flex items-center justify-center">
-                  <Eye className="h-7 w-7 text-white" />
-                </div>
-                <h3 className="font-display text-2xl font-bold text-foreground">
-                  {t('about.goal.title')}
-                </h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {t('about.goal.text')}
-                </p>
               </motion.div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Section 4: Vision 2030 */}
-      <section id="vision" className="min-h-[70vh] flex items-center hero-gradient">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
+      {/* Section 3: Mission & But */}
+      <section id="mission" className="relative overflow-hidden">
+        <div className="relative py-16 md:py-20">
+          <div className="absolute inset-0">
+            <img src={heroMission} alt="Mission" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 hero-gradient opacity-85 backdrop-blur-[2px]" />
+          </div>
+          <div className="container mx-auto px-4 relative z-10">
+            <motion.h2 
+              className="font-display text-3xl md:text-5xl font-bold text-white"
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
-              className="space-y-6"
             >
-              <h2 className="font-display text-3xl md:text-5xl font-bold text-white">
-                {isLoading ? <Loader2 className="h-8 w-8 animate-spin inline-block" /> : getContent(visionPage, 'title') || t('about.vision.title')}
-              </h2>
-              <p className="text-white/85 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto whitespace-pre-line">
-                {isLoading ? '' : getContent(visionPage, 'content') || t('about.vision.text')}
-              </p>
-            </motion.div>
+              {t('about.mission.title')} & {t('about.goal.title')}
+            </motion.h2>
+          </div>
+        </div>
+        <div className="section-padding bg-background">
+          <div className="container mx-auto">
+            <div className="max-w-6xl mx-auto">
+              <div className="grid md:grid-cols-2 gap-8">
+                <motion.div 
+                  className="bg-card rounded-2xl border border-border p-8 shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] transition-all duration-300 space-y-5"
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6 }}
+                  whileHover={{ y: -5 }}
+                >
+                  <div className="w-14 h-14 rounded-xl hero-gradient flex items-center justify-center">
+                    <Target className="h-7 w-7 text-white" />
+                  </div>
+                  <h3 className="font-display text-2xl font-bold text-foreground">
+                    {isLoading ? <Loader2 className="h-5 w-5 animate-spin inline-block" /> : getContent(missionPage, 'title') || t('about.mission.title')}
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed text-justify whitespace-pre-line">
+                    {isLoading ? '' : getContent(missionPage, 'content') || t('about.mission.text')}
+                  </p>
+                  <div className="flex items-center gap-3 pt-2">
+                    <div className="flex -space-x-2">
+                      {[Users, Heart, Handshake].map((Icon, i) => (
+                        <div key={i} className="w-8 h-8 rounded-full hero-gradient flex items-center justify-center border-2 border-card">
+                          <Icon className="h-3.5 w-3.5 text-white" />
+                        </div>
+                      ))}
+                    </div>
+                    <span className="text-sm text-muted-foreground font-medium">{t('about.nav.mission')}</span>
+                  </div>
+                </motion.div>
+
+                <motion.div 
+                  className="bg-card rounded-2xl border border-border p-8 shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] transition-all duration-300 space-y-5"
+                  initial={{ opacity: 0, x: 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                  whileHover={{ y: -5 }}
+                >
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-secondary to-secondary/70 flex items-center justify-center">
+                    <Eye className="h-7 w-7 text-white" />
+                  </div>
+                  <h3 className="font-display text-2xl font-bold text-foreground">
+                    {t('about.goal.title')}
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed text-justify">
+                    {t('about.goal.text')}
+                  </p>
+                  <div className="flex items-center gap-3 pt-2">
+                    <div className="flex -space-x-2">
+                      {[Shield, Target, Eye].map((Icon, i) => (
+                        <div key={i} className="w-8 h-8 rounded-full bg-gradient-to-br from-secondary to-secondary/70 flex items-center justify-center border-2 border-card">
+                          <Icon className="h-3.5 w-3.5 text-white" />
+                        </div>
+                      ))}
+                    </div>
+                    <span className="text-sm text-muted-foreground font-medium">{t('about.nav.goal')}</span>
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 4: Vision 2030 */}
+      <section id="vision" className="relative overflow-hidden">
+        <div className="relative min-h-[70vh] flex items-center">
+          <div className="absolute inset-0">
+            <img src={heroVision} alt="Vision 2030" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 hero-gradient opacity-85 backdrop-blur-[2px]" />
+          </div>
+          <div className="container mx-auto px-4 relative z-10 py-20">
+            <div className="max-w-4xl mx-auto text-center">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7 }}
+                className="space-y-8"
+              >
+                <motion.div 
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                >
+                  <Eye className="h-4 w-4 text-secondary" />
+                  <span className="text-white/90 text-sm font-medium">{t('about.nav.vision')}</span>
+                </motion.div>
+                <h2 className="font-display text-3xl md:text-5xl lg:text-6xl font-bold text-white">
+                  {isLoading ? <Loader2 className="h-8 w-8 animate-spin inline-block" /> : getContent(visionPage, 'title') || t('about.vision.title')}
+                </h2>
+                <p className="text-white/85 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto text-justify whitespace-pre-line">
+                  {isLoading ? '' : getContent(visionPage, 'content') || t('about.vision.text')}
+                </p>
+                <motion.div
+                  className="w-24 h-1 bg-gradient-to-r from-transparent via-secondary to-transparent mx-auto"
+                  animate={{ scaleX: [0.7, 1, 0.7], opacity: [0.5, 1, 0.5] }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                />
+              </motion.div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Section 5: Valeurs */}
-      <section id="valeurs" className="min-h-[85vh] flex items-center section-padding bg-background">
-        <div className="container mx-auto">
-          <motion.div
-            className="mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
+      <section id="valeurs" className="relative overflow-hidden">
+        <div className="relative py-16 md:py-20">
+          <div className="absolute inset-0">
+            <img src={heroValues} alt="Nos valeurs" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 hero-gradient opacity-85 backdrop-blur-[2px]" />
+          </div>
+          <div className="container mx-auto px-4 relative z-10">
+            <motion.h2 
+              className="font-display text-3xl md:text-5xl font-bold text-white"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
               {t('about.values.title')}
-            </h2>
-          </motion.div>
-          
-          <motion.div 
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto"
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-          >
-            {values.map((value) => (
-              <motion.div
-                key={value.title}
-                className="card-institutional"
-                variants={fadeInUp}
-                whileHover={{ y: -5, transition: { duration: 0.2 } }}
-              >
-                <div className="w-14 h-14 rounded-xl hero-gradient flex items-center justify-center mb-4">
-                  <value.icon className="h-7 w-7 text-white" />
-                </div>
-                <h3 className="font-display text-lg font-semibold text-foreground mb-2">
-                  {value.title}
-                </h3>
-                <p className="text-muted-foreground text-sm">
-                  {value.description}
-                </p>
-              </motion.div>
-            ))}
-          </motion.div>
+            </motion.h2>
+          </div>
+        </div>
+        <div className="section-padding bg-background">
+          <div className="container mx-auto">
+            <motion.div 
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto"
+              variants={staggerContainer}
+              initial="initial"
+              whileInView="animate"
+              viewport={{ once: true }}
+            >
+              {values.map((value, index) => (
+                <motion.div
+                  key={value.title}
+                  className="relative bg-card rounded-2xl border border-border p-6 shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] transition-all duration-300 group overflow-hidden"
+                  variants={fadeInUp}
+                  whileHover={{ y: -8, transition: { duration: 0.3 } }}
+                >
+                  {/* Top accent bar */}
+                  <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${value.color}`} />
+                  
+                  <div className="w-16 h-16 rounded-2xl hero-gradient flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+                    <value.icon className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="font-display text-xl font-bold text-foreground mb-3">
+                    {value.title}
+                  </h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed text-justify">
+                    {value.description}
+                  </p>
+                  
+                  {/* Index number */}
+                  <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-muted/50 flex items-center justify-center">
+                    <span className="text-xs font-bold text-muted-foreground">0{index + 1}</span>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
         </div>
       </section>
     </Layout>

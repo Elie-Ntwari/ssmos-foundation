@@ -19,6 +19,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.services': 'Services',
     'nav.news': 'Actualités',
     'nav.blog': 'Blog',
+    'nav.publications': 'Publications',
     'nav.team': 'Équipe',
     'nav.contact': 'Contact',
     
@@ -161,6 +162,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.services': 'Services',
     'nav.news': 'News',
     'nav.blog': 'Blog',
+    'nav.publications': 'Publications',
     'nav.team': 'Team',
     'nav.contact': 'Contact',
     
@@ -303,6 +305,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.services': 'Misala',
     'nav.news': 'Sango',
     'nav.blog': 'Blogi',
+    'nav.publications': 'Mikanda',
     'nav.team': 'Équipe',
     'nav.contact': 'Koyebana',
     
@@ -445,6 +448,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.services': 'Huduma',
     'nav.news': 'Habari',
     'nav.blog': 'Blogu',
+    'nav.publications': 'Machapisho',
     'nav.team': 'Timu',
     'nav.contact': 'Wasiliana',
     

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useLocation } from 'react-router-dom';
 import { Briefcase, GraduationCap, ClipboardCheck, Scale, Cpu, ArrowRight, CheckCircle, ArrowLeft, Search, MessageSquare, Loader2, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/i18n/LanguageContext';
@@ -31,12 +31,23 @@ const staggerContainer = {
 const Services = () => {
   const { t, language } = useLanguage();
   const { id } = useParams();
+  const location = useLocation();
   const [services, setServices] = useState<Service[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     loadServices();
   }, []);
+
+  // Scroll to anchor when hash changes
+  useEffect(() => {
+    if (location.hash && !isLoading) {
+      const el = document.querySelector(location.hash);
+      if (el) {
+        setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+      }
+    }
+  }, [location.hash, isLoading]);
 
   const loadServices = async () => {
     try {
@@ -198,6 +209,7 @@ const Services = () => {
                 return (
                   <motion.div
                     key={service.id}
+                    id={service.category || ''}
                     className="card-institutional flex flex-col md:flex-row gap-6"
                     variants={fadeInUp}
                     whileHover={{ y: -5, transition: { duration: 0.2 } }}
@@ -209,7 +221,7 @@ const Services = () => {
                       <h2 className="font-display text-2xl font-bold text-foreground mb-3">
                         {getMultilingualContent(service.title)}
                       </h2>
-                      <p className="text-muted-foreground leading-relaxed mb-4 whitespace-pre-line">
+                      <p className="text-muted-foreground leading-relaxed mb-4 whitespace-pre-line text-justify">
                         {getMultilingualContent(service.description)}
                       </p>
                       <Button asChild variant="outline" className="group">
