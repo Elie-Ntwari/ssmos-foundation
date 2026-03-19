@@ -144,6 +144,12 @@ const Index = () => {
   };
 
   const latestArticles = Array.isArray(articles) ? articles.slice(0, 3) : [];
+  const heroStats = [
+    { value: `${stats.companies}+`, label: t('stats.companies') },
+    { value: `${stats.trainings}+`, label: t('stats.trainings') },
+    { value: `${stats.experts}`, label: t('stats.experts') },
+    { value: `${stats.years}`, label: t('stats.years') },
+  ];
 
   const nextSlide = useCallback(() => setCurrentSlide((prev) => (prev + 1) % 3), []);
   const prevSlide = useCallback(() => setCurrentSlide((prev) => (prev - 1 + 3) % 3), []);
@@ -184,7 +190,7 @@ const Index = () => {
         <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 relative z-10">
           {/* Top Banner - visible on all slides */}
           <motion.div 
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 shadow-sm mb-8"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 shadow-sm mb-5 mt-4 md:mt-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
@@ -259,75 +265,84 @@ const Index = () => {
             >
               {/* Logo always visible */}
               <motion.div
-                className="relative bg-white rounded-2xl p-4 md:p-6 shadow-2xl mb-6 w-fit mx-auto"
-                whileHover={{ scale: 1.03, y: -3 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                key={`logo-card-${currentSlide}`}
+                className="relative bg-white rounded-3xl p-5 md:p-8 shadow-2xl mb-4 w-fit mx-auto border border-white/30 overflow-hidden"
+                initial={{ opacity: 0, y: 12, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.45 }}
+                whileHover={{ scale: 1.03, y: -4 }}
+                whileTap={{ scale: 0.99 }}
               >
+                <motion.div
+                  className="absolute top-3 right-3 w-10 h-10 rounded-lg bg-secondary/25 border border-white/35 backdrop-blur-sm"
+                  animate={{
+                    y: [0, -4, 0],
+                    rotate: [0, 6, 0],
+                    boxShadow: [
+                      '0 0 0px rgba(0,184,204,0.2)',
+                      '0 0 18px rgba(0,184,204,0.55)',
+                      '0 0 0px rgba(0,184,204,0.2)'
+                    ],
+                  }}
+                  transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
+                />
+                <motion.div
+                  className="absolute bottom-3 left-3 w-9 h-9 rounded-md bg-primary/20 border border-white/30 backdrop-blur-sm"
+                  animate={{
+                    y: [0, 4, 0],
+                    rotate: [0, -6, 0],
+                    boxShadow: [
+                      '0 0 0px rgba(1,45,94,0.2)',
+                      '0 0 16px rgba(1,45,94,0.45)',
+                      '0 0 0px rgba(1,45,94,0.2)'
+                    ],
+                  }}
+                  transition={{ duration: 3.6, repeat: Infinity, ease: 'easeInOut', delay: 0.25 }}
+                />
+                <motion.div
+                  className="absolute -top-6 -left-6 w-20 h-20 bg-secondary/20 rounded-full blur-2xl"
+                  animate={{ scale: [1, 1.2, 1], opacity: [0.45, 0.7, 0.45] }}
+                  transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
+                />
+                <motion.div
+                  className="absolute -bottom-6 -right-6 w-24 h-24 bg-primary/20 rounded-full blur-2xl"
+                  animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.65, 0.4] }}
+                  transition={{ duration: 4.4, repeat: Infinity, ease: 'easeInOut' }}
+                />
                 <motion.img
                   src={logo}
                   alt="SSMos Logo"
-                  className="w-32 md:w-40 h-auto drop-shadow-lg"
-                  animate={{ y: [0, -4, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  className="relative z-10 w-48 md:w-60 lg:w-72 h-auto drop-shadow-xl"
+                  animate={{ y: [0, -6, 0] }}
+                  transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
                 />
               </motion.div>
 
-              {heroSlides[currentSlide].showLogo ? (
-                <div className="w-full max-w-md">
-                  {/* Stats grid on slide 1 too */}
-                  <motion.div 
-                    className="grid grid-cols-2 gap-3 w-full"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.3 }}
+              <motion.div 
+                className="grid grid-cols-2 gap-3 w-full max-w-md"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                {heroStats.map((stat, i) => (
+                  <motion.div
+                    key={stat.label}
+                    className="relative bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-3 py-2.5 text-center overflow-hidden"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 + i * 0.08 }}
+                    whileHover={{ y: -3, backgroundColor: 'rgba(255,255,255,0.16)' }}
                   >
-                    {[
-                      { value: `${stats.companies}+`, label: t('stats.companies') },
-                      { value: `${stats.trainings}+`, label: t('stats.trainings') },
-                      { value: `${stats.experts}`, label: t('stats.experts') },
-                      { value: `${stats.years}`, label: t('stats.years') },
-                    ].map((stat, i) => (
-                      <motion.div
-                        key={stat.label}
-                        className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 text-center"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.4 + i * 0.1 }}
-                        whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,255,255,0.15)' }}
-                      >
-                        <div className="font-display text-2xl font-bold text-secondary mb-0.5">{stat.value}</div>
-                        <div className="text-white/80 text-xs">{stat.label}</div>
-                      </motion.div>
-                    ))}
-                  </motion.div>
-                </div>
-              ) : (
-                <motion.div 
-                  className="grid grid-cols-2 gap-4 w-full max-w-md"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3 }}
-                >
-                  {[
-                    { value: `${stats.companies}+`, label: t('stats.companies') },
-                    { value: `${stats.trainings}+`, label: t('stats.trainings') },
-                    { value: `${stats.experts}`, label: t('stats.experts') },
-                    { value: `${stats.years}`, label: t('stats.years') },
-                  ].map((stat, i) => (
                     <motion.div
-                      key={stat.label}
-                      className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-5 text-center"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.4 + i * 0.1 }}
-                      whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,255,255,0.15)' }}
-                    >
-                      <div className="font-display text-3xl font-bold text-secondary mb-1">{stat.value}</div>
-                      <div className="text-white/80 text-xs">{stat.label}</div>
-                    </motion.div>
-                  ))}
-                </motion.div>
-              )}
+                      className="absolute -top-6 -right-6 w-14 h-14 rounded-full bg-secondary/25 blur-2xl"
+                      animate={{ scale: [1, 1.25, 1], opacity: [0.3, 0.55, 0.3] }}
+                      transition={{ duration: 3.5 + i * 0.4, repeat: Infinity }}
+                    />
+                    <div className="relative z-10 font-display text-xl md:text-2xl font-bold text-secondary leading-none mb-1">{stat.value}</div>
+                    <div className="relative z-10 text-white/85 text-[11px] md:text-xs">{stat.label}</div>
+                  </motion.div>
+                ))}
+              </motion.div>
             </motion.div>
           </div>
 

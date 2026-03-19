@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Clock, Send, CheckCircle, ChevronRight } from 'lucide-react';
 import { useLanguage } from '@/i18n/LanguageContext';
@@ -9,6 +9,8 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import Layout from '@/components/layout/Layout';
 import { contactService } from '@/services/contactService';
+import { contentService } from '@/services/contentService';
+import { HomePageSection } from '@/types/api';
 import heroContact from '@/assets/hero-3.png';
 
 const Contact = () => {
@@ -16,12 +18,39 @@ const Contact = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [homeSections, setHomeSections] = useState<Record<string, HomePageSection>>({});
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     subject: '',
     message: '',
   });
+
+  useEffect(() => {
+    const loadHomeSections = async () => {
+      try {
+        const response = await contentService.getHomeSections();
+        if (response.error === false && response.data && Array.isArray(response.data)) {
+          const sectionsMap: Record<string, HomePageSection> = {};
+          response.data.forEach((section) => {
+            sectionsMap[section.section_key] = section;
+          });
+          setHomeSections(sectionsMap);
+        }
+      } catch (error) {
+        console.error('Erreur lors du chargement des infos de contact:', error);
+      }
+    };
+
+    loadHomeSections();
+  }, []);
+
+  const getSectionContent = (sectionKey: string, fallback: string): string => {
+    const section = homeSections[sectionKey];
+    if (!section) return fallback;
+    const content = section.content;
+    return content[language] || content.fr || content.en || fallback;
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -68,24 +97,25 @@ const Contact = () => {
     {
       icon: MapPin,
       label: t('contact.info.address'),
-      value: '123 Avenue de la Paix, Gombe\nKinshasa, RDC',
+      value: `${getSectionContent('footer_address_line1', '123 Avenue de la Paix, Gombe')}\n${getSectionContent('footer_address_line2', 'Kinshasa, RDC')}`,
     },
     {
       icon: Phone,
       label: t('contact.info.phone'),
-      value: '+243 812 345 678',
+      value: getSectionContent('footer_phone', '+243 812 345 678'),
     },
     {
       icon: Mail,
       label: t('contact.info.email'),
-      value: 'contact@ssmos.org',
+      value: getSectionContent('footer_email', 'contact@ssmos.org'),
     },
     {
       icon: Clock,
       label: t('contact.info.hours'),
-      value: language === 'en' 
-        ? 'Mon - Fri: 8:00 AM - 5:00 PM' 
-        : 'Lun - Ven : 8h00 - 17h00',
+      value: getSectionContent(
+        'footer_hours',
+        language === 'en' ? 'Mon - Fri: 8:00 AM - 5:00 PM' : 'Lun - Ven : 8h00 - 17h00'
+      ),
     },
   ];
 

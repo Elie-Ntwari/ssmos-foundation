@@ -23,12 +23,12 @@ const aboutSections = [
 ];
 
 const serviceSections = [
-  { id: 'cabinet', labelKey: 'services.cabinet.title', icon: Briefcase },
-  { id: 'training', labelKey: 'services.training.title', icon: GraduationCap },
-  { id: 'research', labelKey: 'services.research.title', icon: Search },
-  { id: 'audit', labelKey: 'services.audit.title', icon: ClipboardCheck },
-  { id: 'conseil', labelKey: 'services.conseil.title', icon: MessageSquare },
-  { id: 'digital', labelKey: 'services.digital.title', icon: Cpu },
+  { id: 'cabinet', anchor: 'cabinet', labelKey: 'services.cabinet.title', icon: Briefcase },
+  { id: 'training', anchor: 'training', labelKey: 'services.training.title', icon: GraduationCap },
+  { id: 'research', anchor: 'etudes-et-recherche', labelKey: 'services.research.title', icon: Search },
+  { id: 'audit', anchor: 'audit', labelKey: 'services.audit.title', icon: ClipboardCheck },
+  { id: 'conseil', anchor: 'conseil-et-promotion-en-sst', labelKey: 'services.conseil.title', icon: MessageSquare },
+  { id: 'digital', anchor: 'innovation-et-digitalisation', labelKey: 'services.digital.title', icon: Cpu },
 ];
 
 const Header = () => {
@@ -130,7 +130,7 @@ const Header = () => {
                           : serviceSections.map((section) => (
                               <Link
                                 key={section.id}
-                                to={`/services#${section.id}`}
+                                to={`/services#${section.anchor}`}
                                 onClick={() => setIsServicesOpen(false)}
                                 className="flex items-center gap-3 px-4 py-3 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
                               >
@@ -243,7 +243,7 @@ const Header = () => {
                             {(link.hasDropdown === 'about' ? aboutSections : serviceSections).map((section) => (
                               <Link
                                 key={section.id}
-                                to={link.hasDropdown === 'about' ? (section as any).path : `/services#${section.id}`}
+                                to={link.hasDropdown === 'about' ? (section as any).path : `/services#${(section as any).anchor}`}
                                 onClick={() => { setIsMenuOpen(false); setIsMobileAboutOpen(false); setIsMobileServicesOpen(false); }}
                                 className="flex items-center gap-2 px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors"
                               >

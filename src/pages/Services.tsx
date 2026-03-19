@@ -28,6 +28,50 @@ const staggerContainer = {
   }
 };
 
+const normalizeAnchorToken = (value: string): string =>
+  (value || '')
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/&/g, ' et ')
+    .replace(/[^a-z0-9\s-]/g, ' ')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+
+const toServiceAnchorId = (service: Service): string => {
+  const categoryToken = normalizeAnchorToken(service.category || '');
+  const titleToken = normalizeAnchorToken(
+    `${service.title?.fr || ''} ${service.title?.en || ''} ${service.title?.ln || ''} ${service.title?.sw || ''}`
+  );
+  const normalized = `${categoryToken} ${titleToken}`.replace(/-/g, ' ');
+
+  if (normalized.includes('cabinet')) return 'cabinet';
+  if (normalized.includes('training') || normalized.includes('formation')) return 'training';
+  if (
+    titleToken.includes('etudes-et-recherche') ||
+    titleToken.includes('etudes-de-marche') ||
+    normalized.includes('research') ||
+    normalized.includes('etude') ||
+    normalized.includes('recherche') ||
+    normalized.includes('marche')
+  ) return 'etudes-et-recherche';
+  if (normalized.includes('audit')) return 'audit';
+  if (
+    normalized.includes('conseil') ||
+    normalized.includes('promotion') ||
+    normalized.includes('sst')
+  ) return 'conseil-et-promotion-en-sst';
+  if (
+    normalized.includes('digital') ||
+    normalized.includes('digitalisation') ||
+    normalized.includes('innovation')
+  ) return 'innovation-et-digitalisation';
+
+  return categoryToken || titleToken;
+};
+
 const Services = () => {
   const { t, language } = useLanguage();
   const { id } = useParams();
@@ -42,9 +86,24 @@ const Services = () => {
   // Scroll to anchor when hash changes
   useEffect(() => {
     if (location.hash && !isLoading) {
-      const el = document.querySelector(location.hash);
+      const requestedAnchor = normalizeAnchorToken(location.hash.replace('#', ''));
+      const aliases: Record<string, string[]> = {
+        'cabinet': ['cabinet'],
+        'training': ['training', 'formations-et-renforcement'],
+        'etudes-et-recherche': ['etudes-et-recherche', 'research', 'etudes-de-marche'],
+        'audit': ['audit'],
+        'conseil-et-promotion-en-sst': ['conseil-et-promotion-en-sst', 'conseil', 'promotion-sst'],
+        'innovation-et-digitalisation': ['innovation-et-digitalisation', 'digital', 'innovation-digital'],
+      };
+      const canonicalAnchor =
+        Object.entries(aliases).find(([, values]) => values.includes(requestedAnchor))?.[0] || requestedAnchor;
+      const el = document.getElementById(canonicalAnchor);
       if (el) {
-        setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+        setTimeout(() => {
+          const headerOffset = 110;
+          const y = el.getBoundingClientRect().top + window.scrollY - headerOffset;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }, 250);
       }
     }
   }, [location.hash, isLoading]);
@@ -209,8 +268,8 @@ const Services = () => {
                 return (
                   <motion.div
                     key={service.id}
-                    id={service.category || ''}
-                    className="card-institutional flex flex-col md:flex-row gap-6"
+                    id={toServiceAnchorId(service)}
+                    className="card-institutional flex flex-col md:flex-row gap-6 scroll-mt-28"
                     variants={fadeInUp}
                     whileHover={{ y: -5, transition: { duration: 0.2 } }}
                   >
