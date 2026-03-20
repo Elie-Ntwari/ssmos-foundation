@@ -130,14 +130,14 @@
 
   /* Card Styles */
   .card-institutional {
-    @apply bg-card rounded-xl border border-border p-6
+    @apply bg-card rounded-xl border border-border p-4 sm:p-5 md:p-6
            shadow-[var(--card-shadow)] transition-all duration-300
            hover:shadow-[var(--card-shadow-hover)] hover:-translate-y-1;
   }
 
   /* Section Styles */
   .section-padding {
-    @apply py-16 md:py-24 px-4 md:px-6;
+    @apply py-12 sm:py-14 md:py-24 px-4 sm:px-5 md:px-6;
   }
 
   /* Gradient Text */

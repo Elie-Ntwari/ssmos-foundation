@@ -411,6 +411,6 @@ export const teamMembers: TeamMember[] = [
 export const contactInfo = {
   address: 'Avenue de la Paix, N°123, Kinshasa, RDC',
   phone: '+243 812 345 678',
-  email: 'contact@ssmos.cd',
+  email: 'contact@ssmos.org',
   hours: 'Lun - Ven: 8h00 - 17h00'
 };

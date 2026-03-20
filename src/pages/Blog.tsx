@@ -1,17 +1,50 @@
+import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, Calendar, User, Clock } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Calendar, ChevronRight, User, Clock, Loader2 } from 'lucide-react';
 import { useLanguage } from '@/i18n/LanguageContext';
-import { blogPosts } from '@/data/mockData';
+import { contentService } from '@/services/contentService';
+import { BlogPost } from '@/types/api';
 import { Button } from '@/components/ui/button';
+import { getFormattedMultilingualContent as getContent } from '@/utils/multilingual';
 import Layout from '@/components/layout/Layout';
+import heroBlog from '@/assets/hero-blog.png';
 
 const Blog = () => {
   const { t, language } = useLanguage();
   const { id } = useParams();
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    loadBlogPosts();
+  }, []);
+
+  const loadBlogPosts = async () => {
+    try {
+      setIsLoading(true);
+      const response = await contentService.getBlogPosts();
+      if (response.error === false && response.data && Array.isArray(response.data)) {
+        // Filtrer seulement les articles publiés
+        const publishedPosts = response.data.filter(post => post.status === 'published');
+        setBlogPosts(publishedPosts);
+      } else {
+        setBlogPosts([]);
+      }
+    } catch (error: any) {
+      console.error('Erreur lors du chargement des articles:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Helper pour obtenir le contenu multilingue (utilise la langue actuelle)
+  const getMultilingualContent = (content: { fr?: string; en?: string; ln?: string; sw?: string }): string => {
+    return getContent(content, language);
+  };
 
   // Single post view
   if (id) {
-    const post = blogPosts.find(p => p.id === id);
+    const post = Array.isArray(blogPosts) ? blogPosts.find(p => p.id === parseInt(id)) : undefined;
 
     if (!post) {
       return (
@@ -29,8 +62,19 @@ const Blog = () => {
     return (
       <Layout>
         {/* Hero */}
-        <section className="hero-gradient py-16 md:py-24">
-          <div className="container mx-auto px-4">
+        <section className="relative overflow-hidden py-16 md:py-24">
+          <div className="absolute inset-0">
+            <img src={heroBlog} alt="Blog SSMos" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 hero-gradient opacity-80" />
+          </div>
+          <div className="container mx-auto px-4 relative z-10">
+            <nav className="flex items-center gap-2 text-white/60 text-sm mb-6">
+              <Link to="/" className="hover:text-white transition-colors">{t('nav.home')}</Link>
+              <ChevronRight className="h-3.5 w-3.5" />
+              <Link to="/blog" className="hover:text-white transition-colors">{t('nav.blog')}</Link>
+              <ChevronRight className="h-3.5 w-3.5" />
+              <span className="text-white line-clamp-1">{getMultilingualContent(post.title)}</span>
+            </nav>
             <Button asChild variant="ghost" className="text-white/80 hover:text-white mb-6">
               <Link to="/blog">
                 <ArrowLeft className="mr-2 h-4 w-4" />
@@ -38,24 +82,20 @@ const Blog = () => {
               </Link>
             </Button>
             <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 max-w-4xl">
-              {language === 'en' ? post.titleEn : post.title}
+              {getMultilingualContent(post.title)}
             </h1>
             <div className="flex flex-wrap items-center gap-4 text-white/70 text-sm">
               <span className="flex items-center gap-2">
                 <User className="h-4 w-4" />
-                {post.author}
+                {post.author_name}
               </span>
               <span className="flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
-                {new Date(post.date).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR', {
+                {new Date(post.created_at).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR', {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric'
                 })}
-              </span>
-              <span className="flex items-center gap-2">
-                <Clock className="h-4 w-4" />
-                {post.readTime}
               </span>
             </div>
           </div>
@@ -65,14 +105,16 @@ const Blog = () => {
         <section className="section-padding bg-background">
           <div className="container mx-auto">
             <div className="max-w-3xl mx-auto">
-              <img
-                src={post.image}
-                alt={language === 'en' ? post.titleEn : post.title}
-                className="w-full aspect-video object-cover rounded-xl mb-8"
-              />
+              {post.image && (
+                <img
+                  src={post.image}
+                  alt={getMultilingualContent(post.title)}
+                  className="w-full aspect-video object-cover rounded-xl mb-8"
+                />
+              )}
               <div className="prose prose-lg max-w-none">
-                <p className="text-muted-foreground text-lg leading-relaxed">
-                  {language === 'en' ? post.contentEn : post.content}
+                <p className="text-muted-foreground text-lg leading-relaxed whitespace-pre-wrap">
+                  {getMultilingualContent(post.content)}
                 </p>
               </div>
             </div>
@@ -86,58 +128,77 @@ const Blog = () => {
   return (
     <Layout>
       {/* Hero */}
-      <section className="hero-gradient py-20 md:py-28">
-        <div className="container mx-auto px-4 text-center">
+      <section className="relative overflow-hidden py-20 md:py-28">
+        <div className="absolute inset-0">
+          <img src={heroBlog} alt="Blog SSMos" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 hero-gradient opacity-80" />
+        </div>
+        <div className="container mx-auto px-4 relative z-10">
+          <nav className="flex items-center gap-2 text-white/60 text-sm mb-6">
+            <Link to="/" className="hover:text-white transition-colors">{t('nav.home')}</Link>
+            <ChevronRight className="h-3.5 w-3.5" />
+            <span className="text-white">{t('nav.blog')}</span>
+          </nav>
           <h1 className="font-display text-4xl md:text-5xl font-bold text-white mb-4 opacity-0 animate-fade-up">
             {t('blog.title')}
           </h1>
-          <p className="text-white/80 text-lg max-w-2xl mx-auto opacity-0 animate-fade-up stagger-1">
-            {t('blog.subtitle')}
-          </p>
         </div>
       </section>
 
       {/* Blog Grid */}
       <section className="section-padding bg-background">
         <div className="container mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogPosts.map((post, index) => (
-              <Link
-                key={post.id}
-                to={`/blog/${post.id}`}
-                className="card-institutional group opacity-0 animate-fade-up overflow-hidden"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="aspect-video overflow-hidden rounded-lg mb-4 -mt-2 -mx-2">
-                  <img
-                    src={post.image}
-                    alt={language === 'en' ? post.titleEn : post.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-                <div className="flex items-center gap-3 text-muted-foreground text-xs mb-3">
-                  <span className="flex items-center gap-1">
-                    <Calendar className="h-3 w-3" />
-                    {new Date(post.date).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR')}
+          {isLoading ? (
+            <div className="flex justify-center items-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+              {Array.isArray(blogPosts) && blogPosts.map((post, index) => (
+                <Link
+                  key={post.id}
+                  to={`/blog/${post.id}`}
+                  className="card-institutional group opacity-0 animate-fade-up overflow-hidden"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className="aspect-video overflow-hidden rounded-lg mb-4 -mt-2 -mx-2">
+                    {post.image ? (
+                      <img
+                        src={post.image}
+                        alt={getMultilingualContent(post.title)}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-muted flex items-center justify-center">
+                        <Calendar className="h-12 w-12 text-muted-foreground" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3 text-muted-foreground text-xs mb-3">
+                    <span className="flex items-center gap-1">
+                      <Calendar className="h-3 w-3" />
+                      {new Date(post.created_at).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR')}
+                    </span>
+                  </div>
+                  <h2 className="font-display text-xl font-semibold text-foreground group-hover:text-secondary transition-colors mb-2 line-clamp-2">
+                    {getMultilingualContent(post.title)}
+                  </h2>
+                  <p className="text-muted-foreground text-sm mb-4 line-clamp-3">
+                    {getMultilingualContent(post.excerpt)}
+                  </p>
+                  <span className="inline-flex items-center text-secondary text-sm font-medium">
+                    {t('blog.readMore')}
+                    <ArrowRight className="ml-1 h-4 w-4" />
                   </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="h-3 w-3" />
-                    {post.readTime}
-                  </span>
+                </Link>
+              ))}
+              {blogPosts.length === 0 && !isLoading && (
+                <div className="col-span-full text-center py-12 text-muted-foreground">
+                  <p>{t('blog.noPosts') || 'Aucun article disponible'}</p>
                 </div>
-                <h2 className="font-display text-xl font-semibold text-foreground group-hover:text-secondary transition-colors mb-2 line-clamp-2">
-                  {language === 'en' ? post.titleEn : post.title}
-                </h2>
-                <p className="text-muted-foreground text-sm mb-4 line-clamp-3">
-                  {language === 'en' ? post.excerptEn : post.excerpt}
-                </p>
-                <span className="inline-flex items-center text-secondary text-sm font-medium">
-                  {t('blog.readMore')}
-                  <ArrowRight className="ml-1 h-4 w-4" />
-                </span>
-              </Link>
-            ))}
-          </div>
+              )}
+            </div>
+          )}
         </div>
       </section>
     </Layout>

@@ -1,15 +1,33 @@
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Shield, GraduationCap, ClipboardCheck, Scale, Cpu, Factory, Building2, Truck, Hospital, Pickaxe, Leaf, CheckCircle, Play } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { ArrowRight, Shield, Loader2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { contentService } from '@/services/contentService';
+import { NewsArticle, HomePageSection, InterventionAxis } from '@/types/api';
 import { Button } from '@/components/ui/button';
-import { stats, articles, interventionAreas } from '@/data/mockData';
+import { stats } from '@/data/mockData';
+import { getFormattedMultilingualContent as getContent } from '@/utils/multilingual';
 import Layout from '@/components/layout/Layout';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from '@/components/ui/carousel';
 import logo from '@/assets/logo.png';
+import hero1 from '@/assets/hero-1.png';
+import hero2 from '@/assets/hero-2.png';
+import hero3 from '@/assets/hero-3.png';
+import axisAgriculture from '@/assets/axis-agriculture.png';
+import axisMines from '@/assets/axis-mines.png';
+import axisTransport from '@/assets/axis-transport.png';
+import axisBtp from '@/assets/axis-btp.png';
+import axisSante from '@/assets/axis-sante.png';
+import axisIndustrie from '@/assets/axis-industrie.png';
 
-const iconMap: Record<string, any> = {
-  Factory, Building2, Truck, Hospital, Pickaxe, Leaf,
-  Briefcase: Shield, GraduationCap, ClipboardCheck, Scale, Cpu
+const axisImageMap: Record<string, string> = {
+  Leaf: axisAgriculture,
+  Pickaxe: axisMines,
+  Truck: axisTransport,
+  Building2: axisBtp,
+  Hospital: axisSante,
+  Factory: axisIndustrie
 };
 
 const fadeInUp = {
@@ -28,409 +46,327 @@ const staggerContainer = {
 
 const Index = () => {
   const { t, language } = useLanguage();
+  const [articles, setArticles] = useState<NewsArticle[]>([]);
+  const [homeSections, setHomeSections] = useState<Record<string, HomePageSection>>({});
+  const [interventionAxes, setInterventionAxes] = useState<InterventionAxis[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingSections, setIsLoadingSections] = useState(true);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [axesCarouselApi, setAxesCarouselApi] = useState<CarouselApi | null>(null);
 
-  const latestArticles = articles.slice(0, 3);
+  const heroSlides = [
+    {
+      image: hero1,
+      title: getSectionContentStatic('hero_title') || t('hero.title'),
+      subtitle: getSectionContentStatic('hero_subtitle') || t('hero.subtitle'),
+      showLogo: true,
+    },
+    {
+      image: hero2,
+      title: getSectionContentStatic('hero_title_2') || t('hero.slide2.title'),
+      subtitle: getSectionContentStatic('hero_subtitle_2') || t('hero.slide2.subtitle'),
+      showLogo: false,
+    },
+    {
+      image: hero3,
+      title: getSectionContentStatic('hero_title_3') || t('hero.slide3.title'),
+      subtitle: getSectionContentStatic('hero_subtitle_3') || t('hero.slide3.subtitle'),
+      showLogo: false,
+    },
+  ];
+
+  function getSectionContentStatic(sectionKey: string): string {
+    const section = homeSections[sectionKey];
+    if (!section) return '';
+    return getContent(section.content, language);
+  }
+
+  useEffect(() => {
+    loadAllData();
+  }, []);
+
+  // Auto-advance carousel
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % 3);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!axesCarouselApi || interventionAxes.length <= 1) return;
+    const timer = setInterval(() => {
+      axesCarouselApi.scrollNext();
+    }, 4500);
+    return () => clearInterval(timer);
+  }, [axesCarouselApi, interventionAxes.length]);
+
+  const loadAllData = async () => {
+    try {
+      setIsLoading(true);
+      setIsLoadingSections(true);
+      
+      const newsResponse = await contentService.getNews();
+      if (newsResponse.error === false && newsResponse.data) {
+        const publishedNews = newsResponse.data.filter(article => article.status === 'published');
+        setArticles(publishedNews);
+      }
+
+      const sectionsResponse = await contentService.getHomeSections();
+      if (sectionsResponse.error === false && sectionsResponse.data) {
+        const sectionsMap: Record<string, HomePageSection> = {};
+        sectionsResponse.data.forEach(section => {
+          sectionsMap[section.section_key] = section;
+        });
+        setHomeSections(sectionsMap);
+      }
+
+      const axesResponse = await contentService.getInterventionAxes();
+      if (axesResponse.error === false && axesResponse.data) {
+        setInterventionAxes(axesResponse.data);
+      }
+    } catch (error: any) {
+      console.error('Erreur lors du chargement des données:', error);
+    } finally {
+      setIsLoading(false);
+      setIsLoadingSections(false);
+    }
+  };
+
+  const getSectionContent = (sectionKey: string): string => {
+    const section = homeSections[sectionKey];
+    if (!section) return '';
+    return getContent(section.content, language);
+  };
+
+  const getMultilingualContent = (content: { fr?: string; en?: string; ln?: string; sw?: string }): string => {
+    return getContent(content, language);
+  };
+
+  const latestArticles = Array.isArray(articles) ? articles.slice(0, 3) : [];
+  const heroStats = [
+    { value: `${stats.companies}+`, label: t('stats.companies') },
+    { value: `${stats.trainings}+`, label: t('stats.trainings') },
+    { value: `${stats.experts}`, label: t('stats.experts') },
+    { value: `${stats.years}`, label: t('stats.years') },
+  ];
+
+  const nextSlide = useCallback(() => setCurrentSlide((prev) => (prev + 1) % 3), []);
+  const prevSlide = useCallback(() => setCurrentSlide((prev) => (prev - 1 + 3) % 3), []);
+  const showImpactSection = false;
 
   return (
     <Layout>
-      {/* Hero Section - Modern & Professional */}
-      <section className="relative min-h-[85vh] flex items-center overflow-hidden bg-gradient-to-br from-primary via-primary to-[hsl(214,79%,28%)] py-12 md:py-16 lg:py-20">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          {/* Gradient Orbs */}
-          <motion.div 
-            className="absolute -top-32 -right-32 w-[400px] h-[400px] rounded-full bg-secondary/15 blur-[80px]"
-            animate={{ 
-              scale: [1, 1.15, 1],
-              opacity: [0.25, 0.4, 0.25] 
-            }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <motion.div 
-            className="absolute top-1/2 -left-32 w-[350px] h-[350px] rounded-full bg-secondary/12 blur-[70px]"
-            animate={{ 
-              scale: [1.15, 1, 1.15],
-              opacity: [0.15, 0.3, 0.15] 
-            }}
-            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          />
-          
-          {/* Grid Pattern */}
-          <div className="absolute inset-0 opacity-[0.03]">
-            <div className="absolute inset-0" style={{
-              backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-              backgroundSize: '40px 40px'
-            }} />
-          </div>
-          
-          {/* Floating Particles with enhanced animation */}
-          {[...Array(5)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-1.5 h-1.5 bg-secondary/30 rounded-full"
-              style={{
-                left: `${20 + i * 18}%`,
-                top: `${30 + (i % 3) * 20}%`,
-              }}
-              animate={{
-                y: [-15, 15, -15],
-                x: [0, (i % 2 === 0 ? 10 : -10), 0],
-                opacity: [0.2, 0.6, 0.2],
-                scale: [1, 1.3, 1],
-              }}
-              transition={{
-                duration: 4 + i * 0.5,
-                repeat: Infinity,
-                delay: i * 0.5,
-                ease: "easeInOut"
-              }}
-            />
-          ))}
-          
-          {/* Animated connecting lines */}
-          <motion.svg 
-            className="absolute inset-0 w-full h-full opacity-10"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.1 }}
-            transition={{ delay: 1, duration: 2 }}
+      {/* Hero Carousel Section */}
+      <section className="relative min-h-[85vh] flex items-center overflow-hidden">
+        {/* Background Images with Crossfade */}
+        {[hero1, hero2, hero3].map((img, index) => (
+          <motion.div
+            key={index}
+            className="absolute inset-0"
+            initial={false}
+            animate={{ opacity: currentSlide === index ? 1 : 0 }}
+            transition={{ duration: 1.2, ease: 'easeInOut' }}
           >
-            {[...Array(3)].map((_, i) => (
-              <motion.line
-                key={i}
-                x1={`${20 + i * 25}%`}
-                y1="20%"
-                x2={`${30 + i * 20}%`}
-                y2="80%"
-                stroke="rgba(255, 255, 255, 0.1)"
-                strokeWidth="1"
-                animate={{
-                  pathLength: [0, 1, 0],
-                  opacity: [0, 0.2, 0]
-                }}
-                transition={{
-                  duration: 3 + i,
-                  repeat: Infinity,
-                  delay: i * 0.8,
-                  ease: "easeInOut"
-                }}
-              />
-            ))}
-          </motion.svg>
+            <img
+              src={img}
+              alt={`SSMos Hero ${index + 1}`}
+              className="w-full h-full object-cover"
+            />
+            {/* Same blue tone as top hero sections on other pages */}
+            <div className="absolute inset-0 hero-gradient opacity-80" />
+          </motion.div>
+        ))}
+
+        {/* Grid Pattern Overlay */}
+        <div className="absolute inset-0 opacity-[0.03] z-[1]">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+            backgroundSize: '40px 40px'
+          }} />
         </div>
 
-        <div className="container mx-auto px-4 md:px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center">
-            {/* Left Content */}
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              className="space-y-6"
-            >
-              {/* Badge */}
-              <motion.div 
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 shadow-sm relative overflow-hidden"
-                initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
-              >
-                {/* Shimmer effect */}
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                  animate={{ x: ['-100%', '200%'] }}
-                  transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 }}
-                />
-                <motion.div 
-                  className="w-1.5 h-1.5 bg-secondary rounded-full relative z-10"
-                  animate={{ 
-                    scale: [1, 1.3, 1],
-                    opacity: [0.8, 1, 0.8]
-                  }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
-                <span className="text-white/90 text-xs md:text-sm font-medium relative z-10">Safety & Santé na Mosala - République Démocratique du Congo</span>
-              </motion.div>
+        {/* Content */}
+        <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 relative z-10">
+          {/* Top Banner - visible on all slides */}
+          <motion.div 
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 shadow-sm mb-5 mt-4 md:mt-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <motion.div 
+              className="w-2 h-2 bg-secondary rounded-full"
+              animate={{ scale: [1, 1.3, 1], opacity: [0.8, 1, 0.8] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+            <span className="text-white/90 text-sm md:text-base font-medium">
+              Safety & Santé na Mosala (SSMos)— République Démocratique du Congo
+            </span>
+          </motion.div>
 
-              <motion.h1 
-                className="font-display text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-[1.1] tracking-tight relative"
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center">
+            {/* Left Content - Animated per slide */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentSlide}
+                initial={{ opacity: 0, x: -40 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 40 }}
+                transition={{ duration: 0.6 }}
+                className="space-y-6"
               >
-                {/* Text reveal animation */}
-                <motion.span
-                  className="inline-block"
+                <motion.h1 
+                  className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-[1.1] tracking-tight"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4, duration: 0.6 }}
+                  transition={{ delay: 0.2, duration: 0.6 }}
                 >
-                  {t('hero.title')}
-                </motion.span>
-                {/* Subtle glow effect */}
-                <motion.div
-                  className="absolute -inset-4 bg-secondary/10 blur-2xl -z-10"
-                  animate={{ 
-                    opacity: [0.3, 0.5, 0.3],
-                    scale: [1, 1.1, 1]
-                  }}
-                  transition={{ duration: 4, repeat: Infinity }}
-                />
-              </motion.h1>
-              
-              <motion.p 
-                className="text-base md:text-lg lg:text-xl text-white/85 leading-relaxed max-w-xl relative"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.7, ease: "easeOut" }}
-              >
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.6, duration: 0.8 }}
+                  {heroSlides[currentSlide].title}
+                </motion.h1>
+                
+                <motion.p 
+                  className="text-sm sm:text-base md:text-lg lg:text-xl text-white/85 leading-relaxed max-w-xl"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.35, duration: 0.6 }}
                 >
-                  {t('hero.subtitle')}
-                </motion.span>
-              </motion.p>
+                  {heroSlides[currentSlide].subtitle}
+                </motion.p>
 
-              {/* CTA Buttons */}
-              <motion.div 
-                className="flex flex-col sm:flex-row gap-3 pt-2"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6, duration: 0.6 }}
-              >
-                <motion.div
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                {/* CTA Buttons */}
+                <motion.div 
+                  className="flex flex-col sm:flex-row gap-3 pt-2"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5, duration: 0.5 }}
                 >
-                  <Button asChild className="bg-secondary text-primary font-semibold text-sm md:text-base px-6 py-5 md:px-8 md:py-6 hover:bg-secondary/90 shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl relative overflow-hidden group">
-                    <Link to="/services" className="flex items-center justify-center gap-2 relative z-10">
-                      <motion.span
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                        initial={{ x: '-100%' }}
-                        whileHover={{ x: '200%' }}
-                        transition={{ duration: 0.6 }}
-                      />
+                  <Button asChild className="bg-secondary text-primary font-semibold text-sm md:text-base px-6 py-5 md:px-8 md:py-6 hover:bg-secondary/90 shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl">
+                    <Link to="/services" className="flex items-center justify-center gap-2">
                       {t('hero.cta.primary')}
-                      <motion.span
-                        animate={{ x: [0, 4, 0] }}
-                        transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 0.5 }}
-                      >
-                        <ArrowRight className="h-4 w-4 md:h-5 md:w-5" />
-                      </motion.span>
+                      <ArrowRight className="h-4 w-4 md:h-5 md:w-5" />
                     </Link>
                   </Button>
-                </motion.div>
-                <motion.div
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                >
-                  <Button asChild variant="outline" className="border-2 border-white/40 text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all duration-300 text-sm md:text-base px-6 py-5 md:px-8 md:py-6 font-semibold hover:border-white/60 relative overflow-hidden group">
-                    <Link to="/contact" className="flex items-center justify-center relative z-10">
-                      <motion.span
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-                        initial={{ x: '-100%' }}
-                        whileHover={{ x: '200%' }}
-                        transition={{ duration: 0.6 }}
-                      />
+                  <Button asChild variant="outline" className="border-2 border-white/40 text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all duration-300 text-sm md:text-base px-6 py-5 md:px-8 md:py-6 font-semibold hover:border-white/60">
+                    <Link to="/contact" className="flex items-center justify-center">
                       {t('hero.cta.secondary')}
                     </Link>
                   </Button>
                 </motion.div>
               </motion.div>
-            </motion.div>
+            </AnimatePresence>
 
-            {/* Right Content - Logo/Visual */}
+            {/* Right Content - Logo Box (visible on slide 1, stats on others) */}
             <motion.div
               className="hidden lg:flex flex-col items-center justify-center space-y-6"
-              initial={{ opacity: 0, scale: 0.8, rotateY: -15 }}
-              animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-              transition={{ delay: 0.4, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
             >
-              <div className="relative w-full max-w-md">
-                {/* Multi-layer Glow Effects */}
-                <motion.div 
-                  className="absolute inset-0 bg-secondary/25 blur-[40px] rounded-full -z-10"
-                  animate={{ 
-                    scale: [1, 1.1, 1],
-                    opacity: [0.3, 0.5, 0.3],
-                    x: [0, 10, 0],
-                    y: [0, -10, 0]
-                  }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                />
-                <motion.div 
-                  className="absolute inset-0 bg-secondary/15 blur-[60px] rounded-full -z-10"
-                  animate={{ 
-                    scale: [1, 1.15, 1],
-                    opacity: [0.2, 0.35, 0.2],
-                    x: [0, -15, 0],
-                    y: [0, 15, 0]
-                  }}
-                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                />
-
-                {/* Logo Container - Modern Card Design */}
-                <motion.div
-                  className="relative bg-white rounded-3xl p-8 md:p-10 shadow-2xl border border-white/20 backdrop-blur-sm"
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
-                  whileHover={{ 
-                    scale: 1.03,
-                    y: -5,
-                    boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
-                    transition: { type: "spring", stiffness: 300, damping: 20 }
-                  }}
-                >
-                  {/* Subtle gradient overlay with animation */}
-                  <motion.div 
-                    className="absolute inset-0 bg-gradient-to-br from-white to-gray-50/50 rounded-3xl opacity-50"
-                    animate={{ 
-                      backgroundPosition: ['0% 0%', '100% 100%']
-                    }}
-                    transition={{ duration: 8, repeat: Infinity, repeatType: "reverse" }}
-                  />
-                  
-                  {/* Animated border glow */}
-                  <motion.div
-                    className="absolute inset-0 rounded-3xl bg-gradient-to-r from-secondary/20 via-secondary/40 to-secondary/20 opacity-0"
-                    whileHover={{ opacity: 1 }}
-                    transition={{ duration: 0.3 }}
-                    style={{ 
-                      backgroundSize: '200% 200%',
-                      backgroundPosition: '0% 50%'
-                    }}
-                    animate={{
-                      backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
-                    }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                  />
-                  
-                  {/* Logo Image with subtle float */}
-                  <motion.div 
-                    className="relative z-10 flex items-center justify-center"
-                    animate={{ 
-                      y: [0, -8, 0]
-                    }}
-                    transition={{ 
-                      duration: 4, 
-                      repeat: Infinity, 
-                      ease: "easeInOut" 
-                    }}
-                  >
-                    <motion.img
-                      src={logo}
-                      alt="SSMos Logo"
-                      className="w-full max-w-[280px] h-auto drop-shadow-lg"
-                      whileHover={{ scale: 1.05 }}
-                      transition={{ type: "spring", stiffness: 400 }}
-                    />
-                  </motion.div>
-
-                  {/* Decorative Corner Accents */}
-                  <motion.div
-                    className="absolute -top-2 -right-2 w-20 h-20 bg-gradient-to-br from-secondary/40 to-secondary/20 rounded-2xl backdrop-blur-md border border-secondary/30"
-                    animate={{ 
-                      rotate: [0, 5, 0, -5, 0],
-                      scale: [1, 1.05, 1, 1.08, 1],
-                      x: [0, 2, 0, -2, 0],
-                      y: [0, -2, 0, 2, 0]
-                    }}
-                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                  />
-                  <motion.div
-                    className="absolute -bottom-2 -left-2 w-16 h-16 bg-gradient-to-tr from-white/30 to-white/10 rounded-xl backdrop-blur-md border border-white/20"
-                    animate={{ 
-                      rotate: [0, -5, 0, 5, 0],
-                      scale: [1, 1.05, 1, 1.08, 1],
-                      x: [0, -2, 0, 2, 0],
-                      y: [0, 2, 0, -2, 0]
-                    }}
-                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                  />
-                  
-                  {/* Bottom accent line with animation */}
-                  <motion.div 
-                    className="absolute bottom-0 left-1/2 -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-transparent via-secondary/50 to-transparent rounded-full"
-                    animate={{ 
-                      width: ['6rem', '8rem', '6rem'],
-                      opacity: [0.5, 0.8, 0.5]
-                    }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                  />
-                </motion.div>
-              </div>
-
-              {/* Trust Indicators - Enhanced Design */}
+              {/* Logo always visible */}
               <motion.div
-                className="flex items-center gap-8 pt-2"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8, duration: 0.6 }}
+                key={`logo-card-${currentSlide}`}
+                className="relative bg-white rounded-3xl p-5 md:p-8 shadow-2xl mb-4 w-fit mx-auto border border-white/30 overflow-hidden"
+                initial={{ opacity: 0, y: 12, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.45 }}
+                whileHover={{ scale: 1.03, y: -4 }}
+                whileTap={{ scale: 0.99 }}
               >
-                <motion.div 
-                  className="flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/15 transition-colors relative overflow-hidden group"
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  transition={{ type: "spring", stiffness: 400 }}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.9, duration: 0.5 }}
-                >
+                <motion.div
+                  className="absolute top-3 right-3 w-10 h-10 rounded-lg bg-secondary/25 border border-white/35 backdrop-blur-sm"
+                  animate={{
+                    y: [0, -4, 0],
+                    rotate: [0, 6, 0],
+                    boxShadow: [
+                      '0 0 0px rgba(0,184,204,0.2)',
+                      '0 0 18px rgba(0,184,204,0.55)',
+                      '0 0 0px rgba(0,184,204,0.2)'
+                    ],
+                  }}
+                  transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
+                />
+                <motion.div
+                  className="absolute bottom-3 left-3 w-9 h-9 rounded-md bg-primary/20 border border-white/30 backdrop-blur-sm"
+                  animate={{
+                    y: [0, 4, 0],
+                    rotate: [0, -6, 0],
+                    boxShadow: [
+                      '0 0 0px rgba(1,45,94,0.2)',
+                      '0 0 16px rgba(1,45,94,0.45)',
+                      '0 0 0px rgba(1,45,94,0.2)'
+                    ],
+                  }}
+                  transition={{ duration: 3.6, repeat: Infinity, ease: 'easeInOut', delay: 0.25 }}
+                />
+                <motion.div
+                  className="absolute -top-6 -left-6 w-20 h-20 bg-secondary/20 rounded-full blur-2xl"
+                  animate={{ scale: [1, 1.2, 1], opacity: [0.45, 0.7, 0.45] }}
+                  transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
+                />
+                <motion.div
+                  className="absolute -bottom-6 -right-6 w-24 h-24 bg-primary/20 rounded-full blur-2xl"
+                  animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.65, 0.4] }}
+                  transition={{ duration: 4.4, repeat: Infinity, ease: 'easeInOut' }}
+                />
+                <motion.img
+                  src={logo}
+                  alt="SSMos Logo"
+                  className="relative z-10 w-48 md:w-60 lg:w-72 h-auto drop-shadow-xl"
+                  animate={{ y: [0, -6, 0] }}
+                  transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
+                />
+              </motion.div>
+
+              <motion.div 
+                className="grid grid-cols-2 gap-3 w-full max-w-md"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                {heroStats.map((stat, i) => (
                   <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-                    initial={{ x: '-100%' }}
-                    whileHover={{ x: '200%' }}
-                    transition={{ duration: 0.6 }}
-                  />
-                  <motion.div 
-                    className="p-1.5 bg-secondary/20 rounded-full relative z-10"
-                    animate={{ 
-                      scale: [1, 1.1, 1],
-                      rotate: [0, 5, 0]
-                    }}
-                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
+                    key={stat.label}
+                    className="relative bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-3 py-2.5 text-center overflow-hidden"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 + i * 0.08 }}
+                    whileHover={{ y: -3, backgroundColor: 'rgba(255,255,255,0.16)' }}
                   >
-                    <CheckCircle className="h-4 w-4 text-secondary" />
+                    <motion.div
+                      className="absolute -top-6 -right-6 w-14 h-14 rounded-full bg-secondary/25 blur-2xl"
+                      animate={{ scale: [1, 1.25, 1], opacity: [0.3, 0.55, 0.3] }}
+                      transition={{ duration: 3.5 + i * 0.4, repeat: Infinity }}
+                    />
+                    <div className="relative z-10 font-display text-xl md:text-2xl font-bold text-secondary leading-none mb-1">{stat.value}</div>
+                    <div className="relative z-10 text-white/85 text-[11px] md:text-xs">{stat.label}</div>
                   </motion.div>
-                  <span className="text-white/90 text-sm font-medium relative z-10">{stats.companies}+ {t('hero.partners')}</span>
-                </motion.div>
-                <motion.div 
-                  className="flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/15 transition-colors relative overflow-hidden group"
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  transition={{ type: "spring", stiffness: 400 }}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 1, duration: 0.5 }}
-                >
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-                    initial={{ x: '-100%' }}
-                    whileHover={{ x: '200%' }}
-                    transition={{ duration: 0.6 }}
-                  />
-                  <motion.div 
-                    className="p-1.5 bg-secondary/20 rounded-full relative z-10"
-                    animate={{ 
-                      scale: [1, 1.1, 1],
-                      rotate: [0, -5, 0]
-                    }}
-                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 1.2 }}
-                  >
-                    <CheckCircle className="h-4 w-4 text-secondary" />
-                  </motion.div>
-                  <span className="text-white/90 text-sm font-medium relative z-10">{stats.years} {t('hero.years')}</span>
-                </motion.div>
+                ))}
               </motion.div>
             </motion.div>
+          </div>
+
+          {/* Carousel Controls */}
+          <div className="flex items-center mt-10">
+            {/* Dots */}
+            <div className="flex items-center gap-3">
+              {[0, 1, 2].map((i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentSlide(i)}
+                  className={`transition-all duration-300 rounded-full ${
+                    currentSlide === i 
+                      ? 'w-10 h-3 bg-secondary' 
+                      : 'w-3 h-3 bg-white/40 hover:bg-white/60'
+                  }`}
+                />
+              ))}
+            </div>
           </div>
         </div>
 
         {/* Bottom Wave */}
-        <div className="absolute bottom-0 left-0 right-0">
+        <div className="absolute bottom-0 left-0 right-0 z-[2]">
           <svg viewBox="0 0 1440 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
             <path d="M0 50L48 45.7C96 41.3 192 32.7 288 30.5C384 28.3 480 32.7 576 39.2C672 45.7 768 54.3 864 54.2C960 54 1056 45 1152 41.7C1248 38.3 1344 40.7 1392 41.8L1440 43V100H1392C1344 100 1248 100 1152 100C1056 100 960 100 864 100C768 100 672 100 576 100C480 100 384 100 288 100C192 100 96 100 48 100H0V50Z" fill="hsl(var(--background))"/>
           </svg>
@@ -448,13 +384,13 @@ const Index = () => {
             transition={{ duration: 0.6 }}
           >
             <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-6">
-              {t('home.about.title')}
+              {getSectionContent('about_title') || t('home.about.title')}
             </h2>
-            <p className="text-muted-foreground text-lg leading-relaxed mb-8">
-              {t('home.about.description')}
+            <p className="text-muted-foreground text-lg leading-relaxed mb-8 whitespace-pre-line text-justify">
+              {getSectionContent('about_description') || t('home.about.description')}
             </p>
             <Button asChild variant="outline" className="group">
-              <Link to="/about">
+              <Link to="/about/presentation">
                 {t('services.learnMore')}
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
@@ -464,49 +400,6 @@ const Index = () => {
       </section>
 
       {/* Intervention Areas */}
-      <section className="section-padding bg-muted/50">
-        <div className="container mx-auto">
-          <motion.h2 
-            className="font-display text-3xl md:text-4xl font-bold text-foreground text-center mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            {t('home.axes.title')}
-          </motion.h2>
-          <motion.div 
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-          >
-            {interventionAreas.map((area, index) => {
-              const IconComponent = iconMap[area.icon] || Factory;
-              return (
-                <motion.div
-                  key={area.title}
-                  variants={fadeInUp}
-                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                  className="card-institutional group"
-                >
-                  <div className="w-14 h-14 rounded-xl hero-gradient flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <IconComponent className="h-7 w-7 text-white" />
-                  </div>
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-2">
-                    {language === 'en' ? area.titleEn : language === 'ln' ? area.titleLn : language === 'sw' ? area.titleSw : area.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm">
-                    {language === 'en' ? area.descriptionEn : language === 'ln' ? area.descriptionLn : language === 'sw' ? area.descriptionSw : area.description}
-                  </p>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
       <section className="section-padding hero-gradient">
         <div className="container mx-auto">
           <motion.h2 
@@ -515,38 +408,108 @@ const Index = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            {t('home.stats.title')}
+            {getSectionContent('axes_title') || t('home.axes.title')}
           </motion.h2>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              { value: stats.companies, label: t('stats.companies'), suffix: '+' },
-              { value: stats.trainings, label: t('stats.trainings'), suffix: '+' },
-              { value: stats.experts, label: t('stats.experts'), suffix: '' },
-              { value: stats.years, label: t('stats.years'), suffix: '' },
-            ].map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                className="text-center"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
+          {isLoadingSections ? (
+            <div className="flex justify-center items-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+          ) : (
+            <motion.div
+              variants={staggerContainer}
+              initial="initial"
+              whileInView="animate"
+              viewport={{ once: true }}
+            >
+              <Carousel
+                setApi={setAxesCarouselApi}
+                opts={{ align: 'start', loop: true }}
+                className="w-full px-2 sm:px-8 md:px-12"
               >
-                <motion.div 
-                  className="font-display text-4xl md:text-5xl font-bold text-secondary mb-2"
-                  initial={{ scale: 0.5 }}
-                  whileInView={{ scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 + 0.2, type: "spring" }}
-                >
-                  {stat.value}{stat.suffix}
-                </motion.div>
-                <div className="text-white/80 text-sm md:text-base">{stat.label}</div>
-              </motion.div>
-            ))}
-          </div>
+                <CarouselContent className="-ml-4 sm:-ml-6">
+                  {interventionAxes.map((axis) => {
+                    const axisImage = axis.image || axisImageMap[axis.icon] || axisIndustrie;
+                    return (
+                      <CarouselItem key={axis.id} className="pl-4 sm:pl-6 basis-full md:basis-1/3">
+                        <motion.div
+                          variants={fadeInUp}
+                          whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                          className="relative group overflow-hidden rounded-2xl min-h-[220px] sm:min-h-[250px] md:min-h-[260px] border border-white/20 shadow-[var(--card-shadow)]"
+                        >
+                          <img
+                            src={axisImage}
+                            alt={getMultilingualContent(axis.title)}
+                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
+                          <div className="absolute inset-0 hero-gradient opacity-80" />
+                          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.12),transparent_60%)]" />
+                          <div className="absolute inset-0 z-10 flex items-center justify-center p-4 sm:p-6 text-center">
+                            <h3 className="inline-flex items-center justify-center w-fit max-w-[88%] sm:max-w-[82%] mx-auto font-display text-xl sm:text-2xl md:text-3xl font-bold text-white text-center leading-tight drop-shadow-[0_3px_10px_rgba(0,0,0,0.45)] bg-white/10 border border-white/25 backdrop-blur-sm rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4">
+                              {getMultilingualContent(axis.title)}
+                            </h3>
+                          </div>
+                        </motion.div>
+                      </CarouselItem>
+                    );
+                  })}
+                </CarouselContent>
+                <CarouselPrevious className="hidden sm:inline-flex left-0 md:-left-1 bg-white/90 hover:bg-white text-primary border-primary/20" />
+                <CarouselNext className="hidden sm:inline-flex right-0 md:-right-1 bg-white/90 hover:bg-white text-primary border-primary/20" />
+              </Carousel>
+            </motion.div>
+          )}
         </div>
       </section>
+
+      {/* Impact visual section */}
+      {showImpactSection && (
+        <section className="section-padding hero-gradient overflow-hidden">
+          <div className="container mx-auto">
+            <div className="relative rounded-3xl border border-white/20 bg-white/5 backdrop-blur-md p-8 md:p-12 min-h-[220px] md:min-h-[260px] flex items-center justify-center">
+              <motion.div
+                aria-hidden
+                className="absolute -top-20 -left-20 h-48 w-48 rounded-full bg-secondary/30 blur-3xl"
+                animate={{ x: [0, 30, 0], y: [0, -20, 0], scale: [1, 1.12, 1] }}
+                transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+              />
+              <motion.div
+                aria-hidden
+                className="absolute -bottom-16 -right-16 h-56 w-56 rounded-full bg-primary-foreground/20 blur-3xl"
+                animate={{ x: [0, -25, 0], y: [0, 15, 0], scale: [1, 0.92, 1] }}
+                transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+              />
+              <motion.img
+                src={logo}
+                alt="SSMos motif"
+                aria-hidden
+                className="absolute inset-0 m-auto w-36 md:w-44 opacity-[0.1] pointer-events-none select-none"
+                animate={{ y: [0, -6, 0], scale: [1, 1.03, 1] }}
+                transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+              />
+              <div className="relative z-10 text-center">
+                <motion.h2
+                  className="font-display text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white"
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6 }}
+                >
+                  <span className="bg-gradient-to-r from-white via-secondary to-white bg-clip-text text-transparent">
+                    SSMOS Impact Vision
+                  </span>
+                </motion.h2>
+                <motion.div
+                  aria-hidden
+                  className="mx-auto mt-5 h-1 rounded-full bg-gradient-to-r from-transparent via-secondary to-transparent"
+                  style={{ width: 'min(360px, 70vw)' }}
+                  animate={{ opacity: [0.4, 1, 0.4], scaleX: [0.85, 1, 0.85] }}
+                  transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Latest News */}
       <section className="section-padding bg-background">
@@ -558,56 +521,74 @@ const Index = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              {t('home.news.title')}
+              {getSectionContent('news_title') || t('home.news.title')}
             </motion.h2>
             <Button asChild variant="outline" className="hidden sm:flex group">
-              <Link to="/news">
+              <Link to="/publications">
                 {t('home.news.viewAll')}
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
           </div>
-          <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-          >
-            {latestArticles.map((article, index) => (
-              <motion.div key={article.id} variants={fadeInUp}>
-                <Link
-                  to={`/news/${article.id}`}
-                  className="card-institutional group overflow-hidden block"
-                >
-                  <div className="aspect-video overflow-hidden rounded-lg mb-4 -mt-2 -mx-2">
-                    <img
-                      src={article.image}
-                      alt={language === 'en' ? article.titleEn : article.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="px-2.5 py-1 bg-secondary/10 text-secondary text-xs font-medium rounded-full">
-                      {t(`news.category.${article.category}`)}
-                    </span>
-                    <span className="text-muted-foreground text-xs">
-                      {new Date(article.date).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR')}
-                    </span>
-                  </div>
-                  <h3 className="font-display text-lg font-semibold text-foreground group-hover:text-secondary transition-colors line-clamp-2 mb-2">
-                    {language === 'en' ? article.titleEn : language === 'ln' ? article.titleLn : language === 'sw' ? article.titleSw : article.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm line-clamp-2">
-                    {language === 'en' ? article.excerptEn : language === 'ln' ? article.excerptLn : language === 'sw' ? article.excerptSw : article.excerpt}
-                  </p>
-                </Link>
-              </motion.div>
-            ))}
-          </motion.div>
+          {isLoading ? (
+            <div className="flex justify-center items-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+          ) : (
+            <motion.div 
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              variants={staggerContainer}
+              initial="initial"
+              whileInView="animate"
+              viewport={{ once: true }}
+            >
+              {latestArticles.map((article) => (
+                <motion.div key={article.id} variants={fadeInUp}>
+                  <Link
+                    to={`/publications/news/${article.id}`}
+                    className="card-institutional group overflow-hidden block"
+                  >
+                    <div className="aspect-video overflow-hidden rounded-lg mb-4 -mt-2 -mx-2">
+                      {article.image ? (
+                        <img
+                          src={article.image}
+                          alt={article.title.fr || article.title.en || 'Actualité'}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-muted flex items-center justify-center">
+                          <Shield className="h-12 w-12 text-muted-foreground" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="px-2.5 py-1 bg-secondary/10 text-secondary text-xs font-medium rounded-full">
+                        {article.category}
+                      </span>
+                      <span className="text-muted-foreground text-xs">
+                        {new Date(article.created_at).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR')}
+                      </span>
+                    </div>
+                    <h3 className="font-display text-lg font-semibold text-foreground group-hover:text-secondary transition-colors line-clamp-2 mb-2">
+                      {getMultilingualContent(article.title)}
+                    </h3>
+                    <p className="text-muted-foreground text-sm line-clamp-2">
+                      {getMultilingualContent(article.excerpt)}
+                    </p>
+                  </Link>
+                </motion.div>
+              ))}
+              {latestArticles.length === 0 && !isLoading && (
+                <div className="col-span-full text-center py-12 text-muted-foreground">
+                  <Shield className="h-12 w-12 text-muted-foreground/50 mx-auto mb-3" />
+                  <p className="text-muted-foreground text-sm">{t('home.news.noArticles')}</p>
+                </div>
+              )}
+            </motion.div>
+          )}
           <div className="mt-8 text-center sm:hidden">
             <Button asChild variant="outline">
-              <Link to="/news">
+              <Link to="/publications">
                 {t('home.news.viewAll')}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
@@ -625,10 +606,10 @@ const Index = () => {
             viewport={{ once: true }}
           >
             <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-6">
-              {t('cta.ready.title')}
+              {getSectionContent('cta_title') || t('cta.ready.title')}
             </h2>
-            <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto">
-              {t('cta.ready.description')}
+            <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto whitespace-pre-line">
+              {getSectionContent('cta_description') || t('cta.ready.description')}
             </p>
             <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg transition-all duration-300 hover:-translate-y-0.5">
               <Link to="/contact">

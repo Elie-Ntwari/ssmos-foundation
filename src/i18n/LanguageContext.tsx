@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
 import { Language, getTranslation, languages } from './translations';
 
 interface LanguageContextType {
@@ -17,8 +17,22 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
     return getTranslation(language, key);
   }, [language]);
 
+  // Persister la langue dans localStorage
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem('ssmos_language') as Language;
+    if (savedLanguage && ['fr', 'en', 'ln', 'sw'].includes(savedLanguage)) {
+      setLanguage(savedLanguage);
+    }
+  }, []);
+
+  // Sauvegarder la langue quand elle change
+  const handleSetLanguage = useCallback((lang: Language) => {
+    setLanguage(lang);
+    localStorage.setItem('ssmos_language', lang);
+  }, []);
+
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t, languages }}>
+    <LanguageContext.Provider value={{ language, setLanguage: handleSetLanguage, t, languages }}>
       {children}
     </LanguageContext.Provider>
   );

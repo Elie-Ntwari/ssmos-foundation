@@ -1,20 +1,47 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Facebook, Linkedin, Twitter, ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/i18n/LanguageContext';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { contentService } from '@/services/contentService';
+import { HomePageSection } from '@/types/api';
 import logo from '@/assets/logo.png';
 
 const Footer = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const [homeSections, setHomeSections] = useState<Record<string, HomePageSection>>({});
+
+  useEffect(() => {
+    const loadHomeSections = async () => {
+      try {
+        const response = await contentService.getHomeSections();
+        if (response.error === false && response.data && Array.isArray(response.data)) {
+          const sectionsMap: Record<string, HomePageSection> = {};
+          response.data.forEach((section) => {
+            sectionsMap[section.section_key] = section;
+          });
+          setHomeSections(sectionsMap);
+        }
+      } catch (error) {
+        console.error('Erreur lors du chargement des sections footer:', error);
+      }
+    };
+
+    loadHomeSections();
+  }, []);
+
+  const getSectionContent = (sectionKey: string, fallback: string): string => {
+    const section = homeSections[sectionKey];
+    if (!section) return fallback;
+    const content = section.content;
+    return content[language] || content.fr || content.en || fallback;
+  };
 
   const quickLinks = [
     { path: '/', label: t('nav.home') },
-    { path: '/about', label: t('nav.about') },
+    { path: '/about/presentation', label: t('nav.about') },
     { path: '/services', label: t('nav.services') },
-    { path: '/news', label: t('nav.news') },
-    { path: '/blog', label: t('nav.blog') },
+    { path: '/publications', label: t('nav.publications') },
     { path: '/team', label: t('nav.team') },
     { path: '/contact', label: t('nav.contact') },
   ];
@@ -25,6 +52,17 @@ const Footer = () => {
     'Études & Audits',
     'Conseil Juridique',
     'Innovation & Digital',
+  ];
+
+  const footerDescription = getSectionContent('footer_description', t('footer.description'));
+  const footerAddressLine1 = getSectionContent('footer_address_line1', '123 Avenue de la Paix, Gombe');
+  const footerAddressLine2 = getSectionContent('footer_address_line2', 'Kinshasa, RDC');
+  const footerPhone = getSectionContent('footer_phone', '+243 812 345 678');
+  const footerEmail = getSectionContent('footer_email', 'contact@ssmos.org');
+  const socialLinks = [
+    { icon: Facebook, href: getSectionContent('footer_social_facebook', '#') },
+    { icon: Linkedin, href: getSectionContent('footer_social_linkedin', '#') },
+    { icon: Twitter, href: getSectionContent('footer_social_twitter', '#') },
   ];
 
   return (
@@ -40,18 +78,20 @@ const Footer = () => {
               <img src={logo} alt="SSMos Logo" className="h-14 w-auto brightness-0 invert" />
             </motion.div>
             <p className="text-primary-foreground/80 text-sm leading-relaxed mb-6">
-              {t('footer.description')}
+              {footerDescription}
             </p>
             <div className="flex gap-3">
-              {[Facebook, Linkedin, Twitter].map((Icon, idx) => (
+              {socialLinks.map((social, idx) => (
                 <motion.a
                   key={idx}
-                  href="#"
+                  href={social.href || '#'}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   whileHover={{ scale: 1.1, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   className="w-9 h-9 rounded-full bg-primary-foreground/10 hover:bg-secondary flex items-center justify-center transition-colors"
                 >
-                  <Icon className="h-4 w-4" />
+                  <social.icon className="h-4 w-4" />
                 </motion.a>
               ))}
             </div>
@@ -91,38 +131,30 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact & Newsletter */}
+          {/* Contact */}
           <div>
             <h4 className="font-display text-lg font-semibold mb-4">{t('footer.contact')}</h4>
             <div className="space-y-3 mb-6">
               <div className="flex items-start gap-3 text-sm">
                 <MapPin className="h-4 w-4 mt-0.5 text-secondary" />
                 <span className="text-primary-foreground/80">
-                  123 Avenue de la Paix, Gombe<br />
-                  Kinshasa, RDC
+                  {footerAddressLine1}<br />
+                  {footerAddressLine2}
                 </span>
               </div>
               <div className="flex items-center gap-3 text-sm">
                 <Phone className="h-4 w-4 text-secondary" />
-                <span className="text-primary-foreground/80">+243 812 345 678</span>
+                <a href={`tel:${footerPhone.replace(/\s+/g, '')}`} className="text-primary-foreground/80 hover:text-secondary transition-colors">
+                  {footerPhone}
+                </a>
               </div>
               <div className="flex items-center gap-3 text-sm">
                 <Mail className="h-4 w-4 text-secondary" />
-                <span className="text-primary-foreground/80">contact@ssmos.cd</span>
+                <a href={`mailto:${footerEmail}`} className="text-primary-foreground/80 hover:text-secondary transition-colors">
+                  {footerEmail}
+                </a>
               </div>
             </div>
-
-            <h5 className="font-medium text-sm mb-3">{t('footer.newsletter')}</h5>
-            <form className="flex gap-2">
-              <Input
-                type="email"
-                placeholder={t('footer.newsletter.placeholder')}
-                className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50"
-              />
-              <Button variant="secondary" size="sm">
-                {t('footer.newsletter.subscribe')}
-              </Button>
-            </form>
           </div>
         </div>
       </div>

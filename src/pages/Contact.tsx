@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { Mail, Phone, MapPin, Clock, Send, CheckCircle } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Mail, Phone, MapPin, Clock, Send, CheckCircle, ChevronRight } from 'lucide-react';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,69 +8,134 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import Layout from '@/components/layout/Layout';
+import { contactService } from '@/services/contactService';
+import { contentService } from '@/services/contentService';
+import { HomePageSection } from '@/types/api';
+import heroContact from '@/assets/hero-3.png';
 
 const Contact = () => {
   const { t, language } = useLanguage();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [homeSections, setHomeSections] = useState<Record<string, HomePageSection>>({});
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  });
+
+  useEffect(() => {
+    const loadHomeSections = async () => {
+      try {
+        const response = await contentService.getHomeSections();
+        if (response.error === false && response.data && Array.isArray(response.data)) {
+          const sectionsMap: Record<string, HomePageSection> = {};
+          response.data.forEach((section) => {
+            sectionsMap[section.section_key] = section;
+          });
+          setHomeSections(sectionsMap);
+        }
+      } catch (error) {
+        console.error('Erreur lors du chargement des infos de contact:', error);
+      }
+    };
+
+    loadHomeSections();
+  }, []);
+
+  const getSectionContent = (sectionKey: string, fallback: string): string => {
+    const section = homeSections[sectionKey];
+    if (!section) return fallback;
+    const content = section.content;
+    return content[language] || content.fr || content.en || fallback;
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      const response = await contactService.createMessage({
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        subject: formData.subject.trim(),
+        message: formData.message.trim(),
+      });
 
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    toast({
-      title: t('contact.form.success'),
-      description: language === 'en' 
-        ? 'We will get back to you shortly.' 
-        : 'Nous vous répondrons dans les plus brefs délais.',
-    });
+      if (response.error === false) {
+        setIsSubmitted(true);
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        toast({
+          title: t('contact.form.success'),
+          description: language === 'en' 
+            ? 'We will get back to you shortly.' 
+            : 'Nous vous répondrons dans les plus brefs délais.',
+        });
 
-    // Reset after 3 seconds
-    setTimeout(() => setIsSubmitted(false), 3000);
+        // Reset after 3 seconds
+        setTimeout(() => setIsSubmitted(false), 3000);
+      } else {
+        throw new Error(response.message || 'Erreur lors de l\'envoi du message');
+      }
+    } catch (error: any) {
+      console.error('Erreur lors de l\'envoi du message:', error);
+      toast({
+        title: language === 'en' ? 'Error' : 'Erreur',
+        description: error.response?.data?.message || error.message || (language === 'en' 
+          ? 'Failed to send message. Please try again.' 
+          : 'Échec de l\'envoi du message. Veuillez réessayer.'),
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactInfo = [
     {
       icon: MapPin,
       label: t('contact.info.address'),
-      value: '123 Avenue de la Paix, Gombe\nKinshasa, RDC',
+      value: `${getSectionContent('footer_address_line1', '123 Avenue de la Paix, Gombe')}\n${getSectionContent('footer_address_line2', 'Kinshasa, RDC')}`,
     },
     {
       icon: Phone,
       label: t('contact.info.phone'),
-      value: '+243 812 345 678',
+      value: getSectionContent('footer_phone', '+243 812 345 678'),
     },
     {
       icon: Mail,
       label: t('contact.info.email'),
-      value: 'contact@ssmos.cd',
+      value: getSectionContent('footer_email', 'contact@ssmos.org'),
     },
     {
       icon: Clock,
       label: t('contact.info.hours'),
-      value: language === 'en' 
-        ? 'Mon - Fri: 8:00 AM - 5:00 PM' 
-        : 'Lun - Ven : 8h00 - 17h00',
+      value: getSectionContent(
+        'footer_hours',
+        language === 'en' ? 'Mon - Fri: 8:00 AM - 5:00 PM' : 'Lun - Ven : 8h00 - 17h00'
+      ),
     },
   ];
 
   return (
     <Layout>
       {/* Hero */}
-      <section className="hero-gradient py-20 md:py-28">
-        <div className="container mx-auto px-4 text-center">
+      <section className="relative overflow-hidden py-20 md:py-28">
+        <div className="absolute inset-0">
+          <img src={heroContact} alt="Contact SSMos" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 hero-gradient opacity-80" />
+        </div>
+        <div className="container mx-auto px-4 relative z-10">
+          <nav className="flex items-center gap-2 text-white/60 text-sm mb-6">
+            <Link to="/" className="hover:text-white transition-colors">{t('nav.home')}</Link>
+            <ChevronRight className="h-3.5 w-3.5" />
+            <span className="text-white">{t('nav.contact')}</span>
+          </nav>
           <h1 className="font-display text-4xl md:text-5xl font-bold text-white mb-4 opacity-0 animate-fade-up">
             {t('contact.title')}
           </h1>
-          <p className="text-white/80 text-lg max-w-2xl mx-auto opacity-0 animate-fade-up stagger-1">
-            {t('contact.subtitle')}
-          </p>
         </div>
       </section>
 
@@ -105,6 +171,8 @@ const Contact = () => {
                       id="name"
                       name="name"
                       required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       className="mt-1.5"
                       placeholder={language === 'en' ? 'John Doe' : 'Jean Dupont'}
                     />
@@ -116,6 +184,8 @@ const Contact = () => {
                       name="email"
                       type="email"
                       required
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       className="mt-1.5"
                       placeholder="exemple@email.com"
                     />
@@ -126,6 +196,8 @@ const Contact = () => {
                       id="subject"
                       name="subject"
                       required
+                      value={formData.subject}
+                      onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                       className="mt-1.5"
                       placeholder={language === 'en' ? 'How can we help?' : 'Comment pouvons-nous vous aider ?'}
                     />
@@ -137,6 +209,8 @@ const Contact = () => {
                       name="message"
                       required
                       rows={5}
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       className="mt-1.5 resize-none"
                       placeholder={language === 'en' ? 'Your message...' : 'Votre message...'}
                     />
