@@ -8,7 +8,7 @@ export const languages: { code: Language; name: string; nativeName: string; name
 ];
 
 export const getTranslation = (lang: Language, key: string): string => {
-  return translations[lang]?.[key] || translations['fr']?.[key] || key;
+  return translations[lang]?.[key] || translations['fr']?.[key] || 'Contenu indisponible';
 };
 
 export const translations: Record<Language, Record<string, string>> = {
@@ -119,6 +119,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'blog.subtitle': 'Parce que la sécurité ne doit pas être une simple contrainte réglementaire, mais une priorité partagée.',
     'blog.readMore': 'Lire l\'article',
     'blog.backToList': 'Retour au blog',
+    'blog.noPosts': 'Aucun article disponible',
     
     // Team
     'team.title': 'Notre Équipe',
@@ -262,6 +263,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'blog.subtitle': 'Because safety should not be just a regulatory constraint, but a shared priority.',
     'blog.readMore': 'Read article',
     'blog.backToList': 'Back to blog',
+    'blog.noPosts': 'No posts available',
     
     // Team
     'team.title': 'Our Team',
@@ -420,6 +422,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'blog.subtitle': 'Mpo ete bobateli esengeli te kozala makambo ya mibeko kaka.',
     'blog.readMore': 'Kotanga article',
     'blog.backToList': 'Kozonga na blogi',
+    'blog.noPosts': 'Articles ezali te mpo na sikoyo',
 
     // Team
     'team.title': 'Équipe na biso',
@@ -563,6 +566,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'blog.subtitle': 'Kwa sababu usalama haupaswi kuwa kikwazo cha kisheria tu.',
     'blog.readMore': 'Soma makala',
     'blog.backToList': 'Rudi kwenye blogu',
+    'blog.noPosts': 'Hakuna makala zilizopo',
 
     // Team
     'team.title': 'Timu Yetu',
