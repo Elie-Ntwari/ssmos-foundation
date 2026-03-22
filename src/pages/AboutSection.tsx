@@ -207,16 +207,16 @@ const AboutSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <div className="bg-card rounded-2xl border border-border p-8 md:p-12 shadow-[var(--card-shadow)]">
-                <div className="flex items-start gap-6">
-                  <div className="w-16 h-16 rounded-xl hero-gradient flex items-center justify-center flex-shrink-0">
-                    <SectionIcon className="h-8 w-8 text-white" />
+              <div className="bg-card rounded-2xl border border-border p-6 md:p-12 shadow-[var(--card-shadow)]">
+                <div className="flex flex-col sm:flex-row items-start gap-4 md:gap-6">
+                  <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl hero-gradient flex items-center justify-center flex-shrink-0">
+                    <SectionIcon className="h-6 w-6 md:h-8 md:w-8 text-white" />
                   </div>
-                  <div className="space-y-4">
-                    <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
+                  <div className="space-y-3 md:space-y-4 min-w-0">
+                    <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
                       {isLoading ? <Loader2 className="h-6 w-6 animate-spin inline-block" /> : sectionTitle}
                     </h2>
-                    <p className="text-muted-foreground text-lg leading-relaxed text-justify whitespace-pre-line">
+                    <p className="min-w-0 break-words text-muted-foreground text-base md:text-lg leading-relaxed text-justify whitespace-pre-line">
                       {isLoading ? '' : sectionContent}
                     </p>
                   </div>

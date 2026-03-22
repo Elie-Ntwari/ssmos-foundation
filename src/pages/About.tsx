@@ -145,17 +145,17 @@ const About = () => {
       </section>
 
       {/* Section 1: Présentation générale */}
-      <section id="presentation" className="min-h-[85vh] flex items-center section-padding bg-background">
-        <div className="container mx-auto">
+      <section id="presentation" className="min-h-[70vh] md:min-h-[85vh] flex items-start md:items-center section-padding bg-background">
+        <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             {isLoading ? (
               <div className="flex justify-center items-center py-12">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
               </div>
             ) : (
-              <div className="grid md:grid-cols-5 gap-12 items-center">
+              <div className="grid md:grid-cols-5 gap-6 md:gap-12 items-start md:items-center">
                 <motion.div 
-                  className="md:col-span-3 space-y-6"
+                  className="md:col-span-3 space-y-4 md:space-y-6"
                   initial={{ opacity: 0, x: -30 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
@@ -165,10 +165,10 @@ const About = () => {
                     <Building className="h-4 w-4 text-primary" />
                     <span className="text-primary text-sm font-medium">{t('about.nav.presentation')}</span>
                   </div>
-                  <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground">
+                  <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
                     {getContent(presentationPage, 'title') || t('about.intro')}
                   </h2>
-                  <p className="text-muted-foreground text-lg leading-relaxed text-justify whitespace-pre-line">
+                  <p className="text-muted-foreground text-base md:text-lg leading-relaxed text-justify whitespace-pre-line">
                     {getContent(presentationPage, 'content') || t('about.intro.text')}
                   </p>
                 </motion.div>
@@ -179,7 +179,7 @@ const About = () => {
                   viewport={{ once: true }}
                   transition={{ duration: 0.7, delay: 0.2 }}
                 >
-                  <div className="w-full aspect-square rounded-3xl overflow-hidden relative group">
+                  <div className="w-full aspect-square rounded-2xl md:rounded-3xl overflow-hidden relative group">
                     <img src={heroPresentation} alt="Présentation SSMos" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                     <div className="absolute inset-0 hero-gradient opacity-60" />
                     <div className="absolute inset-0 flex items-center justify-center">
@@ -224,20 +224,20 @@ const About = () => {
           </div>
         </div>
         <div className="section-padding bg-muted/50">
-          <div className="container mx-auto">
+          <div className="container mx-auto px-4">
             <div className="max-w-5xl mx-auto">
               <motion.div
-                className="bg-card rounded-2xl border border-border p-8 md:p-12 shadow-sm"
+                className="bg-card rounded-2xl border border-border p-6 md:p-12 shadow-sm"
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7 }}
               >
-                <div className="flex items-start gap-6">
-                  <div className="w-16 h-16 rounded-xl hero-gradient flex items-center justify-center flex-shrink-0">
-                    <Shield className="h-8 w-8 text-white" />
+                <div className="flex flex-col sm:flex-row items-start gap-4 md:gap-6">
+                  <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl hero-gradient flex items-center justify-center flex-shrink-0">
+                    <Shield className="h-6 w-6 md:h-8 md:w-8 text-white" />
                   </div>
-                  <p className="text-muted-foreground text-lg leading-relaxed text-justify whitespace-pre-line">
+                  <p className="min-w-0 break-words text-muted-foreground text-base md:text-lg leading-relaxed text-justify whitespace-pre-line">
                     {isLoading ? '' : getContent(contextePage, 'content') || t('about.context.text')}
                   </p>
                 </div>
@@ -266,31 +266,31 @@ const About = () => {
           </div>
         </div>
         <div className="section-padding bg-background">
-          <div className="container mx-auto">
+          <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
-              <div className="grid md:grid-cols-2 gap-8">
+              <div className="grid md:grid-cols-2 gap-6 md:gap-8">
                 <motion.div 
-                  className="bg-card rounded-2xl border border-border p-8 shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] transition-all duration-300 space-y-5"
+                  className="bg-card rounded-2xl border border-border p-6 md:p-8 shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] transition-all duration-300 space-y-4 md:space-y-5"
                   initial={{ opacity: 0, x: -30 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6 }}
                   whileHover={{ y: -5 }}
                 >
-                  <div className="w-14 h-14 rounded-xl hero-gradient flex items-center justify-center">
-                    <Target className="h-7 w-7 text-white" />
+                  <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl hero-gradient flex items-center justify-center">
+                    <Target className="h-6 w-6 md:h-7 md:w-7 text-white" />
                   </div>
                   <h3 className="font-display text-2xl font-bold text-foreground">
                     {isLoading ? <Loader2 className="h-5 w-5 animate-spin inline-block" /> : getContent(missionPage, 'title') || t('about.mission.title')}
                   </h3>
-                  <p className="text-muted-foreground leading-relaxed text-justify whitespace-pre-line">
+                  <p className="text-muted-foreground text-base md:text-[1rem] leading-relaxed text-justify whitespace-pre-line">
                     {isLoading ? '' : getContent(missionPage, 'content') || t('about.mission.text')}
                   </p>
                   <div className="flex items-center gap-3 pt-2">
                     <div className="flex -space-x-2">
                       {[Users, Heart, Handshake].map((Icon, i) => (
-                        <div key={i} className="w-8 h-8 rounded-full hero-gradient flex items-center justify-center border-2 border-card">
-                          <Icon className="h-3.5 w-3.5 text-white" />
+                        <div key={i} className="w-7 h-7 md:w-8 md:h-8 rounded-full hero-gradient flex items-center justify-center border-2 border-card">
+                          <Icon className="h-3 w-3 md:h-3.5 md:w-3.5 text-white" />
                         </div>
                       ))}
                     </div>
@@ -299,27 +299,27 @@ const About = () => {
                 </motion.div>
 
                 <motion.div 
-                  className="bg-card rounded-2xl border border-border p-8 shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] transition-all duration-300 space-y-5"
+                  className="bg-card rounded-2xl border border-border p-6 md:p-8 shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] transition-all duration-300 space-y-4 md:space-y-5"
                   initial={{ opacity: 0, x: 30 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.1 }}
                   whileHover={{ y: -5 }}
                 >
-                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-secondary to-secondary/70 flex items-center justify-center">
-                    <Eye className="h-7 w-7 text-white" />
+                  <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-gradient-to-br from-secondary to-secondary/70 flex items-center justify-center">
+                    <Eye className="h-6 w-6 md:h-7 md:w-7 text-white" />
                   </div>
                   <h3 className="font-display text-2xl font-bold text-foreground">
                     {t('about.goal.title')}
                   </h3>
-                  <p className="text-muted-foreground leading-relaxed text-justify">
+                  <p className="text-muted-foreground text-base md:text-[1rem] leading-relaxed text-justify">
                     {t('about.goal.text')}
                   </p>
                   <div className="flex items-center gap-3 pt-2">
                     <div className="flex -space-x-2">
                       {[Shield, Target, Eye].map((Icon, i) => (
-                        <div key={i} className="w-8 h-8 rounded-full bg-gradient-to-br from-secondary to-secondary/70 flex items-center justify-center border-2 border-card">
-                          <Icon className="h-3.5 w-3.5 text-white" />
+                        <div key={i} className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-gradient-to-br from-secondary to-secondary/70 flex items-center justify-center border-2 border-card">
+                          <Icon className="h-3 w-3 md:h-3.5 md:w-3.5 text-white" />
                         </div>
                       ))}
                     </div>
@@ -393,9 +393,9 @@ const About = () => {
           </div>
         </div>
         <div className="section-padding bg-background">
-          <div className="container mx-auto">
+          <div className="container mx-auto px-4">
             <motion.div 
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-6xl mx-auto"
               variants={staggerContainer}
               initial="initial"
               whileInView="animate"
@@ -404,17 +404,17 @@ const About = () => {
               {values.map((value, index) => (
                 <motion.div
                   key={value.title}
-                  className="relative bg-card rounded-2xl border border-border p-6 shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] transition-all duration-300 group overflow-hidden"
+                  className="relative bg-card rounded-2xl border border-border p-5 md:p-6 shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] transition-all duration-300 group overflow-hidden"
                   variants={fadeInUp}
                   whileHover={{ y: -8, transition: { duration: 0.3 } }}
                 >
                   {/* Top accent bar */}
                   <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${value.color}`} />
                   
-                  <div className="w-16 h-16 rounded-2xl hero-gradient flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
-                    <value.icon className="h-8 w-8 text-white" />
+                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl hero-gradient flex items-center justify-center mb-4 md:mb-5 group-hover:scale-110 transition-transform duration-300">
+                    <value.icon className="h-7 w-7 md:h-8 md:w-8 text-white" />
                   </div>
-                  <h3 className="font-display text-xl font-bold text-foreground mb-3">
+                  <h3 className="font-display text-lg md:text-xl font-bold text-foreground mb-2 md:mb-3">
                     {value.title}
                   </h3>
                   <p className="text-muted-foreground text-sm leading-relaxed text-justify">
