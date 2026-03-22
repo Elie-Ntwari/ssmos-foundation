@@ -15,7 +15,7 @@ export const translations: Record<Language, Record<string, string>> = {
   fr: {
     // Navigation
     'nav.home': 'Accueil',
-    'nav.about': 'Qui sommes-nous',
+    'nav.about': 'SSMos',
     'nav.services': 'Services',
     'nav.news': 'Actualités',
     'nav.blog': 'Blog',
@@ -42,7 +42,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'hero.slide3.subtitle': 'Développez les compétences de vos équipes grâce à nos programmes de formation adaptés au contexte congolais',
     
     // Home sections
-    'home.about.title': 'Présentation générale',
+    'home.about.title': 'Partenariat et expertise',
     'home.about.description': 'Safety & Santé na Mosala (SSMOS) est une organisation pionnière, privée de prévention des risques professionnels en République Démocratique du Congo, dédiée à la promotion de la sécurité, de la santé au travail et de l\'amélioration durable des conditions de travail.',
     'home.axes.title': 'Nos axes d\'intervention',
     'home.stats.title': 'Notre impact en chiffres',
@@ -159,7 +159,7 @@ export const translations: Record<Language, Record<string, string>> = {
   en: {
     // Navigation
     'nav.home': 'Home',
-    'nav.about': 'Who We Are',
+    'nav.about': 'SSMos',
     'nav.services': 'Services',
     'nav.news': 'News',
     'nav.blog': 'Blog',
@@ -186,7 +186,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'hero.slide3.subtitle': 'Develop your teams\' skills through our training programs adapted to the Congolese context',
     
     // Home sections
-    'home.about.title': 'General Presentation',
+    'home.about.title': 'Partnership and Expertise',
     'home.about.description': 'Safety & Santé na Mosala (SSMOS) is a pioneering private organization for occupational risk prevention in the DRC.',
     'home.axes.title': 'Our areas of intervention',
     'home.stats.title': 'Our impact in numbers',
@@ -303,7 +303,7 @@ export const translations: Record<Language, Record<string, string>> = {
   ln: {
     // Navigation
     'nav.home': 'Ndako',
-    'nav.about': 'Biso nani',
+    'nav.about': 'SSMos',
     'nav.services': 'Misala',
     'nav.news': 'Sango',
     'nav.blog': 'Blogi',
@@ -330,7 +330,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'hero.slide3.subtitle': 'Bokólisa compétences ya ba équipes na bino na programmes ya formation adaptées',
     
     // Home sections
-    'home.about.title': 'Botálisi ya mobimba',
+    'home.about.title': 'Boyokani mpe mayele ya mosala',
     'home.about.description': 'Safety & Santé na Mosala (SSMOS) ezali organisation pionnière mpo na prévention ya risques professionnels na RDC.',
     'home.axes.title': 'Bisika ya mosala na biso',
     'home.stats.title': 'Mbongwana na biso na bitangi',
@@ -447,7 +447,7 @@ export const translations: Record<Language, Record<string, string>> = {
   sw: {
     // Navigation
     'nav.home': 'Nyumbani',
-    'nav.about': 'Sisi ni nani',
+    'nav.about': 'SSMos',
     'nav.services': 'Huduma',
     'nav.news': 'Habari',
     'nav.blog': 'Blogu',
@@ -474,7 +474,7 @@ export const translations: Record<Language, Record<string, string>> = {
     'hero.slide3.subtitle': 'Endeleza ujuzi wa timu zako kupitia programu zetu za mafunzo',
     
     // Home sections
-    'home.about.title': 'Maelezo ya jumla',
+    'home.about.title': 'Ushirikiano na utaalamu',
     'home.about.description': 'Safety & Santé na Mosala (SSMOS) ni shirika la kwanza la kibinafsi la kuzuia hatari za kazi nchini DRC.',
     'home.axes.title': 'Maeneo yetu ya kazi',
     'home.stats.title': 'Athari yetu kwa nambari',

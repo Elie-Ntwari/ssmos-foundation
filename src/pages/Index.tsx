@@ -6,7 +6,6 @@ import { useLanguage } from '@/i18n/LanguageContext';
 import { contentService } from '@/services/contentService';
 import { NewsArticle, HomePageSection, InterventionAxis } from '@/types/api';
 import { Button } from '@/components/ui/button';
-import { stats } from '@/data/mockData';
 import { getFormattedMultilingualContent as getContent } from '@/utils/multilingual';
 import Layout from '@/components/layout/Layout';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from '@/components/ui/carousel';
@@ -144,12 +143,6 @@ const Index = () => {
   };
 
   const latestArticles = Array.isArray(articles) ? articles.slice(0, 3) : [];
-  const heroStats = [
-    { value: `${stats.companies}+`, label: t('stats.companies') },
-    { value: `${stats.trainings}+`, label: t('stats.trainings') },
-    { value: `${stats.experts}`, label: t('stats.experts') },
-    { value: `${stats.years}`, label: t('stats.years') },
-  ];
 
   const nextSlide = useCallback(() => setCurrentSlide((prev) => (prev + 1) % 3), []);
   const prevSlide = useCallback(() => setCurrentSlide((prev) => (prev - 1 + 3) % 3), []);
@@ -318,31 +311,6 @@ const Index = () => {
                 />
               </motion.div>
 
-              <motion.div 
-                className="grid grid-cols-2 gap-3 w-full max-w-md"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-              >
-                {heroStats.map((stat, i) => (
-                  <motion.div
-                    key={stat.label}
-                    className="relative bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-3 py-2.5 text-center overflow-hidden"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 + i * 0.08 }}
-                    whileHover={{ y: -3, backgroundColor: 'rgba(255,255,255,0.16)' }}
-                  >
-                    <motion.div
-                      className="absolute -top-6 -right-6 w-14 h-14 rounded-full bg-secondary/25 blur-2xl"
-                      animate={{ scale: [1, 1.25, 1], opacity: [0.3, 0.55, 0.3] }}
-                      transition={{ duration: 3.5 + i * 0.4, repeat: Infinity }}
-                    />
-                    <div className="relative z-10 font-display text-xl md:text-2xl font-bold text-secondary leading-none mb-1">{stat.value}</div>
-                    <div className="relative z-10 text-white/85 text-[11px] md:text-xs">{stat.label}</div>
-                  </motion.div>
-                ))}
-              </motion.div>
             </motion.div>
           </div>
 
@@ -384,17 +352,22 @@ const Index = () => {
             transition={{ duration: 0.6 }}
           >
             <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-6">
-              {getSectionContent('about_title') || t('home.about.title')}
+              {t('home.about.title')}
             </h2>
-            <p className="text-muted-foreground text-lg leading-relaxed mb-8 whitespace-pre-line text-justify">
-              {getSectionContent('about_description') || t('home.about.description')}
-            </p>
-            <Button asChild variant="outline" className="group">
-              <Link to="/about/presentation">
-                {t('services.learnMore')}
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </Button>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6 max-w-4xl mx-auto">
+              {[
+                { value: '3+', label: t('stats.companies') },
+                { value: '15+', label: t('stats.trainings') },
+                { value: '25', label: t('stats.experts') },
+                { value: '8', label: t('stats.years') },
+              ].map((s) => (
+                <div key={s.label} className="relative bg-card rounded-xl border border-border p-4 md:p-5 shadow-[var(--card-shadow)]">
+                  <div className="font-display text-2xl md:text-3xl font-bold text-secondary mb-1">{s.value}</div>
+                  <div className="text-muted-foreground text-xs md:text-sm leading-snug">{s.label}</div>
+                  <div className="absolute top-0 left-0 right-0 h-1 hero-gradient rounded-t-xl" />
+                </div>
+              ))}
+            </div>
           </motion.div>
         </div>
       </section>
