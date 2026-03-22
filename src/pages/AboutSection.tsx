@@ -107,6 +107,7 @@ const AboutSection = () => {
   const presentationPage = pages.presentation;
   const contextePage = pages.contexte;
   const visionPage = pages.vision;
+  const valeursPage = pages.valeurs || pages.values || pages['nos-valeurs'] || pages['nosvaleurs'];
 
   const values = [
     { icon: ShieldCheck, title: t('about.values.prevention'), description: t('about.values.prevention.desc') },
@@ -121,6 +122,7 @@ const AboutSection = () => {
     mission: missionPage,
     but: goalPage,
     vision: visionPage,
+    valeurs: valeursPage,
   };
 
   const sectionFallbackMap: Record<AboutSectionId, { title: string; content: string }> = {
@@ -172,7 +174,7 @@ const AboutSection = () => {
 
       <section className="section-padding bg-background">
         <div className="container mx-auto max-w-5xl">
-          {currentSection === 'valeurs' ? (
+          {currentSection === 'valeurs' && !getContent(valeursPage, 'content') ? (
             <motion.div 
               className="grid grid-cols-1 sm:grid-cols-2 gap-6"
               initial="initial"
