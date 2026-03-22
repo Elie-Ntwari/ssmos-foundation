@@ -8,18 +8,16 @@ import { contentService } from '@/services/contentService';
 import { InstitutionalPage } from '@/types/api';
 import { normalizeCmsText } from '@/utils/multilingual';
 import heroPresentation from '@/assets/hero-about-presentation.jpg';
-import heroContext from '@/assets/hero-about-context.jpg';
 import heroMission from '@/assets/hero-about-mission.jpg';
 import heroVision from '@/assets/hero-about-vision.jpg';
 import heroValues from '@/assets/hero-about-values.jpg';
 
-type AboutSectionId = 'presentation' | 'contexte' | 'mission' | 'vision' | 'valeurs';
+type AboutSectionId = 'presentation' | 'mission' | 'vision' | 'valeurs';
 
-const validSections: AboutSectionId[] = ['presentation', 'contexte', 'mission', 'vision', 'valeurs'];
+const validSections: AboutSectionId[] = ['presentation', 'mission', 'vision', 'valeurs'];
 
 const sectionHeroImages: Record<AboutSectionId, string> = {
   presentation: heroPresentation,
-  contexte: heroContext,
   mission: heroMission,
   vision: heroVision,
   valeurs: heroValues,
@@ -28,7 +26,6 @@ const sectionHeroImages: Record<AboutSectionId, string> = {
 type IconComponent = ComponentType<{ className?: string }>;
 const sectionIcons: Record<AboutSectionId, IconComponent> = {
   presentation: Building,
-  contexte: Shield,
   mission: Target,
   vision: Eye,
   valeurs: ShieldCheck,
@@ -94,7 +91,6 @@ const AboutSection = () => {
 
   const sectionTitleMap: Record<AboutSectionId, string> = {
     presentation: t('about.nav.presentation'),
-    contexte: t('about.nav.context'),
     mission: t('about.nav.mission'),
     vision: t('about.nav.vision'),
     valeurs: t('about.nav.values'),
@@ -102,7 +98,6 @@ const AboutSection = () => {
 
   const missionPage = pages.mission;
   const presentationPage = pages.presentation;
-  const contextePage = pages.contexte;
   const visionPage = pages.vision;
   const valeursPage = pages.valeurs || pages.values || pages['nos-valeurs'] || pages['nosvaleurs'];
 
@@ -115,7 +110,6 @@ const AboutSection = () => {
 
   const sectionPageMap: Partial<Record<AboutSectionId, InstitutionalPage | undefined>> = {
     presentation: presentationPage,
-    contexte: contextePage,
     mission: missionPage,
     vision: visionPage,
     valeurs: valeursPage,
@@ -123,7 +117,6 @@ const AboutSection = () => {
 
   const sectionFallbackMap: Record<AboutSectionId, { title: string; content: string }> = {
     presentation: { title: t('about.intro'), content: t('about.intro.text') },
-    contexte: { title: t('about.context.title'), content: t('about.context.text') },
     mission: { title: t('about.mission.title'), content: t('about.mission.text') },
     vision: { title: t('about.vision.title'), content: t('about.vision.text') },
     valeurs: { title: t('about.values.title'), content: values.map((v) => `- ${v.title}: ${v.description}`).join('\n\n') },

@@ -72,6 +72,16 @@ const toServiceAnchorId = (service: Service): string => {
   return categoryToken || titleToken;
 };
 
+const getServiceListPreview = (fullDescription: string): string => {
+  if (!fullDescription) return '';
+  const normalized = fullDescription.replace(/\s+/g, ' ').trim();
+  const sentenceMatch = normalized.match(/^(.+?[.!?])(\s|$)/);
+  if (sentenceMatch && sentenceMatch[1]) {
+    return sentenceMatch[1].trim();
+  }
+  return normalized;
+};
+
 const Services = () => {
   const { t, language } = useLanguage();
   const { id } = useParams();
@@ -281,7 +291,7 @@ const Services = () => {
                         {getMultilingualContent(service.title)}
                       </h2>
                       <p className="text-muted-foreground leading-relaxed mb-4 whitespace-pre-line text-justify">
-                        {getMultilingualContent(service.description)}
+                        {getServiceListPreview(getMultilingualContent(service.description))}
                       </p>
                       <Button asChild variant="outline" className="group">
                         <Link to={`/services/${service.id}`}>
