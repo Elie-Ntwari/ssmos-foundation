@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type ComponentType } from 'react';
 import { ChevronRight, Loader2, Shield, ShieldCheck, Lightbulb, Award, Building, Target, Eye } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -13,24 +13,23 @@ import heroMission from '@/assets/hero-about-mission.jpg';
 import heroVision from '@/assets/hero-about-vision.jpg';
 import heroValues from '@/assets/hero-about-values.jpg';
 
-type AboutSectionId = 'presentation' | 'contexte' | 'mission' | 'but' | 'vision' | 'valeurs';
+type AboutSectionId = 'presentation' | 'contexte' | 'mission' | 'vision' | 'valeurs';
 
-const validSections: AboutSectionId[] = ['presentation', 'contexte', 'mission', 'but', 'vision', 'valeurs'];
+const validSections: AboutSectionId[] = ['presentation', 'contexte', 'mission', 'vision', 'valeurs'];
 
 const sectionHeroImages: Record<AboutSectionId, string> = {
   presentation: heroPresentation,
   contexte: heroContext,
   mission: heroMission,
-  but: heroMission,
   vision: heroVision,
   valeurs: heroValues,
 };
 
-const sectionIcons: Record<AboutSectionId, any> = {
+type IconComponent = ComponentType<{ className?: string }>;
+const sectionIcons: Record<AboutSectionId, IconComponent> = {
   presentation: Building,
   contexte: Shield,
   mission: Target,
-  but: Eye,
   vision: Eye,
   valeurs: ShieldCheck,
 };
@@ -97,13 +96,11 @@ const AboutSection = () => {
     presentation: t('about.nav.presentation'),
     contexte: t('about.nav.context'),
     mission: t('about.nav.mission'),
-    but: t('about.nav.goal'),
     vision: t('about.nav.vision'),
     valeurs: t('about.nav.values'),
   };
 
   const missionPage = pages.mission;
-  const goalPage = pages.but || pages.goal;
   const presentationPage = pages.presentation;
   const contextePage = pages.contexte;
   const visionPage = pages.vision;
@@ -120,7 +117,6 @@ const AboutSection = () => {
     presentation: presentationPage,
     contexte: contextePage,
     mission: missionPage,
-    but: goalPage,
     vision: visionPage,
     valeurs: valeursPage,
   };
@@ -129,7 +125,6 @@ const AboutSection = () => {
     presentation: { title: t('about.intro'), content: t('about.intro.text') },
     contexte: { title: t('about.context.title'), content: t('about.context.text') },
     mission: { title: t('about.mission.title'), content: t('about.mission.text') },
-    but: { title: t('about.goal.title'), content: t('about.goal.text') },
     vision: { title: t('about.vision.title'), content: t('about.vision.text') },
     valeurs: { title: t('about.values.title'), content: values.map((v) => `- ${v.title}: ${v.description}`).join('\n\n') },
   };

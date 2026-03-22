@@ -17,7 +17,6 @@ const aboutSections = [
   { id: 'presentation', path: '/about/presentation', labelKey: 'about.nav.presentation', icon: Building },
   { id: 'contexte', path: '/about/contexte', labelKey: 'about.nav.context', icon: Shield },
   { id: 'mission', path: '/about/mission', labelKey: 'about.nav.mission', icon: Target },
-  { id: 'but', path: '/about/but', labelKey: 'about.nav.goal', icon: Eye },
   { id: 'vision', path: '/about/vision', labelKey: 'about.nav.vision', icon: Eye },
   { id: 'valeurs', path: '/about/valeurs', labelKey: 'about.nav.values', icon: ShieldCheck },
 ];

@@ -24,9 +24,9 @@ export const translations: Record<Language, Record<string, string>> = {
     'nav.contact': 'Contact',
     
     // About nav sections
-    'about.nav.presentation': 'Présentation générale',
+    'about.nav.presentation': 'Qui sommes-nous',
     'about.nav.context': 'Contexte de création',
-    'about.nav.mission': 'Notre Mission',
+    'about.nav.mission': 'Notre mission et actions',
     'about.nav.goal': 'Notre But',
     'about.nav.vision': 'Notre Vision',
     'about.nav.values': 'Nos Valeurs',
