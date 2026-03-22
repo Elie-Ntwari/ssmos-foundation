@@ -75,6 +75,8 @@ export interface TeamMember {
   bio: MultilingualContent;
   expertise: string[];
   image?: string;
+  is_manager: boolean;
+  display_order: number;
   created_at: string;
 }
 
