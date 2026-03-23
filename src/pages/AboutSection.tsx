@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ComponentType } from 'react';
+import { useEffect, useMemo, useState, type ComponentType, type ReactNode } from 'react';
 import { ChevronRight, Loader2, Shield, ShieldCheck, Lightbulb, Award, Building, Target, Eye } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -35,6 +35,76 @@ const fadeInUp = {
   initial: { opacity: 0, y: 30 },
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.6 }
+};
+
+const renderTextWithBoldMarkers = (text: string): ReactNode => {
+  const lines = (text || '').split('\n');
+  return lines.map((line, lineIndex) => {
+    const segments = line.split(/(\*[^*]+\*)/g);
+    return (
+      <span key={`line-${lineIndex}`}>
+        {segments.map((segment, segmentIndex) => {
+          const isMarked = /^\*[^*]+\*$/.test(segment);
+          if (isMarked) {
+            const boldText = segment.slice(1, -1);
+            return (
+              <strong key={`seg-${lineIndex}-${segmentIndex}`} className="font-semibold text-foreground">
+                {boldText}
+              </strong>
+            );
+          }
+          return <span key={`seg-${lineIndex}-${segmentIndex}`}>{segment}</span>;
+        })}
+        {lineIndex < lines.length - 1 ? <br /> : null}
+      </span>
+    );
+  });
+};
+
+type ParsedValueCard = { title: string; description: string };
+
+const parseValuesContent = (content: string): ParsedValueCard[] => {
+  if (!content) return [];
+  // Split by empty lines to create blocks
+  const blocks = content
+    .split(/\n\s*\n+/g)
+    .map(b => b.trim())
+    .filter(Boolean);
+
+  const items: ParsedValueCard[] = [];
+  const titleRegex = /^\s*(\*([^*]+)\*|([^:\n]+))\s*:\s*(.+)$/s; // *Title* : desc  OR  Title : desc
+
+  for (const block of blocks) {
+    const match = block.match(titleRegex);
+    if (match) {
+      const title = (match[2] || match[3] || '').trim();
+      const description = (match[4] || '').trim();
+      if (title || description) {
+        items.push({ title, description });
+      }
+      continue;
+    }
+    // If block starts with list dash, keep after the dash as description
+    const listMatch = block.match(/^\s*[-•]\s*(.+)$/s);
+    if (listMatch) {
+      items.push({ title: '', description: listMatch[1].trim() });
+      continue;
+    }
+    // Fallback: whole block as description
+    items.push({ title: '', description: block });
+  }
+  return items;
+};
+
+const pickValueIcon = (title: string): IconComponent => {
+  const t = (title || '').toLowerCase();
+  if (t.includes('excellence')) return Award;
+  if (t.includes('intégrité') || t.includes('integrite') || t.includes('integrity')) return Shield;
+  if (t.includes('innovation')) return Lightbulb;
+  if (t.includes('prévention') || t.includes('prevention')) return ShieldCheck;
+  if (t.includes('engagement') || t.includes('commit')) return Target;
+  if (t.includes('respect')) return Eye; // as a neutral icon
+  return ShieldCheck;
 };
 const AboutSection = () => {
   const { sectionId } = useParams<{ sectionId: string }>();
@@ -132,7 +202,7 @@ const AboutSection = () => {
     <Layout>
       <section className="relative overflow-hidden py-16 md:py-20">
         <div className="absolute inset-0">
-          <img src={heroImage} alt={sectionTitleMap[currentSection]} className="w-full h-full object-cover" />
+          <img src={heroImage} alt={sectionTitle} className="w-full h-full object-cover" />
           <div className="absolute inset-0 hero-gradient opacity-85 backdrop-blur-[2px]" />
         </div>
         <div className="container mx-auto px-4 relative z-10">
@@ -146,7 +216,7 @@ const AboutSection = () => {
             <ChevronRight className="h-3.5 w-3.5" />
             <Link to="/about/presentation" className="hover:text-white transition-colors">{t('nav.about')}</Link>
             <ChevronRight className="h-3.5 w-3.5" />
-            <span className="text-white">{sectionTitleMap[currentSection]}</span>
+            <span className="text-white">{sectionTitle}</span>
           </motion.nav>
 
           <motion.h1
@@ -155,14 +225,14 @@ const AboutSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            {sectionTitleMap[currentSection]}
+            {sectionTitle}
           </motion.h1>
         </div>
       </section>
 
       <section className="section-padding bg-background">
         <div className="container mx-auto max-w-5xl">
-          {currentSection === 'valeurs' && !getContent(valeursPage, 'content') ? (
+          {currentSection === 'valeurs' && (getContent(valeursPage, 'content') || '').trim().length === 0 ? (
             <motion.div 
               className="grid grid-cols-1 sm:grid-cols-2 gap-6"
               initial="initial"
@@ -188,6 +258,51 @@ const AboutSection = () => {
                 </motion.div>
               ))}
             </motion.div>
+          ) : currentSection === 'valeurs' ? (
+            (() => {
+              const cards = parseValuesContent(sectionContent);
+              if (cards.length === 0) {
+                return null;
+              }
+              return (
+                <motion.div
+                  className="grid grid-cols-1 sm:grid-cols-2 gap-6"
+                  initial="initial"
+                  animate="animate"
+                  variants={{ animate: { transition: { staggerChildren: 0.1 } } }}
+                >
+                  {cards.map((card, idx) => {
+                    const Icon = pickValueIcon(card.title);
+                    return (
+                      <motion.div
+                        key={`${card.title}-${idx}`}
+                        className="relative bg-card rounded-2xl border border-border p-6 shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] transition-all duration-300 group overflow-hidden"
+                        variants={fadeInUp}
+                        whileHover={{ y: -5 }}
+                      >
+                        <div className="absolute top-0 left-0 right-0 h-1 hero-gradient" />
+                        <div className="w-14 h-14 rounded-xl hero-gradient flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                          <Icon className="h-7 w-7 text-white" />
+                        </div>
+                        {card.title && (
+                          <h3 className="font-display text-lg font-bold text-foreground mb-2">
+                            {card.title}
+                          </h3>
+                        )}
+                        <p className="text-muted-foreground text-sm leading-relaxed text-justify">
+                          {renderTextWithBoldMarkers(card.description)}
+                        </p>
+                        <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-muted/50 flex items-center justify-center">
+                          <span className="text-xs font-bold text-muted-foreground">
+                            0{idx + 1}
+                          </span>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </motion.div>
+              );
+            })()
           ) : (
             <motion.div 
               className="space-y-6"
@@ -201,11 +316,8 @@ const AboutSection = () => {
                     <SectionIcon className="h-6 w-6 md:h-8 md:w-8 text-white" />
                   </div>
                   <div className="space-y-3 md:space-y-4 min-w-0">
-                    <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
-                      {isLoading ? <Loader2 className="h-6 w-6 animate-spin inline-block" /> : sectionTitle}
-                    </h2>
                     <p className="min-w-0 break-words text-muted-foreground text-base md:text-lg leading-relaxed text-justify whitespace-pre-line">
-                      {isLoading ? '' : sectionContent}
+                      {isLoading ? '' : renderTextWithBoldMarkers(sectionContent)}
                     </p>
                   </div>
                 </div>
