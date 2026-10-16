@@ -7,6 +7,7 @@ import { contentService } from '@/services/contentService';
 import { InstitutionalPage } from '@/types/api';
 import { normalizeCmsText } from '@/utils/multilingual';
 import Layout from '@/components/layout/Layout';
+import { RichContent } from '@/components/RichContent';
 import heroPresentation from '@/assets/hero-about-presentation.jpg';
 import heroContext from '@/assets/hero-about-context.jpg';
 import heroMission from '@/assets/hero-about-mission.jpg';
@@ -168,9 +169,7 @@ const About = () => {
                   <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
                     {getContent(presentationPage, 'title') || t('about.intro')}
                   </h2>
-                  <p className="text-muted-foreground text-base md:text-lg leading-relaxed text-justify whitespace-pre-line">
-                    {getContent(presentationPage, 'content') || t('about.intro.text')}
-                  </p>
+                  <RichContent className="text-muted-foreground text-base md:text-lg leading-relaxed text-justify" text={getContent(presentationPage, 'content') || t('about.intro.text')} />
                 </motion.div>
                 <motion.div
                   className="md:col-span-2"
@@ -237,9 +236,7 @@ const About = () => {
                   <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl hero-gradient flex items-center justify-center flex-shrink-0">
                     <Shield className="h-6 w-6 md:h-8 md:w-8 text-white" />
                   </div>
-                  <p className="min-w-0 break-words text-muted-foreground text-base md:text-lg leading-relaxed text-justify whitespace-pre-line">
-                    {isLoading ? '' : getContent(contextePage, 'content') || t('about.context.text')}
-                  </p>
+                  <RichContent className="min-w-0 break-words text-muted-foreground text-base md:text-lg leading-relaxed text-justify" text={isLoading ? '' : getContent(contextePage, 'content') || t('about.context.text')} />
                 </div>
               </motion.div>
             </div>
@@ -283,9 +280,7 @@ const About = () => {
                   <h3 className="font-display text-2xl font-bold text-foreground">
                     {isLoading ? <Loader2 className="h-5 w-5 animate-spin inline-block" /> : getContent(missionPage, 'title') || t('about.mission.title')}
                   </h3>
-                  <p className="text-muted-foreground text-base md:text-[1rem] leading-relaxed text-justify whitespace-pre-line">
-                    {isLoading ? '' : getContent(missionPage, 'content') || t('about.mission.text')}
-                  </p>
+                  <RichContent className="text-muted-foreground text-base md:text-[1rem] leading-relaxed text-justify" text={isLoading ? '' : getContent(missionPage, 'content') || t('about.mission.text')} />
                   <div className="flex items-center gap-3 pt-2">
                     <div className="flex -space-x-2">
                       {[Users, Heart, Handshake].map((Icon, i) => (
@@ -360,9 +355,7 @@ const About = () => {
                 <h2 className="font-display text-3xl md:text-5xl lg:text-6xl font-bold text-white">
                   {isLoading ? <Loader2 className="h-8 w-8 animate-spin inline-block" /> : getContent(visionPage, 'title') || t('about.vision.title')}
                 </h2>
-                <p className="text-white/85 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto text-justify whitespace-pre-line">
-                  {isLoading ? '' : getContent(visionPage, 'content') || t('about.vision.text')}
-                </p>
+                <RichContent className="text-white/85 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto text-justify" text={isLoading ? '' : getContent(visionPage, 'content') || t('about.vision.text')} />
                 <motion.div
                   className="w-24 h-1 bg-gradient-to-r from-transparent via-secondary to-transparent mx-auto"
                   animate={{ scaleX: [0.7, 1, 0.7], opacity: [0.5, 1, 0.5] }}

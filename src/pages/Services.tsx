@@ -8,6 +8,7 @@ import { Service } from '@/types/api';
 import { Button } from '@/components/ui/button';
 import { getFormattedMultilingualContent as getContent } from '@/utils/multilingual';
 import Layout from '@/components/layout/Layout';
+import { RichContent, toPlainText } from '@/components/RichContent';
 import heroServices from '@/assets/hero-services.png';
 
 const iconMap: Record<string, any> = {
@@ -74,7 +75,7 @@ const toServiceAnchorId = (service: Service): string => {
 
 const getServiceListPreview = (fullDescription: string): string => {
   if (!fullDescription) return '';
-  const normalized = fullDescription.replace(/\s+/g, ' ').trim();
+  const normalized = toPlainText(fullDescription).replace(/\s+/g, ' ').trim();
   const sentenceMatch = normalized.match(/^(.+?[.!?])(\s|$)/);
   if (sentenceMatch && sentenceMatch[1]) {
     return sentenceMatch[1].trim();
@@ -207,14 +208,14 @@ const Services = () => {
         <section className="section-padding bg-background">
           <div className="container mx-auto">
             <div className="max-w-4xl">
-              <motion.p 
-                className="text-lg text-muted-foreground leading-relaxed mb-8 whitespace-pre-line"
+              <motion.div 
+                className="text-lg text-muted-foreground leading-relaxed mb-8"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
               >
-                {getMultilingualContent(service.description)}
-              </motion.p>
+                <RichContent text={getMultilingualContent(service.description)} />
+              </motion.div>
               
               <motion.div
                 initial={{ opacity: 0, y: 20 }}

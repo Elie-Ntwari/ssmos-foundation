@@ -3,6 +3,7 @@ import { ChevronRight, Loader2, Shield, ShieldCheck, Lightbulb, Award, Building,
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Layout from '@/components/layout/Layout';
+import { RichContent } from '@/components/RichContent';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { contentService } from '@/services/contentService';
 import { InstitutionalPage } from '@/types/api';
@@ -38,6 +39,9 @@ const fadeInUp = {
 };
 
 const renderTextWithBoldMarkers = (text: string): ReactNode => {
+  if (/<\/?[a-z][\s\S]*>/i.test(text || '')) {
+    return <RichContent text={text} />;
+  }
   const lines = (text || '').split('\n');
   return lines.map((line, lineIndex) => {
     const segments = line.split(/(\*[^*]+\*)/g);
@@ -316,9 +320,9 @@ const AboutSection = () => {
                     <SectionIcon className="h-6 w-6 md:h-8 md:w-8 text-white" />
                   </div>
                   <div className="space-y-3 md:space-y-4 min-w-0">
-                    <p className="min-w-0 break-words text-muted-foreground text-base md:text-lg leading-relaxed text-justify whitespace-pre-line">
+                    <div className="min-w-0 break-words text-muted-foreground text-base md:text-lg leading-relaxed text-justify">
                       {isLoading ? '' : renderTextWithBoldMarkers(sectionContent)}
-                    </p>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -6,6 +6,7 @@ import { TeamMember, TeamPage } from '@/types/api';
 import { ChevronRight, Loader2 } from 'lucide-react';
 import { getFormattedMultilingualContent as getContent } from '@/utils/multilingual';
 import Layout from '@/components/layout/Layout';
+import { RichContent } from '@/components/RichContent';
 import heroTeam from '@/assets/hero-2.png';
 
 const Team = () => {
@@ -125,9 +126,7 @@ const Team = () => {
                     <p className="text-secondary font-medium text-sm md:text-base mb-4">
                       {getMultilingualContent(member.role)}
                     </p>
-                    <p className="text-muted-foreground text-sm md:text-base mb-5 leading-relaxed line-clamp-4 whitespace-pre-line">
-                      {getMultilingualContent(member.bio)}
-                    </p>
+                    <RichContent text={getMultilingualContent(member.bio)} className="text-muted-foreground text-sm md:text-base mb-5 leading-relaxed line-clamp-4" />
                     {member.expertise && member.expertise.length > 0 && (
                       <div className="mt-6 pt-4 border-t border-border">
                         <h4 className="text-xs font-semibold text-foreground uppercase tracking-wide mb-3">

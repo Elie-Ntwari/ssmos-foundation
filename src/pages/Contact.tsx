@@ -49,7 +49,8 @@ const Contact = () => {
     const section = homeSections[sectionKey];
     if (!section) return fallback;
     const content = section.content;
-    return content[language] || content.fr || content.en || fallback;
+    const value = content[language] || content.fr || content.en || fallback;
+    return value.replace(/<[^>]*>/g, '').replace(/&nbsp;/gi, ' ').trim() || fallback;
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -62,6 +63,7 @@ const Contact = () => {
         email: formData.email.trim(),
         subject: formData.subject.trim(),
         message: formData.message.trim(),
+        language,
       });
 
       if (response.error === false) {
@@ -69,9 +71,9 @@ const Contact = () => {
         setFormData({ name: '', email: '', subject: '', message: '' });
         toast({
           title: t('contact.form.success'),
-          description: language === 'en' 
-            ? 'We will get back to you shortly.' 
-            : 'Nous vous répondrons dans les plus brefs délais.',
+          description: language === 'en'
+            ? 'A confirmation email is on its way. We will get back to you shortly.'
+            : 'Un e-mail de confirmation vous a été envoyé. Nous vous répondrons dans les meilleurs délais.',
         });
 
         // Reset after 3 seconds
@@ -158,9 +160,9 @@ const Contact = () => {
                     {t('contact.form.success')}
                   </h3>
                   <p className="text-muted-foreground">
-                    {language === 'en' 
-                      ? 'We will get back to you shortly.' 
-                      : 'Nous vous répondrons dans les plus brefs délais.'}
+                    {language === 'en'
+                      ? 'A confirmation email is on its way. Your request is being processed.'
+                      : 'Un e-mail de confirmation est en route. Votre demande est en cours de traitement.'}
                   </p>
                 </div>
               ) : (

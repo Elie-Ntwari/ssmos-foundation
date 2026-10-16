@@ -34,7 +34,8 @@ const Footer = () => {
     const section = homeSections[sectionKey];
     if (!section) return fallback;
     const content = section.content;
-    return content[language] || content.fr || content.en || fallback;
+    const value = content[language] || content.fr || content.en || fallback;
+    return value.replace(/<[^>]*>/g, '').replace(/&nbsp;/gi, ' ').trim() || fallback;
   };
 
   const quickLinks = [

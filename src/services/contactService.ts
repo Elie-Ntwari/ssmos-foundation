@@ -6,6 +6,7 @@ export interface ContactMessageCreateData {
   email: string;
   subject: string;
   message: string;
+  language?: string;
 }
 
 export const contactService = {

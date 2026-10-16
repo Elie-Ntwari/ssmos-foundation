@@ -8,6 +8,8 @@ import { NewsArticle, HomePageSection, InterventionAxis } from '@/types/api';
 import { Button } from '@/components/ui/button';
 import { getFormattedMultilingualContent as getContent } from '@/utils/multilingual';
 import Layout from '@/components/layout/Layout';
+import { toPlainText } from '@/components/RichContent';
+import { SharePublication } from '@/components/SharePublication';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from '@/components/ui/carousel';
 import logo from '@/assets/logo.png';
 import hero1 from '@/assets/hero-1.png';
@@ -77,7 +79,7 @@ const Index = () => {
   function getSectionContentStatic(sectionKey: string): string {
     const section = homeSections[sectionKey];
     if (!section) return '';
-    return getContent(section.content, language);
+    return toPlainText(getContent(section.content, language));
   }
 
   useEffect(() => {
@@ -135,7 +137,7 @@ const Index = () => {
   const getSectionContent = (sectionKey: string): string => {
     const section = homeSections[sectionKey];
     if (!section) return '';
-    return getContent(section.content, language);
+    return toPlainText(getContent(section.content, language));
   };
 
   const getMultilingualContent = (content: { fr?: string; en?: string; ln?: string; sw?: string }): string => {
@@ -517,9 +519,10 @@ const Index = () => {
             >
               {latestArticles.map((article) => (
                 <motion.div key={article.id} variants={fadeInUp}>
+                  <div className="card-institutional group overflow-hidden">
                   <Link
                     to={`/publications/news/${article.id}`}
-                    className="card-institutional group overflow-hidden block"
+                    className="block"
                   >
                     <div className="aspect-video overflow-hidden rounded-lg mb-4 -mt-2 -mx-2">
                       {article.image ? (
@@ -549,6 +552,10 @@ const Index = () => {
                       {getMultilingualContent(article.excerpt)}
                     </p>
                   </Link>
+                  <div className="mt-4">
+                    <SharePublication title={getMultilingualContent(article.title)} path={`/publications/news/${article.id}`} />
+                  </div>
+                  </div>
                 </motion.div>
               ))}
               {latestArticles.length === 0 && !isLoading && (

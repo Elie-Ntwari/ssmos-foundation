@@ -8,6 +8,8 @@ import { NewsArticle, BlogPost } from '@/types/api';
 import { Button } from '@/components/ui/button';
 import { getFormattedMultilingualContent as getContent } from '@/utils/multilingual';
 import Layout from '@/components/layout/Layout';
+import { RichContent } from '@/components/RichContent';
+import { SharePublication } from '@/components/SharePublication';
 import heroBlog from '@/assets/hero-blog.png';
 import heroNews from '@/assets/hero-news.png';
 
@@ -62,6 +64,16 @@ const BlogNews = () => {
     ? articles.filter(a => a.category.toLowerCase() === selectedCategory.toLowerCase())
     : articles;
 
+  if (id && isLoading) {
+    return (
+      <Layout>
+        <div className="section-padding flex justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </Layout>
+    );
+  }
+
   // Single article/post detail view
   if (id) {
     const isViewingBlog = type === 'blog';
@@ -99,22 +111,21 @@ const BlogNews = () => {
               <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 max-w-4xl">
                 {getMultilingualContent(post.title)}
               </h1>
-              <div className="flex flex-wrap items-center gap-4 text-white/70 text-sm">
+              <div className="flex flex-wrap items-center gap-4 text-white/70 text-sm mb-4">
                 <span className="flex items-center gap-2"><User className="h-4 w-4" />{post.author_name}</span>
                 <span className="flex items-center gap-2">
                   <Calendar className="h-4 w-4" />
                   {new Date(post.created_at).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}
                 </span>
               </div>
+              <SharePublication tone="light" title={getMultilingualContent(post.title)} path={`/publications/blog/${post.id}`} />
             </div>
           </section>
           <section className="section-padding bg-background">
             <div className="container mx-auto">
               <div className="max-w-3xl mx-auto">
                 {post.image && <img src={post.image} alt={getMultilingualContent(post.title)} className="w-full aspect-video object-cover rounded-xl mb-8" />}
-                <div className="prose prose-lg max-w-none">
-                  <p className="text-muted-foreground text-lg leading-relaxed text-justify whitespace-pre-wrap">{getMultilingualContent(post.content)}</p>
-                </div>
+                <RichContent text={getMultilingualContent(post.content)} className="text-lg leading-relaxed text-justify text-muted-foreground" />
               </div>
             </div>
           </section>
@@ -154,19 +165,18 @@ const BlogNews = () => {
             </Button>
             <span className="inline-block px-3 py-1 bg-secondary text-secondary-foreground text-sm font-medium rounded-full mb-4">{article.category}</span>
             <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 max-w-4xl">{getMultilingualContent(article.title)}</h1>
-            <div className="flex flex-wrap items-center gap-4 text-white/70 text-sm">
+            <div className="flex flex-wrap items-center gap-4 text-white/70 text-sm mb-4">
               <span className="flex items-center gap-2"><User className="h-4 w-4" />{article.author_name}</span>
               <span className="flex items-center gap-2"><Calendar className="h-4 w-4" />{new Date(article.created_at).toLocaleDateString(language === 'en' ? 'en-US' : 'fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
             </div>
+            <SharePublication tone="light" title={getMultilingualContent(article.title)} path={`/publications/news/${article.id}`} />
           </div>
         </section>
         <section className="section-padding bg-background">
           <div className="container mx-auto">
             <div className="max-w-3xl mx-auto">
               {article.image && <img src={article.image} alt={getMultilingualContent(article.title)} className="w-full aspect-video object-cover rounded-xl mb-8" />}
-              <div className="prose prose-lg max-w-none">
-                <p className="text-muted-foreground text-lg leading-relaxed text-justify whitespace-pre-wrap">{getMultilingualContent(article.content)}</p>
-              </div>
+              <RichContent text={getMultilingualContent(article.content)} className="text-lg leading-relaxed text-justify text-muted-foreground" />
             </div>
           </div>
         </section>
@@ -283,9 +293,10 @@ const BlogNews = () => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.05 }}
                     >
+                      <div className="card-institutional group overflow-hidden">
                       <Link
                         to={`/publications/news/${article.id}`}
-                        className="card-institutional group overflow-hidden block"
+                        className="block"
                       >
                         <div className="aspect-video overflow-hidden rounded-lg mb-4 -mt-2 -mx-2">
                           {article.image ? (
@@ -302,6 +313,10 @@ const BlogNews = () => {
                         <p className="text-muted-foreground text-sm mb-4 text-justify line-clamp-3">{getMultilingualContent(article.excerpt)}</p>
                         <span className="inline-flex items-center text-secondary text-sm font-medium">{t('news.readMore')}<ArrowRight className="ml-1 h-4 w-4" /></span>
                       </Link>
+                      <div className="mt-4">
+                        <SharePublication title={getMultilingualContent(article.title)} path={`/publications/news/${article.id}`} />
+                      </div>
+                      </div>
                     </motion.div>
                   ))}
                   {filteredArticles.length === 0 && (
@@ -327,9 +342,10 @@ const BlogNews = () => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.05 }}
                     >
+                      <div className="card-institutional group overflow-hidden">
                       <Link
                         to={`/publications/blog/${post.id}`}
-                        className="card-institutional group overflow-hidden block"
+                        className="block"
                       >
                         <div className="aspect-video overflow-hidden rounded-lg mb-4 -mt-2 -mx-2">
                           {post.image ? (
@@ -345,6 +361,10 @@ const BlogNews = () => {
                         <p className="text-muted-foreground text-sm mb-4 text-justify line-clamp-3">{getMultilingualContent(post.excerpt)}</p>
                         <span className="inline-flex items-center text-secondary text-sm font-medium">{t('blog.readMore')}<ArrowRight className="ml-1 h-4 w-4" /></span>
                       </Link>
+                      <div className="mt-4">
+                        <SharePublication title={getMultilingualContent(post.title)} path={`/publications/blog/${post.id}`} />
+                      </div>
+                      </div>
                     </motion.div>
                   ))}
                   {blogPosts.length === 0 && (
