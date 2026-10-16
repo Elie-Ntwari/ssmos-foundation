@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { LoginCredentials, LoginResponse, ApiResponse, User } from '@/types/api';
 
-// const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://api.ssmos.org/api';
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://api.ssmos.org/api';
+// const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 
 class AuthService {
   private getAccessToken(): string | null {
